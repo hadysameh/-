@@ -35,12 +35,12 @@ class WaredController {
     }
   }
   public static async getSearch(req: Request, res: Response): Promise<any> {
-    let numOfRecords = req.query.numOfRecords
-    let pageNum = req.query.pageNum
-    // console.log({req})
+    
+    let params = req.query
+    console.log({params})
     try {
-      let result = await WaredRepo.getSearch();
-      console.log({result});
+      let result = await WaredRepo.getSearch(params);
+      // console.log({result});
       res.json(result)
     } catch (error) {
       console.log({error});

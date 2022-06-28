@@ -32,7 +32,8 @@ class WaredRepo {
     // limit ${numOfRecords} OFFSET ${pageNum*numOfRecords}
     // `;
     const sqlStatment = `
-    SELECT a.id,a.doc_num, a.doc_dept_num ,a.deliver_date, a.register_date, a.doc_date , a.subject , g.name as gehaaName,  a.deadline  
+    SELECT a.id,a.doc_num, a.doc_dept_num ,a.deliver_date, a.register_date, a.doc_date , a.subject ,
+    g.name as gehaaName,  a.deadline  
     FROM wared a , gehaa g 
     WHERE a.gehaa_id = g.id 
     ORDER BY a.register_date DESC
@@ -129,44 +130,52 @@ class WaredRepo {
         });
     });
   }
-  public static async getSearch(searchParams: any | null = null): Promise<any> {
+  public static async getSearch(searchParams: any): Promise<any> {
+    console.log(searchParams);
     return new Promise((resolve: any, reject: any) => {
-      //   let sqlStatment = `
-      // SELECT w.id,w.doc_num, w.doc_dept_num ,w.deliver_date, w.register_date, w.doc_date , w.subject ,
-      // g.name as gehaaName,  w.deadline
-      // FROM wared a , gehaa g ,wared_branches wb , wared_officers wo
-      // WHERE w.gehaa_id = 556478 OR
-      //  w.gehaa_id = g.id OR
-      //  w.id = wb.wared_id OR
-      //  w.id = wo.wared_id
-      // ORDER BY w.register_date DESC
-      // limit 10 OFFSET 10
-      // `;
+      
       let querySearchParams: string[] = [];
+
+      if (searchParams.mokatbaNum) {
+        querySearchParams.push(`w.doc_num = ${searchParams.mokatbaNum}`);
+      }  if (searchParams.gehaaId) {
+        querySearchParams.push(`w.gehaa_id = ${searchParams.gehaaId}`);
+      }  if (searchParams.subject) {
+        querySearchParams.push(`w.subject = ${searchParams.subject}`);
+      }  if (searchParams.branchId) {
+        querySearchParams.push(`wb.branches_id = ${searchParams.branchId}`);
+      }  if (searchParams.officerId) {
+        querySearchParams.push(`wo.officers_id = ${searchParams.officerId}`);
+      }  if (searchParams.mokatbaRegDate) {
+        querySearchParams.push(
+          `w.register_date = ${searchParams.mokatbaRegDate}`
+        );
+      }  if (searchParams.DaysBeforeExecution) {
+      }  if (searchParams.withinExcutionTimeType) {
+      }
+
       let sqlStatment2 = `
-    SELECT w.id,w.doc_num, w.doc_dept_num ,w.deliver_date, w.register_date, w.doc_date , w.subject ,
-     g.name as gehaaName,  w.deadline 
+      SELECT DISTINCT 
+      w.id,w.doc_num, w.doc_dept_num ,w.deliver_date, w.register_date, w.doc_date ,
+       w.subject , g.name as gehaaName, w.deadline 
+       FROM wared w 
+       left JOIN gehaa g ON g.id = w.gehaa_id 
+       left JOIN wared_branches wb ON w.id = wb.wared_id 
+       left JOIN wared_officers wo ON w.id = wo.wared_id
+      
+      ${
+        querySearchParams.length > 0
+          ? "WHERE " + querySearchParams.join(" AND ")
+          : " "
+      }
 
-    FROM wared w
-
-    inner JOIN gehaa g 
-    ON w.gehaa_id = g.id
-    
-    inner JOIN wared_branches wb
-    ON wb.wared_id = w.id
-
-    inner JOIN wared_officers wo
-    ON wo.wared_id = w.id
-
-    WHERE 
-    
-    g.id = 556478 
-
-    ORDER BY w.register_date DESC
-    limit 10 OFFSET 10
+      ORDER BY w.register_date DESC
+      limit 10 
     `;
+
+      console.log(sqlStatment2);
       dbConnection.execute(sqlStatment2, function (err, results, fields) {
-        console.log({ results });
+        // console.log({ results });
         resolve(results);
         if (err) {
           reject(err);
