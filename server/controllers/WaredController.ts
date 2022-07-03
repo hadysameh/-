@@ -39,7 +39,7 @@ class WaredController {
     let params = req.query
     console.log({params})
     try {
-      let result = await WaredRepo.getSearch(params);
+      let result = await WaredRepo.getWithParams(params);
       // console.log({result});
       res.json(result)
     } catch (error) {

@@ -9,9 +9,15 @@ import cors from "cors"
 // import router from './routes/posts'
 // import router from './routes/categories'
 import {routesAssigner} from './routes/index'
+import seqeulize from './db/seqeulizer'
+import Wared from './models/WaredModel'
 require('dotenv').config();
 
+seqeulize.sync().then((res) => {/*console.log(res)*/});
 
+Wared.findOne({ where: { id: 53469 } }).then((res)=>{
+    console.log({res})
+})
 const app:Express = express()
 app.use(cors())
 app.use(express.urlencoded())

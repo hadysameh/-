@@ -4,6 +4,7 @@ import mysql from 'mysql2'
 export const dbConnection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
+  dateStrings: true,
   database: 'trc3'
 });
 

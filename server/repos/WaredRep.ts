@@ -1,4 +1,5 @@
 import { dbConnection } from "../db";
+// import dateFormat from 'date-format'
 class WaredRepo {
   public static async getById(id: string | number): Promise<any> {
     const sqlStatment = "";
@@ -122,7 +123,7 @@ class WaredRepo {
             branches: values[1],
             officers: values[2],
           };
-          console.log(values);
+          // console.log(values);
           resolve(result);
         })
         .catch((err) => {
@@ -130,38 +131,108 @@ class WaredRepo {
         });
     });
   }
-  public static async getSearch(searchParams: any): Promise<any> {
-    console.log(searchParams);
+  public static async getWithParams(searchParams: any): Promise<any> {
+    const todaysDate = new Date().toISOString().slice(0, 19).replace(/T.*/, "");
+    let numberOfRecords = 20;
+    let numberOfOffsetRecords = 0;
+    console.log({ searchParams });
+    const addDaysToDate = (date: string, numOfDays: any) => {
+      let tempDate = new Date(date);
+      tempDate.setDate(tempDate.getDate() + Number(numOfDays));
+      console.log(
+        new Date(tempDate).toISOString().slice(0, 19).replace(/T.*/, ""),
+        {
+          date,
+          numOfDays,
+        }
+      );
+      let result = new Date(tempDate)
+        .toISOString()
+        .slice(0, 19)
+        .replace(/T.*/, "");
+      console.log({ result });
+      return result;
+    };
     return new Promise((resolve: any, reject: any) => {
-      
       let querySearchParams: string[] = [];
 
-      if (searchParams.mokatbaNum) {
-        querySearchParams.push(`w.doc_num = ${searchParams.mokatbaNum}`);
-      }  if (searchParams.gehaaId) {
+      if (searchParams.docNum) {
+        querySearchParams.push(`w.doc_num = ${searchParams.docNum}`);
+      }
+      if (searchParams.docDeptNum) {
+        querySearchParams.push(`w.doc_dept_num = ${searchParams.docDeptNum}`);
+      }
+      if (searchParams.gehaaId) {
         querySearchParams.push(`w.gehaa_id = ${searchParams.gehaaId}`);
-      }  if (searchParams.subject) {
-        querySearchParams.push(`w.subject = ${searchParams.subject}`);
-      }  if (searchParams.branchId) {
+      }
+      if (searchParams.subject) {
+        querySearchParams.push(`w.subject LIKE '%${searchParams.subject}%' `);
+      }
+      if (searchParams.branchId) {
         querySearchParams.push(`wb.branches_id = ${searchParams.branchId}`);
-      }  if (searchParams.officerId) {
+      }
+      if (searchParams.officerId) {
         querySearchParams.push(`wo.officers_id = ${searchParams.officerId}`);
-      }  if (searchParams.mokatbaRegDate) {
-        querySearchParams.push(
-          `w.register_date = ${searchParams.mokatbaRegDate}`
-        );
-      }  if (searchParams.DaysBeforeExecution) {
-      }  if (searchParams.withinExcutionTimeType) {
+      }
+      if (searchParams.mokatbaDate) {
+        querySearchParams.push(`w.doc_date = '${searchParams.mokatbaDate}'`);
       }
 
+      if (searchParams.withinExcutionTimeType == "1") {
+        if (searchParams.DaysBeforeExecution) {
+          querySearchParams.push(
+            `w.docDeadline <= '${addDaysToDate(
+              todaysDate,
+              searchParams.DaysBeforeExecution
+            )}' AND w.closedSader_id is NULL AND w.known = 0`
+          );
+        }
+      } else if (searchParams.withinExcutionTimeType == "2") {
+        if (searchParams.DaysBeforeExecution) {
+          querySearchParams.push(
+            // `w.docDeadline > '${todaysDate}' AND w.closedSader_id is NULL`
+
+            `w.docDeadline > '${addDaysToDate(
+              todaysDate,
+              searchParams.DaysBeforeExecution
+            )}' AND w.closedSader_id is NULL`
+          );
+        }
+      }
+      //TODO
+      // if(searchParams.withinExcutionTimeType!=='0'){
+      //   querySearchParams.push(`ORDER BY w.docDeadline DESC`);
+      // }
+      // else {
+      //   querySearchParams.push(`ORDER BY w.docDeadline DESC`);
+
+      // }
+
+      if (searchParams.numOfRecords) {
+        numberOfRecords = Number(searchParams.numOfRecords);
+        if (searchParams.pageNum) {
+          numberOfOffsetRecords =
+            Number(searchParams.numOfRecords) * Number(searchParams.pageNum);
+        }
+      }
+      const getOrderByComlumn = () => {
+        console.log(searchParams.withinExcutionTimeType)
+        if (searchParams.withinExcutionTimeType !== "0") {
+          return `ORDER BY w.docDeadline DESC`
+        }
+        else {
+          return  `ORDER BY w.register_date DESC`
+
+        }
+      };
       let sqlStatment2 = `
       SELECT DISTINCT 
       w.id,w.doc_num, w.doc_dept_num ,w.deliver_date, w.register_date, w.doc_date ,
-       w.subject , g.name as gehaaName, w.deadline 
-       FROM wared w 
-       left JOIN gehaa g ON g.id = w.gehaa_id 
-       left JOIN wared_branches wb ON w.id = wb.wared_id 
-       left JOIN wared_officers wo ON w.id = wo.wared_id
+      w.subject , g.name as gehaaName, w.docDeadline 
+      FROM wared w 
+      left JOIN gehaa g ON g.id = w.gehaa_id 
+      left JOIN wared_branches wb ON w.id = wb.wared_id 
+      left JOIN wared_officers wo ON w.id = wo.wared_id
       
       ${
         querySearchParams.length > 0
@@ -169,13 +240,12 @@ class WaredRepo {
           : " "
       }
 
-      ORDER BY w.register_date DESC
-      limit 10 
+      ${getOrderByComlumn()}
+      limit ${numberOfRecords}  offset ${numberOfOffsetRecords}
     `;
 
       console.log(sqlStatment2);
       dbConnection.execute(sqlStatment2, function (err, results, fields) {
-        // console.log({ results });
         resolve(results);
         if (err) {
           reject(err);
