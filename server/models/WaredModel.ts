@@ -44,7 +44,7 @@ const Wared = seqeulize.define(
       allowNull: true,
     },
     year: {
-      type: DataTypes.INTEGER(),
+      type: DataTypes.INTEGER,
       defaultValue: null,
       allowNull: true,
     },
