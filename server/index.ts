@@ -11,18 +11,18 @@ import cors from "cors";
 import { routesAssigner } from "./routes/index";
 import seqeulize from "./db/seqeulizer";
 import Wared from "./models/WaredModel";
-import Officers from './models/OfficersModel'
+import Officers from "./models/OfficersModel";
+// import "./models/modesl-test/index";
+import './models/models-relations/index'
 require("dotenv").config();
 
 seqeulize.sync().then(() => {
-  console.log('mysql database is connected')
+  console.log("mysql database is connected");
+  Wared.findOne({ where: { id: 53469 }, include: Officers }).then((res)=>{
+    console.log(res)
+  });
 });
 
-Wared.findOne({}).then((res) => {
-  console.log({ res });
-});
-
- 
 const app: Express = express();
 app.use(cors());
 app.use(express.urlencoded());

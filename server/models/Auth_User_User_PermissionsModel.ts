@@ -1,7 +1,7 @@
 import seqeulize from "../db/seqeulizer";
 import { DataTypes } from "sequelize";
 
-const Branches = seqeulize.define(
+const Auth_User_User_Permissions = seqeulize.define(
   "auth_user_user_permissions",
   {
     id: {
@@ -25,4 +25,4 @@ const Branches = seqeulize.define(
     timestamps: false,
   }
 );
-export default Branches;
+export default Auth_User_User_Permissions;
