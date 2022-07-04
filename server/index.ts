@@ -18,9 +18,9 @@ require("dotenv").config();
 
 seqeulize.sync().then(() => {
   console.log("mysql database is connected");
-  Wared.findOne({ where: { id: 53469 }, include: Officers }).then((res)=>{
-    console.log(res)
-  });
+  // Wared.findOne({ where: { id: 53469 }, include: Officers }).then((res)=>{
+  //   console.log(res)
+  // });
 });
 
 const app: Express = express();
