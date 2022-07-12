@@ -3,8 +3,8 @@ import WaredRepo from "../repos/WaredRep";
 
 class WaredController {
   public static async getOne(req: Request, res: Response): Promise<any> {
-    // console.log({req})
-    let id = req.params.id
+    console.log({reqParams:req.query})
+    let id = req.query.id
     try {
       let result = await WaredRepo.getById(id);
       console.log({result},result._rows);
@@ -47,7 +47,10 @@ class WaredController {
     }
   }
   
-  public static async store(req: Request, res: Response): Promise<any> {}
+  public static async store(req: Request, res: Response): Promise<any> {
+    console.log({body:req.body})
+    res.status(200).json({msg:'ok',body:req.body})
+  }
   public static async delete(req: Request, res: Response): Promise<any> {}
   public static async update(req: Request, res: Response): Promise<any> {}
 }

@@ -1,43 +1,31 @@
 //{ Express }  is the type
 import express, { Express, Request, Response } from "express";
-// import { route } from './routes/controllers-routes/waredRoutes'
-
-// import mongoose   from "mongoose";
-// import {Post} from './models/post'
 import cors from "cors";
-// import bodyparser from "body-parser"
-// import router from './routes/posts'
-// import router from './routes/categories'
 import { routesAssigner } from "./routes/index";
 import seqeulize from "./db/seqeulizer";
-import Wared from "./models/WaredModel";
-import Officers from "./models/OfficersModel";
-// import "./models/modesl-test/index";
-import './models/models-relations/index'
+import "./models/models-relations/index";
+import bodyParser from "body-parser";
 require("dotenv").config();
 
 seqeulize.sync().then(() => {
   console.log("mysql database is connected");
-  // Wared.findOne({ where: { id: 53469 }, include: Officers }).then((res)=>{
-  //   console.log(res)
-  // });
 });
 
 const app: Express = express();
 app.use(cors());
-app.use(express.urlencoded());
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded());
+// in latest body-parser use like below.
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.raw());
+app.use(express.urlencoded({ extended: true }));
 // app.use(router)
 routesAssigner(app);
 app.get("/", (req: Request, res: Response) => {
   res.json("hello from TS");
 });
-// console.log(Post)
-// console.log(typeof(process.env.PORT))
 let port: string = process.env.PORT as string;
 app.listen(port, () => {
   console.log("app runs on " + port);
 });
-// mongoose.connect(process.env.mongoose_connection_string as string).then(()=>{
-//     console.log('mongodb connected')
-// })

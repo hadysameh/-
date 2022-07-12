@@ -15,7 +15,7 @@ const Wared = seqeulize.define(
       allowNull: false,
     },
     doc_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     taashera_elmoder: {
@@ -51,6 +51,7 @@ const Wared = seqeulize.define(
     register_date: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW
     },
     doc_dept_num: {
       type: DataTypes.STRING(100),
