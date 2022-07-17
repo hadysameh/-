@@ -11,10 +11,10 @@ const waredRouter = express.Router();
 
 // })
 waredRouter.get('/wared',WaredController.getOne)
-waredRouter.get('/waredbox',WaredController.get)
+// waredRouter.get('/waredbox',WaredController.get)
 waredRouter.get('/waredbox/searchOptions',WaredController.getSearchOptions)
 waredRouter.get('/waredbox/search',WaredController.getSearch)
 waredRouter.post('/waredbox/store', upload.single('mokatbaPdf'),WaredController.store)
 
-
+waredRouter.put('/waredbox/edit', upload.single('mokatbaPdf'),WaredController.update)
 export default waredRouter

@@ -1,4 +1,4 @@
-import seqeulize from "../db/seqeulizer";
+import seqeulize from "../db/seqeulize";
 import { DataTypes } from "sequelize";
 
 const WaredTrackingOfficers = seqeulize.define(
@@ -24,10 +24,10 @@ const WaredTrackingOfficers = seqeulize.define(
       allowNull: true,
     },
     openedDate: {
-        type: DataTypes.DATE,
-        defaultValue: null,
-        allowNull: true,
-      },
+      type: DataTypes.DATE,
+      defaultValue: null,
+      allowNull: true,
+    },
   },
   {
     // to make the tabel name equal the model name

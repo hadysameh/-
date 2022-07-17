@@ -1,4 +1,4 @@
-import seqeulize from "../db/seqeulizer";
+import seqeulize from "../db/seqeulize";
 import { DataTypes } from "sequelize";
 
 const Ranks = seqeulize.define(

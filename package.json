@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server/index.ts",
+    "start": "nodemon server/index.ts",
     "build": "rm -rf build/ && prettier --write server/ && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,6 +1,6 @@
-import seqeulize from "../db/seqeulizer";
+import seqeulize from "../db/seqeulize";
 import { DataTypes } from "sequelize";
-
+import getCurrentYear from "../utils/getCurrentYear";
 const Wared = seqeulize.define(
   "wared",
   {
@@ -45,13 +45,13 @@ const Wared = seqeulize.define(
     },
     year: {
       type: DataTypes.INTEGER,
-      defaultValue: null,
+      defaultValue: getCurrentYear(),
       allowNull: true,
     },
     register_date: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
     doc_dept_num: {
       type: DataTypes.STRING(100),
@@ -80,7 +80,8 @@ const Wared = seqeulize.define(
     },
     register_user: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      defaultValue: null,
+      allowNull: true,
     },
     lastSader_id: {
       type: DataTypes.INTEGER,
@@ -109,7 +110,7 @@ const Wared = seqeulize.define(
     },
   },
   {
-    // to make the tabel name equal the model name  
+    // to make the tabel name equal the model name
     freezeTableName: true,
     timestamps: false,
     //for the indexes , they already exist in the db so we don't have to specify them again
