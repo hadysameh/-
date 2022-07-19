@@ -24,16 +24,55 @@ Wared.belongsTo(Sader, {
 });
 Wared.belongsTo(Sader, {
   foreignKey: "closedSader_id",
+  onDelete:'CASCADE'
+
 });
 Wared.belongsToMany(Branches, {
   through: Wared_Branches,
   foreignKey: "wared_id", // replaces `productId`
   otherKey: "branches_id",
+  onDelete:'CASCADE'
+  
 });
 // Branches.belongsToMany(Wared, { through: Wared_Branches });
 Wared.belongsToMany(Officers, {
   through: Wared_Officers,
   foreignKey: "wared_id", // replaces `productId`
   otherKey: "officers_id",
+  onDelete:'CASCADE'
 });
-// Officers.belongsToMany(Wared, { through: Wared_Officers });
+
+Wared.belongsToMany(Officers, {
+  through: WaredTrackingOfficers,
+  foreignKey: "wared_id", // replaces `productId`
+  otherKey: "officer_id",
+  onDelete:'CASCADE'
+});
+
+//------------------------------------------------------------
+
+Sader.belongsTo(Wared,{
+  foreignKey: "lastWared_id",
+})
+
+Sader.belongsTo(Officers,{
+  foreignKey: "officer_id",
+})
+
+Sader.belongsTo(Branches,{
+  foreignKey: "branch_id",
+})
+ 
+Sader.belongsToMany(Officers, {
+  through: Sadertrackingofficers,
+  foreignKey: "sader_id", // replaces `productId`
+  otherKey: "officer_id",
+});
+
+Sader.belongsToMany(Gehaa, {
+  through: Sader_Gehaa,
+  foreignKey: "sader_id", // replaces `productId`
+  otherKey: "gehaa_id",
+  constraints: false
+
+});

@@ -52,7 +52,7 @@ class WaredController {
   public static async store(req: Request, res: Response): Promise<any> {
     /*console.log({body:req.body})
     console.log({file:req.file})*/
-    console.log({ filePath: req.file?.path });
+    // console.log({ filePath: req.file?.path });
     //  the file is stored due to multer middleware
     let filePathInUploadsFolder = req.file?.destination.replace(
       "./server/uploads/",
@@ -71,8 +71,8 @@ class WaredController {
     }
   }
   public static async update(req: Request, res: Response): Promise<any> {
-    /*console.log({body:req.body})
-    console.log({file:req.file})*/
+    console.log({body:req.body})
+    // console.log({file:req.file})
     let filePathToStore: string|null=null;
     if (req.file) {
       let filePathInUploadsFolder = req.file?.destination.replace(
@@ -85,7 +85,7 @@ class WaredController {
     }
 
     try {
-      console.log({ filePath: req.file?.path }); 
+      // console.log({ filePath: req.file?.path }); 
 
       await WaredRepo.update(req.body, filePathToStore);
       res.status(200).json({ msg: "ok" });

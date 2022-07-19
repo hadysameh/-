@@ -15,7 +15,7 @@ const Sader = seqeulize.define(
       allowNull: false,
     },
     doc_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     egraa: {

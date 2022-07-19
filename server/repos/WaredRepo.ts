@@ -266,10 +266,10 @@ class WaredRepo {
     reqBodyData: any,
     fileLocationPath: string | null = null
   ) {
-    console.log({
-      reqBodyData,
-      fileLocationPath,
-    });
+    // console.log({
+    //   reqBodyData,
+    //   // fileLocationPath,
+    // });
     return new Promise(async (resolve: any, reject: any) => {
       const t = await sequelize.transaction();
 
@@ -286,6 +286,7 @@ class WaredRepo {
             return { id: selectedOfficer.value };
           }
         );
+        console.log({officersIdsObjs})
         let branchesIdsArr = selectedBranchs.map((branch: any) => {
           return branch.value;
         });
@@ -297,23 +298,24 @@ class WaredRepo {
           return null;
         });
         let lastWared_id = lastWared?.getDataValue("id");
+        let modifiedWaredData:any = {
+          doc_num: reqBodyData.doc_num,
+          doc_dept_num: reqBodyData.doc_dept_num,
+          doc_date: reqBodyData.doc_date,
+          subject: reqBodyData.subject,
+          docDeadline: reqBodyData.reqBodyData ? reqBodyData.reqBodyData : null,
+          gehaa_id: reqBodyData.gehaa_id,
+          known: reqBodyData.docDeadline ? "0" : "1",
+          deliver_date: reqBodyData.deliver_date,
+          lastWared_id,
+          type: reqBodyData.type,
+          register_user: "1",
+        };
+        if (fileLocationPath) {
+          modifiedWaredData["attach"] = fileLocationPath;
+        }
         let modifiedWared = await Wared.update(
-          {
-            doc_num: reqBodyData.doc_num,
-            doc_dept_num: reqBodyData.doc_dept_num,
-            doc_date: reqBodyData.doc_date,
-            subject: reqBodyData.subject,
-            docDeadline: reqBodyData.reqBodyData
-              ? reqBodyData.reqBodyData
-              : null,
-            gehaa_id: reqBodyData.gehaa_id,
-            known: reqBodyData.docDeadline ? "0" : "1",
-            deliver_date: reqBodyData.deliver_date,
-            lastWared_id,
-            type: reqBodyData.type,
-            register_user: "1",
-            attach: fileLocationPath,
-          },
+          modifiedWaredData,
           {
             where: { id: reqBodyData["waredId"] },
           }
@@ -336,35 +338,18 @@ class WaredRepo {
           }
         );
         console.log({ wared_branches_rows, wared_officers_rows });
-        // for (let index = 0; index < wared_branches_rows.length; index++) {
-        //   const wared_branches_row = wared_branches_rows[index];
-        //   let modified_wared_branches = await Wared_Branches.update(
-        //     wared_branches_row,
-        //     {
-        //       where: { wared_id: reqBodyData["waredId"] },
-        //     }
-        //   );
 
-        // }
-        // for (let index = 0; index < wared_officers_rows.length; index++) {
-        //   const wared_officers_row = wared_officers_rows[index];
-        //   let modified_wared_officer = await Wared_Officers.update(
-        //     wared_officers_row,
-        //     {
-        //       where: { wared_id: reqBodyData["waredId"] },
-        //     }
-        //   );
-        // }
         await Wared_Branches.destroy({
           where: {
-            wared_id:reqBodyData["waredId"]
-          }
+            wared_id: reqBodyData["waredId"],
+          },
         });
         await Wared_Officers.destroy({
           where: {
-            wared_id:reqBodyData["waredId"]
-          }
+            wared_id: reqBodyData["waredId"],
+          },
         });
+
         await Wared_Branches.bulkCreate(wared_branches_rows, {
           updateOnDuplicate: ["wared_id"],
         });
@@ -403,6 +388,7 @@ class WaredRepo {
           ...waredTrackingOfficersRowsPt1,
           ...waredTrackingOfficersRowsPt2,
         ];
+        
         let modifiedWaredTrackingOfficers = await WaredTrackingOfficers.update(
           waredtrackingOfficersRows,
           {
@@ -412,7 +398,7 @@ class WaredRepo {
         resolve();
         await t.commit();
       } catch (error) {
-        console.log(error)
+        console.log(error);
         // If the execution reaches this line, an error was thrown.
         // We rollback the transaction.
         await t.rollback();

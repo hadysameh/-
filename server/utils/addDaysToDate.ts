@@ -5,3 +5,4 @@ const addDaysToDate = (date: string, numOfDays: any) => {
   //   console.log({ result });
     return result;
   };
+  export default addDaysToDate
