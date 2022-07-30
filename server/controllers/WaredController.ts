@@ -7,7 +7,7 @@ class WaredController {
     let id = req.query.id;
     try {
       let result = await WaredRepo.getById(id);
-      console.log({ result }, result._rows);
+      // console.log({ result }, result._rows);
       res.json(result);
     } catch (error) {
       console.log({ error });
@@ -67,13 +67,13 @@ class WaredController {
     } catch (error) {
       console.log(error, { msg: "faild to store" });
       // res.status(500);
-      res.status(500).json("wrong password please try again");
+      res.status(500).json({ error });
     }
   }
   public static async update(req: Request, res: Response): Promise<any> {
-    console.log({body:req.body})
+    console.log({ body: req.body });
     // console.log({file:req.file})
-    let filePathToStore: string|null=null;
+    let filePathToStore: string | null = null;
     if (req.file) {
       let filePathInUploadsFolder = req.file?.destination.replace(
         "./server/uploads/",
@@ -85,7 +85,7 @@ class WaredController {
     }
 
     try {
-      // console.log({ filePath: req.file?.path }); 
+      // console.log({ filePath: req.file?.path });
 
       await WaredRepo.update(req.body, filePathToStore);
       res.status(200).json({ msg: "ok" });

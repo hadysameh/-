@@ -12,13 +12,23 @@ import getTodaysDate from "../utils/getTodaysDate";
 import getCurrentYear from "../utils/getCurrentYear";
 import addDaysToDate from "../utils/addDaysToDate";
 import { Op } from "sequelize";
+import Sadertrackingofficers from "../models/SadertrackingofficersModel";
+import Sader_Gehaa from "../models/Sader_GehaaModel";
 export default class SaderRepo {
   public static async getById(id: any): Promise<any> {
     let mokatba = await Sader.findOne({
       where: {
         id,
       },
-      include: [Officers, Branches, Gehaa],
+      include: [
+        {
+          model: Officers,
+          as: "SaderOfficer",
+        },
+        Wared,
+        Branches,
+        Gehaa,
+      ],
     });
     return mokatba;
   }
@@ -55,7 +65,6 @@ export default class SaderRepo {
   }
   public static async getWithParams(searchParams: any): Promise<any> {
     const todaysDate = getTodaysDate();
-console.log({searchParams})
     let whereParams: any = {};
     let includeParams: any = [];
     let orderByArr: any = [];
@@ -94,11 +103,186 @@ console.log({searchParams})
     // console.log({ whereParams });
     let saders = await Sader.findAll({
       where: whereParams,
-      include: [Officers, Branches, Wared, Gehaa, ...includeParams],
+      include: [
+        {
+          model: Officers,
+          as: "SaderOfficer",
+        },
+        Branches,
+        Wared,
+        Gehaa,
+        ...includeParams,
+      ],
       limit: Number(searchParams.numOfRecords),
-      order: orderByArr.length == 0 ? [["register_date", "DESC"]] : orderByArr,
+      order: orderByArr.length == 0 ? [["id", "DESC"]] : orderByArr,
       offset: Number(searchParams.numOfRecords) * Number(searchParams.pageNum),
     });
     return saders;
+  }
+
+  public static async store(
+    reqBodyData: any,
+    fileLocationPath: string
+  ): Promise<any> {
+    console.log({ reqBodyData, fileLocationPath });
+    return new Promise(async (resolve: any, reject: any) => {
+      const t = await sequelize.transaction();
+      try {
+        console.log({ selectedGehaat: reqBodyData.gehaat });
+        let selectedGehaat = JSON.parse(reqBodyData.gehaat);
+        let lastWared = await Wared.findOne({
+          where: {
+            doc_num: reqBodyData.lastWaredNum,
+          },
+        }).catch((err) => {
+          return null;
+        });
+        let lastWared_id = lastWared?.getDataValue("id");
+        let assistantBranch = await Branches.findOne({
+          where: {
+            id: reqBodyData.branch_id,
+          },
+        }).catch((err) => {
+          return null;
+        });
+        let assistantBranchId = assistantBranch?.getDataValue("id");
+        let storedSader = await Sader.create({
+          doc_num: reqBodyData.doc_num,
+          doc_date: reqBodyData.doc_date,
+          branch_id: reqBodyData.branch_id,
+          subject: reqBodyData.subject,
+          known: reqBodyData.branch_id,
+          officer_id: reqBodyData.officer_id,
+          lastWared_id,
+          register_date: getTodaysDate(),
+          type: reqBodyData.type,
+          register_user: "1",
+          attach: fileLocationPath,
+        });
+
+        await Sadertrackingofficers.bulkCreate([
+          {
+            officer_id: assistantBranchId,
+            sader_id: storedSader.getDataValue("id"),
+          },
+          {
+            officer_id: reqBodyData.officer_id,
+            sader_id: storedSader.getDataValue("id"),
+          },
+        ]);
+        let gehaatIdsObjs: { id: any }[] = selectedGehaat.map((branch: any) => {
+          return { id: branch.value };
+        });
+        let Sader_GehaaRows = gehaatIdsObjs.map((gehaaIdObj) => {
+          return {
+            sader_id: storedSader.getDataValue("id"),
+            gehaa_id: gehaaIdObj.id,
+          };
+        });
+        console.log({ Sader_GehaaRows });
+
+        await Sader_Gehaa.bulkCreate(Sader_GehaaRows);
+
+        t.commit();
+        resolve();
+      } catch (error) {
+        t.rollback();
+        reject(error);
+      }
+    });
+  }
+  public static async update(
+    reqBodyData: any,
+    fileLocationPath: string | null = null
+  ) {
+    return new Promise(async (resolve: any, reject: any) => {
+      const t = await sequelize.transaction();
+      try {
+        console.log({reqBodyData});
+        let selectedGehaat = JSON.parse(reqBodyData.gehaat);
+        let lastWared = await Wared.findOne({
+          where: {
+            doc_num: reqBodyData.lastWaredNum,
+          },
+        }).catch((err) => {
+          return null;
+        });
+        let lastWared_id = lastWared ? lastWared.getDataValue("id") : null;
+        let assistantBranch = await Branches.findOne({
+          where: {
+            id: reqBodyData.branch_id,
+          },
+        }).catch((err) => {
+          return null;
+        });
+        let assistantBranchId = assistantBranch?.getDataValue("id");
+        let modifiedSaderData = {
+          doc_num: reqBodyData.doc_num,
+          doc_date: reqBodyData.doc_date,
+          branch_id: reqBodyData.branch_id,
+          subject: reqBodyData.subject,
+          known: reqBodyData.branch_id,
+          officer_id: reqBodyData.officer_id,
+          lastWared_id,
+          register_date: getTodaysDate(),
+          type: reqBodyData.type,
+          register_user: "1",
+          attach: fileLocationPath,
+        };
+        // let storedSader = await Sader.create({
+        //   doc_num: reqBodyData.doc_num,
+        //   doc_date: reqBodyData.doc_date,
+        //   branch_id: reqBodyData.branch_id,
+        //   subject: reqBodyData.subject,
+        //   known: reqBodyData.branch_id,
+        //   officer_id: reqBodyData.officer_id,
+        //   lastWared_id,
+        //   register_date: getTodaysDate(),
+        //   type: reqBodyData.type,
+        //   register_user: "1",
+        //   attach: fileLocationPath,
+        // });
+        let modifiedSader = await Sader.update(modifiedSaderData, {
+          where: { id: reqBodyData["saderId"] },
+        });
+        await Sadertrackingofficers.destroy({
+          where: {
+            sader_id: reqBodyData["saderId"],
+          },
+        });
+        await Sadertrackingofficers.bulkCreate([
+          {
+            officer_id: assistantBranchId,
+            sader_id: reqBodyData["saderId"]
+          },
+          {
+            officer_id: reqBodyData.officer_id,
+            sader_id: reqBodyData["saderId"]
+          },
+        ]);
+        let gehaatIdsObjs: { id: any }[] = selectedGehaat.map((branch: any) => {
+          return { id: branch.value };
+        });
+        let Sader_GehaaRows = gehaatIdsObjs.map((gehaaIdObj) => {
+          return {
+            sader_id: reqBodyData["saderId"] ,
+            gehaa_id: gehaaIdObj.id,
+          };
+        });
+        console.log({ Sader_GehaaRows });
+        await Sader_Gehaa.destroy({
+          where: {
+            sader_id: reqBodyData["saderId"],
+          },
+        });
+        await Sader_Gehaa.bulkCreate(Sader_GehaaRows);
+
+        t.commit();
+        resolve();
+      } catch (error) {
+        t.rollback();
+        reject(error);
+      }
+    });
   }
 }

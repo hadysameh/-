@@ -1,7 +1,7 @@
 import WaredController from "../../controllers/WaredController";
 import express from "express";
 import {Request,Response} from 'express'
-import upload from '../../middelwares/multer'
+import {waredUpload} from '../../middelwares/multer'
 
 const waredRouter = express.Router();
 
@@ -14,7 +14,7 @@ waredRouter.get('/wared',WaredController.getOne)
 // waredRouter.get('/waredbox',WaredController.get)
 waredRouter.get('/waredbox/searchOptions',WaredController.getSearchOptions)
 waredRouter.get('/waredbox/search',WaredController.getSearch)
-waredRouter.post('/waredbox/store', upload.single('mokatbaPdf'),WaredController.store)
+waredRouter.post('/waredbox/store', waredUpload.single('mokatbaPdf'),WaredController.store)
 
-waredRouter.put('/waredbox/edit', upload.single('mokatbaPdf'),WaredController.update)
+waredRouter.put('/waredbox/edit', waredUpload.single('mokatbaPdf'),WaredController.update)
 export default waredRouter

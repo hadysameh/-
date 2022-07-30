@@ -15,7 +15,14 @@ class WaredRepo {
       where: {
         id,
       },
-      include: [Officers, Branches, Gehaa],
+      include: [
+        {
+          model: Officers,
+          as: "Wared_Officers",
+        },
+        Branches,
+        Gehaa,
+      ],
     });
     return mokatba;
   }
@@ -58,13 +65,7 @@ class WaredRepo {
     const addDaysToDate = (date: string, numOfDays: any) => {
       let tempDate = new Date(date);
       tempDate.setDate(tempDate.getDate() + Number(numOfDays));
-      // console.log(
-      //   new Date(tempDate).toISOString().slice(0, 19).replace(/T.*/, ""),
-      //   {
-      //     date,
-      //     numOfDays,
-      //   }
-      // );
+      
       let result = new Date(tempDate)
         .toISOString()
         .slice(0, 19)
@@ -99,6 +100,7 @@ class WaredRepo {
     if (searchParams.officerId) {
       includeParams.push({
         model: Officers,
+        as: "Wared_Officers",
         where: { id: searchParams.officerId },
       });
       // whereParams["id"] = `${searchParams.officerId}`;
@@ -136,9 +138,17 @@ class WaredRepo {
     // console.log({ whereParams });
     let wareds = await Wared.findAll({
       where: whereParams,
-      include: [Officers, Branches, Gehaa, ...includeParams],
+      include: [
+        {
+          model: Officers,
+          as: "Wared_Officers",
+        },
+        Branches,
+        Gehaa,
+        ...includeParams,
+      ],
       limit: Number(searchParams.numOfRecords),
-      order: orderByArr.length == 0 ? [["register_date", "DESC"]] : orderByArr,
+      order: orderByArr.length == 0 ? [["id", "DESC"]] : orderByArr,
       offset: Number(searchParams.numOfRecords) * Number(searchParams.pageNum),
     });
     return wareds;
@@ -181,7 +191,7 @@ class WaredRepo {
           doc_dept_num: reqBodyData.doc_dept_num,
           doc_date: reqBodyData.doc_date,
           subject: reqBodyData.subject,
-          docDeadline: reqBodyData.reqBodyData ? reqBodyData.reqBodyData : null,
+          docDeadline: reqBodyData.docDeadline ? reqBodyData.docDeadline : null,
           gehaa_id: reqBodyData.gehaa_id,
           known: reqBodyData.docDeadline ? "0" : "1",
           deliver_date: reqBodyData.deliver_date,
@@ -258,7 +268,7 @@ class WaredRepo {
         // If the execution reaches this line, an error was thrown.
         // We rollback the transaction.
         await t.rollback();
-        reject("");
+        reject(error);
       }
     });
   }
@@ -286,7 +296,7 @@ class WaredRepo {
             return { id: selectedOfficer.value };
           }
         );
-        console.log({officersIdsObjs})
+        console.log({ officersIdsObjs });
         let branchesIdsArr = selectedBranchs.map((branch: any) => {
           return branch.value;
         });
@@ -298,12 +308,12 @@ class WaredRepo {
           return null;
         });
         let lastWared_id = lastWared?.getDataValue("id");
-        let modifiedWaredData:any = {
+        let modifiedWaredData: any = {
           doc_num: reqBodyData.doc_num,
           doc_dept_num: reqBodyData.doc_dept_num,
           doc_date: reqBodyData.doc_date,
           subject: reqBodyData.subject,
-          docDeadline: reqBodyData.reqBodyData ? reqBodyData.reqBodyData : null,
+          docDeadline: reqBodyData.docDeadline ? reqBodyData.docDeadline : null,
           gehaa_id: reqBodyData.gehaa_id,
           known: reqBodyData.docDeadline ? "0" : "1",
           deliver_date: reqBodyData.deliver_date,
@@ -314,12 +324,9 @@ class WaredRepo {
         if (fileLocationPath) {
           modifiedWaredData["attach"] = fileLocationPath;
         }
-        let modifiedWared = await Wared.update(
-          modifiedWaredData,
-          {
-            where: { id: reqBodyData["waredId"] },
-          }
-        );
+        let modifiedWared = await Wared.update(modifiedWaredData, {
+          where: { id: reqBodyData["waredId"] },
+        });
 
         let wared_branches_rows = branchesIdsObjs.map(
           (brancheIdObj: { id: any }) => {
@@ -337,7 +344,7 @@ class WaredRepo {
             };
           }
         );
-        console.log({ wared_branches_rows, wared_officers_rows });
+        // console.log({ wared_branches_rows, wared_officers_rows });
 
         await Wared_Branches.destroy({
           where: {
@@ -388,13 +395,24 @@ class WaredRepo {
           ...waredTrackingOfficersRowsPt1,
           ...waredTrackingOfficersRowsPt2,
         ];
-        
-        let modifiedWaredTrackingOfficers = await WaredTrackingOfficers.update(
+
+        await WaredTrackingOfficers.destroy({
+          where: {
+            wared_id: reqBodyData["waredId"],
+          },
+        });
+        let modifiedWaredTrackingOfficers = await WaredTrackingOfficers.bulkCreate(
           waredtrackingOfficersRows,
           {
-            where: { wared_id: reqBodyData["waredId"] },
+            updateOnDuplicate: ["wared_id"],
           }
         );
+        // let modifiedWaredTrackingOfficers = await WaredTrackingOfficers.update(
+        //   waredtrackingOfficersRows,
+        //   {
+        //     where: { wared_id: reqBodyData["waredId"] },
+        //   }
+        // );
         resolve();
         await t.commit();
       } catch (error) {

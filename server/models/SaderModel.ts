@@ -45,6 +45,7 @@ const Sader = seqeulize.define(
     },
     register_date: {
       type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
       allowNull: false,
     },
     year: {
