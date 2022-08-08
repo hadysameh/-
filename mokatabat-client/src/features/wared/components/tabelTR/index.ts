@@ -1,0 +1,1 @@
+export {TabelTR} from './TabelTR'
