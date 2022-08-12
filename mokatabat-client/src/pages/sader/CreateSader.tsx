@@ -1,22 +1,20 @@
-import { WaredForm } from "../../features/wared/components/waredForm";
+import { SaderForm } from "../../features/sader/components/saderForm";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { serverApiUrl } from "../../config";
-
-function CreateWared() {
+function CreateSader() {
   let navigate = useNavigate();
-
   const requiredFileds = {
     selectedFile: true,
   };
-  const submitNewWared = useCallback((formData: FormData) => {
+  const submitNewSader = useCallback((formData: FormData) => {
     axios
-      .post(serverApiUrl + "api/waredbox/store", formData)
+      .post("http://localhost:3125/api/saderbox/store", formData)
       .then((res) => {
         console.log(res);
         console.log("will navigate");
-        navigate("/waredbox");
+        navigate("/saderbox");
       })
       .catch((err) => {
         alert("فشل في تسجيل المكاتبة الرجاء التحقق من البيانات المدخلة");
@@ -25,12 +23,9 @@ function CreateWared() {
   }, []);
   return (
     <>
-      <WaredForm
-        submitFormData={submitNewWared}
-        requiredFields={requiredFileds}
-      />
+      <SaderForm submitFormDataMethod={submitNewSader} requiredFields={requiredFileds} />
     </>
   );
 }
 
-export default CreateWared;
+export default CreateSader;

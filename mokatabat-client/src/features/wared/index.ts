@@ -1,3 +1,3 @@
 export { SearchBox } from "./components/searchBox";
-export { TabelTR } from "./components/tabelTR";
+export { WaredTabelTR } from "./components/waredTabelTR";
 export { WaredForm } from "./components/waredForm";

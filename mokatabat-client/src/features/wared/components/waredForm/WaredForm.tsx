@@ -9,21 +9,14 @@ import { serverApiUrl } from "../../../../config";
 interface IProps {
   submitFormData: Function;
   requiredFields: {
-    docNum: any;
-    docDepNum: any;
-    mokatbaDate: any;
-    mokatbaDeliveryDate: any;
-    subject: any;
-    deadLineDate: any;
-    lastWaredNum: any;
-    type: any;
-    selectedGehaa: any;
-    selectedBranchs: any;
-    selectedOfficers: any;
     selectedFile: any;
   };
+  /**
+   * if this form is used in edit page we will use this prop
+   */
+  waredIdToEdit?: any;
 }
-function WaredForm({ submitFormData, requiredFields }: IProps) {
+function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
   let navigate = useNavigate();
   const [hasDeadline, setHasDeadline] = useState(false);
 
@@ -48,11 +41,48 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
   const [isFilePicked, setIsFilePicked] = useState(false);
 
   useEffect(() => {
-    axios.get(serverApiUrl + "waredbox/searchoptions").then((res) => {
+    axios.get(serverApiUrl + "api/waredbox/searchoptions").then((res) => {
       setGehaat(res.data.gehaat);
       setBranchs(res.data.branches);
       setOfficers(res.data.officers);
     });
+  }, []);
+  useEffect(() => {
+    // console.log("will fetch");
+    axios
+      .get(serverApiUrl + "api/wared/", {
+        params: { id: waredIdToEdit },
+      })
+      .then((res) => {
+        let { data } = res;
+        console.log(res.data);
+        setDocNum(data.doc_num);
+        setDocDepNum(data.doc_dept_num);
+        setMokatbaDate(data.doc_date);
+        setMokatbaDeliveryDate(data.deliver_date);
+        setSubject(data.subject);
+        setDeadLineDate(data.docDeadline);
+        setLastWaredNum(data.lastWared_id);
+        setType(data.type);
+        setSelectedGehaa(data.gehaa);
+        if (data.deadline) {
+          setDeadLineDate(data.deadline);
+          setHasDeadline(true);
+        }
+        let { branches } = data;
+        setSelectedBranchs(
+          branches.map((branch: any) => {
+            return { label: branch.name, value: branch.id };
+          })
+        );
+        let { Wared_Officers } = data;
+
+        setSelectedOfficers(
+          Wared_Officers.map((officer: any) => {
+            return { label: officer.name, value: officer.id };
+          })
+        );
+      });
   }, []);
   return (
     <div className="container">
@@ -73,7 +103,7 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
                     type="text"
                     className="form-control fs-3"
                     id="exampleInputEmail1"
-                    required={requiredFields.docNum}
+                    required
                     onChange={(e) => {
                       setDocNum(e.target.value);
                     }}
@@ -90,7 +120,7 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
                     type="text"
                     className="form-control fs-3"
                     id="exampleInputEmail1"
-                    required={requiredFields.docDepNum}
+                    required
                     onChange={(e) => {
                       setDocDepNum(e.target.value);
                     }}
@@ -107,7 +137,7 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
                   <label className="form-label">تاريخ المكاتبة</label>
                   <input
                     type="date"
-                    required={requiredFields.mokatbaDate}
+                    required
                     className="form-control fs-3"
                     id="exampleInputEmail1"
                     onChange={(e) => {
@@ -123,7 +153,7 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
                 <div className="mb-3">
                   <label className="form-label">تاريخ استلام المكاتبة</label>
                   <input
-                    required={requiredFields.mokatbaDeliveryDate}
+                    required
                     type="date"
                     className="form-control fs-3"
                     id="exampleInputEmail1"
@@ -159,7 +189,7 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
             <div className="col-10">
               <label className="form-label">الموضوع</label>
               <input
-                required={requiredFields.subject}
+                required
                 type="text"
                 className="form-control fs-3"
                 id="exampleInputPassword1"
@@ -173,28 +203,34 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
           <div className="mb-3">
             <div className="col-10">
               <label className="form-label">جهة الوارد</label>
-              <input
-                required={requiredFields.selectedGehaa}
-                className="form-control fs-3"
-                list="gehaatOptions"
-                id="exampleDataList"
-                placeholder="Type to search..."
-                value={selectedGehaa ? selectedGehaa.name : ""}
-                onChange={(e) => {
-                  let choosedGehaahName = e.target.value;
-                  let choosedGehaa: any = gehaat.find((gehaa: any) => {
-                    return gehaa.name == choosedGehaahName;
-                  });
-                  setSelectedGehaa(choosedGehaa);
-                }}
-              ></input>
-              <datalist id="gehaatOptions">
-                {gehaat.map((gehaa: any) => {
-                  return (
-                    <option key={gehaa.id + gehaa.name}>{gehaa.name}</option>
-                  );
-                })}
-              </datalist>
+              {!isArrEmpty(gehaat) && (
+                <>
+                  <input
+                    required
+                    className="form-control fs-3"
+                    list="gehaatOptions"
+                    id="exampleDataList"
+                    placeholder="Type to search..."
+                    value={selectedGehaa ? selectedGehaa.name : ""}
+                    onChange={(e) => {
+                      let choosedGehaahName = e.target.value;
+                      let choosedGehaa: any = gehaat.find((gehaa: any) => {
+                        return gehaa.name == choosedGehaahName;
+                      });
+                      setSelectedGehaa(choosedGehaa);
+                    }}
+                  ></input>
+                  <datalist id="gehaatOptions">
+                    {gehaat.map((gehaa: any) => {
+                      return (
+                        <option key={gehaa.id + gehaa.name}>
+                          {gehaa.name}
+                        </option>
+                      );
+                    })}
+                  </datalist>
+                </>
+              )}
             </div>
           </div>
           <div className="container">
@@ -202,14 +238,16 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
               <div className="col-10">
                 <label className="form-label">الافرع المختصة </label>
 
-                <MultiSelect
-                  options={branchs.map((branch: any) => {
-                    return { label: branch.name, value: branch.id };
-                  })}
-                  value={selectedBranchs}
-                  onChange={setSelectedBranchs}
-                  labelledBy="Select"
-                />
+                {!isArrEmpty(branchs) && (
+                  <MultiSelect
+                    options={branchs.map((branch: any) => {
+                      return { label: branch.name, value: branch.id };
+                    })}
+                    value={selectedBranchs}
+                    onChange={setSelectedBranchs}
+                    labelledBy="Select"
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -218,14 +256,16 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
               <div className="col-10">
                 <label className="form-label">الضباط المختصين</label>
 
-                <MultiSelect
-                  options={officers.map((officer: any) => {
-                    return { label: officer.name, value: officer.id };
-                  })}
-                  value={selectedOfficers}
-                  onChange={setSelectedOfficers}
-                  labelledBy="Select"
-                />
+                {!isArrEmpty(officers) && (
+                  <MultiSelect
+                    options={officers.map((officer: any) => {
+                      return { label: officer.name, value: officer.id };
+                    })}
+                    value={selectedOfficers}
+                    onChange={setSelectedOfficers}
+                    labelledBy="Select"
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -235,7 +275,6 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
               <input
                 className="form-check-input"
                 type="checkbox"
-                required={requiredFields.selectedOfficers}
                 id="flexCheckDefault"
                 onChange={() => {
                   setHasDeadline(!hasDeadline);
@@ -279,7 +318,6 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
                     ايماءً الى مكاتبة رقم: (اختياري)
                   </label>
                   <input
-                    required={requiredFields.lastWaredNum}
                     type="text"
                     className="form-control"
                     id="exampleInputEmail1"
@@ -298,7 +336,7 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
                 <label className="form-label">ملف المكاتبة</label>
                 <input
                   className="form-control form-control-lg"
-                  required={requiredFields.selectedFile}
+                  required
                   id="formFileLg"
                   type="file"
                   onChange={(e) => {
@@ -335,30 +373,48 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
             onClick={() => {
               // const isReqFieldsFilled = true;
               const isReqFieldsFilled = (): boolean => {
+                const isFieldValid = (
+                  filed: any,
+                  isFieldRequired: boolean
+                ): boolean => {
+                  if (isFieldRequired) {
+                    if (filed) {
+                      return true;
+                    }
+                    return false;
+                  }
+                  return true;
+                };
                 if (
                   docNum &&
-                  requiredFields.docNum &&
                   docDepNum &&
-                  requiredFields.docDepNum &&
                   mokatbaDate &&
-                  requiredFields.mokatbaDate &&
                   mokatbaDeliveryDate &&
-                  requiredFields.mokatbaDeliveryDate &&
                   subject &&
-                  requiredFields.subject &&
                   !isObjEmpty(selectedGehaa) &&
                   !isArrEmpty(selectedBranchs) &&
                   !isArrEmpty(selectedOfficers) &&
-                  selectedFile &&
-                  requiredFields.selectedFile
+                  isFieldValid(selectedFile, requiredFields.selectedFile)
                 ) {
                   return true;
                 }
+                console.log({
+                  docNum,
+                  docDepNum,
+                  mokatbaDate,
+                  mokatbaDeliveryDate,
+                  subject,
+                  selectedGehaa,
+                  selectedBranchs,
+                  selectedOfficers,
+                });
                 return false;
               };
               if (isReqFieldsFilled()) {
                 let formData = new FormData();
-
+                if (waredIdToEdit) {
+                  formData.append("waredId", waredIdToEdit);
+                }
                 formData.append("doc_num", docNum);
                 formData.append("doc_dept_num", docDepNum);
                 formData.append("type", type);
@@ -378,21 +434,7 @@ function WaredForm({ submitFormData, requiredFields }: IProps) {
                   JSON.stringify(selectedOfficers)
                 );
                 formData.append("mokatbaPdf", selectedFile);
-                // console.log({ selectedBranchs, selectedOfficers });
                 submitFormData(formData);
-                // axios
-                //   .post(serverApiUrl + "/waredbox/store", formData)
-                //   .then((res: any) => {
-                //     console.log(res);
-                //     console.log("will navigate");
-                //     navigate("/waredbox");
-                //   })
-                //   .catch((err: any) => {
-                //     alert(
-                //       "فشل في تسجيل المكاتبة الرجاء التحقق من البيانات المدخلة"
-                //     );
-                //     console.log({ err, msg: "error" });
-                //   });
               } else {
                 alert("من فضلك قم بملأ الخانات المطلوبة");
               }

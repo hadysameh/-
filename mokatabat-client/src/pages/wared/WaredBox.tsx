@@ -1,5 +1,5 @@
 import { SearchBox } from "../../features/wared";
-import { TabelTR } from "../../features/wared";
+import { WaredTabelTR } from "../../features/wared";
 import { useEffect } from "react";
 import HorizontalSpinner from "../../components/HorizontalSpinner";
 import axios from "axios";
@@ -180,7 +180,7 @@ function WaredBox() {
             </thead>
             <tbody>
               {waredBoxRecords.map((row: any, index: number) => {
-                return <TabelTR key={index} row={row}></TabelTR>;
+                return <WaredTabelTR key={index} row={row}></WaredTabelTR>;
               })}
             </tbody>
           </table>

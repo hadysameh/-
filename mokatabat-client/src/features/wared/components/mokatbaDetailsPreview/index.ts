@@ -1,0 +1,1 @@
+export {MokatbaDetailsPreview} from './MokatbaDetailsPreview'

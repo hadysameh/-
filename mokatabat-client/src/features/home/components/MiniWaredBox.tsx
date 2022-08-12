@@ -23,14 +23,8 @@ function MiniWaredBox() {
       .then((res) => {
         if (res.data) {
           let { data } = res;
-          // console.log({ waredData: data });
           setIsShowSpinner(false);
           setWaredBoxRecords(res.data);
-          // window.scroll({
-          //   top: 500,
-          //   left: 0,
-          //   behavior: "smooth",
-          // });
         }
       })
       .catch((err) => {
@@ -68,7 +62,7 @@ function MiniWaredBox() {
           <tbody>
             {waredBoxRecords.map((waredBoxRecord: any, index: number) => {
               return (
-                <tr key={index}>
+                <tr key={index+waredBoxRecord.id}>
                   <th>
                     <a
                       href={`/wared/${waredBoxRecord.id}`}

@@ -1,9 +1,8 @@
-
 let aStyle = {
   textDecoration: "none",
   color: "#000",
 };
-function TabelTR({ row }: { row: any }) {
+function WaredTabelTR({ row }: { row: any }) {
   return (
     <tr>
       <td>
@@ -104,4 +103,4 @@ function TabelTR({ row }: { row: any }) {
     </tr>
   );
 }
-export { TabelTR };
+export { WaredTabelTR };

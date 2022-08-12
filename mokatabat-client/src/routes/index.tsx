@@ -4,7 +4,12 @@ import RedirectIfAuth from "../middlewares/routesMiddlewares/RedirectIfAuth";
 import RedirectIfNotAuth from "../middlewares/routesMiddlewares/RedirectIfNotAuth";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from "../pages/home/HomePage";
- import {Login,Logout,Register} from '../features/user' 
+import { Login, Logout, Register } from "../features/user";
+import CreateWared from "../pages/wared/CreateWared";
+import EditWared from "../pages/wared/EditWared";
+import MokatbaDetailsPreview from "../pages/wared/MokatbaDetailsPreview";
+import CreateSader from "../pages/sader/CreateSader";
+import SaderBox from "../pages/sader/SaderBox";
 //this should be exported to app.js file
 let routes = (
   <BrowserRouter>
@@ -14,12 +19,10 @@ let routes = (
         path="/"
         element={
           <RedirectIfNotAuth>
-           <Home/>
+            <Home />
           </RedirectIfNotAuth>
         }
       />
-      {/* wared pages */}
-
       <Route
         path="/waredbox"
         element={
@@ -32,7 +35,7 @@ let routes = (
         path="/login"
         element={
           <RedirectIfAuth>
-            <Login/>
+            <Login />
           </RedirectIfAuth>
         }
       />
@@ -43,12 +46,12 @@ let routes = (
             <Logout />
           </RedirectIfNotAuth>
         }
-      /> 
-      {/* <Route
-        path="/wared/:mokatbaId"
+      />
+      <Route
+        path="/createwared"
         element={
           <RedirectIfNotAuth>
-            <MokatbaPage />
+            <CreateWared />
           </RedirectIfNotAuth>
         }
       />
@@ -56,23 +59,23 @@ let routes = (
         path="/wared/edit/:mokatbaId"
         element={
           <RedirectIfNotAuth>
-            <EditWaredPage />
+            <EditWared />
           </RedirectIfNotAuth>
         }
       />
       <Route
-        path="/mokatbapdf/:mokatbaId"
+        path="/wared/:mokatbaId"
         element={
           <RedirectIfNotAuth>
-            <MokatbaPdfPage />
+            <MokatbaDetailsPreview />
           </RedirectIfNotAuth>
         }
       />
       <Route
-        path="/createwared"
+        path="/createsader"
         element={
           <RedirectIfNotAuth>
-            <CreateWaredPage />
+            <CreateSader />
           </RedirectIfNotAuth>
         }
       />
@@ -84,74 +87,6 @@ let routes = (
           </RedirectIfNotAuth>
         }
       />
-      <Route
-        path="/sader/:saderId"
-        element={
-          <RedirectIfNotAuth>
-            <SaderPage />
-          </RedirectIfNotAuth>
-        }
-      />
-      <Route
-        path="/sader/edit/:saderId"
-        element={
-          <RedirectIfNotAuth>
-            <EditSaderPage />
-          </RedirectIfNotAuth>
-        }
-      />
-      <Route
-        path="/createsader"
-        element={
-          <RedirectIfNotAuth>
-            <CreateSaderPage />
-          </RedirectIfNotAuth>
-        }
-      />
-      <Route
-        path="/redcircle"
-        element={
-          <RedirectIfNotAuth>
-            <RedCircle />
-          </RedirectIfNotAuth>
-        }
-      />
-      <Route
-        path="/greencircle"
-        element={
-          <RedirectIfNotAuth>
-            <GreenCircle />
-          </RedirectIfNotAuth>
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          <RedirectIfAuth>
-            <Login />
-          </RedirectIfAuth>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <RedirectIfAuth>
-            <Register />
-          </RedirectIfAuth>
-        }
-      />
-      <Route
-        path="/logout"
-        element={
-          <RedirectIfNotAuth>
-            <Logout />
-          </RedirectIfNotAuth>
-        }
-      /> 
-
-      {/*<Route path="/sader/edit/:mokatbaId" element={<EditWaredPage/>} />
-      <Route path="/saderpdf/:mokatbaId" element={<MokatbaPdfPage/>} />
-      <Route path="/createsader" element={<CreateWaredPage/>} /> */}
     </Routes>
   </BrowserRouter>
 );
