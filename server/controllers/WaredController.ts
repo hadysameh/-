@@ -7,7 +7,6 @@ class WaredController {
     let id = req.query.id;
     try {
       let result = await WaredRepo.getById(id);
-      // console.log({ result }, result._rows);
       res.json(result);
     } catch (error) {
       console.log({ error });
@@ -40,7 +39,7 @@ class WaredController {
   public static async getSearch(req: Request, res: Response): Promise<any> {
     let params = req.query;
     try {
-      let result = await WaredRepo.getWithParams(params);
+      let result = await WaredRepo.getWithParams(params,req.user);
       res.json(result);
     } catch (error) {
       console.log({ error });

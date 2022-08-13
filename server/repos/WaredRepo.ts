@@ -60,7 +60,7 @@ class WaredRepo {
     });
   }
 
-  public static async getWithParams(searchParams: any): Promise<any> {
+  public static async getWithParams(searchParams: any,user:any): Promise<any> {
     const todaysDate = new Date().toISOString().slice(0, 19).replace(/T.*/, "");
     const addDaysToDate = (date: string, numOfDays: any) => {
       let tempDate = new Date(date);

@@ -4,6 +4,13 @@ import User from "../models/NewAuthModels/User";
 import UserType from "../models/NewAuthModels/UserTypes";
 import Premission from "../models/NewAuthModels/Premissions";
 import Officers from "../models/OfficersModel";
+declare global {
+  namespace Express {
+    interface Request {
+      user: any
+    }
+  }
+}
 export default async function isAuth(req: any, res: Response, next: any) {
   try {
     let privateKey = String(process.env.jwtKey);
