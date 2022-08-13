@@ -32,7 +32,7 @@ class SaderController {
   }
   public static async store(req: Request, res: Response): Promise<any> {
     let filePathInUploadsFolder = req.file?.destination.replace(
-      "./server/uploads/",
+      "./uploads/",
       ""
     );
     let filePathToStore: string = req.file
@@ -53,14 +53,14 @@ class SaderController {
     let filePathToStore: string | null = null;
     if (req.file) {
       let filePathInUploadsFolder = req.file?.destination.replace(
-        "./server/uploads/",
+        "./uploads/",
         ""
       );
       filePathToStore = req.file
         ? filePathInUploadsFolder + "/" + req.file.filename
         : "";
     }
-    console.log(req.body);
+    // console.log(req.body);
     try {
       await SaderRepo.update(req.body, filePathToStore);
       res.status(200).json({ msg: "ok" });

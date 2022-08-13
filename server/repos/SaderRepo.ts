@@ -198,7 +198,7 @@ export default class SaderRepo {
     return new Promise(async (resolve: any, reject: any) => {
       const t = await sequelize.transaction();
       try {
-        console.log({reqBodyData});
+        // console.log({reqBodyData});
         let selectedGehaat = JSON.parse(reqBodyData.gehaat);
         let lastWared = await Wared.findOne({
           where: {
@@ -216,7 +216,7 @@ export default class SaderRepo {
           return null;
         });
         let assistantBranchId = assistantBranch?.getDataValue("id");
-        let modifiedSaderData = {
+        let modifiedSaderData: any = {
           doc_num: reqBodyData.doc_num,
           doc_date: reqBodyData.doc_date,
           branch_id: reqBodyData.branch_id,
@@ -227,21 +227,10 @@ export default class SaderRepo {
           register_date: getTodaysDate(),
           type: reqBodyData.type,
           register_user: "1",
-          attach: fileLocationPath,
         };
-        // let storedSader = await Sader.create({
-        //   doc_num: reqBodyData.doc_num,
-        //   doc_date: reqBodyData.doc_date,
-        //   branch_id: reqBodyData.branch_id,
-        //   subject: reqBodyData.subject,
-        //   known: reqBodyData.branch_id,
-        //   officer_id: reqBodyData.officer_id,
-        //   lastWared_id,
-        //   register_date: getTodaysDate(),
-        //   type: reqBodyData.type,
-        //   register_user: "1",
-        //   attach: fileLocationPath,
-        // });
+        if (fileLocationPath) {
+          modifiedSaderData["attach"] = fileLocationPath;
+        }
         let modifiedSader = await Sader.update(modifiedSaderData, {
           where: { id: reqBodyData["saderId"] },
         });
@@ -253,11 +242,11 @@ export default class SaderRepo {
         await Sadertrackingofficers.bulkCreate([
           {
             officer_id: assistantBranchId,
-            sader_id: reqBodyData["saderId"]
+            sader_id: reqBodyData["saderId"],
           },
           {
             officer_id: reqBodyData.officer_id,
-            sader_id: reqBodyData["saderId"]
+            sader_id: reqBodyData["saderId"],
           },
         ]);
         let gehaatIdsObjs: { id: any }[] = selectedGehaat.map((branch: any) => {
@@ -265,11 +254,11 @@ export default class SaderRepo {
         });
         let Sader_GehaaRows = gehaatIdsObjs.map((gehaaIdObj) => {
           return {
-            sader_id: reqBodyData["saderId"] ,
+            sader_id: reqBodyData["saderId"],
             gehaa_id: gehaaIdObj.id,
           };
         });
-        console.log({ Sader_GehaaRows });
+        // console.log({ Sader_GehaaRows });
         await Sader_Gehaa.destroy({
           where: {
             sader_id: reqBodyData["saderId"],

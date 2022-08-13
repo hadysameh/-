@@ -1,8 +1,8 @@
-import seqeulize from "../db/seqeulize";
+import seqeulize from "../../db/seqeulize";
 import { DataTypes } from "sequelize";
 
-const Auth_Group = seqeulize.define(
-  "auth_group",
+const Auth_User_Groups = seqeulize.define(
+  "auth_user_groups",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -10,10 +10,14 @@ const Auth_Group = seqeulize.define(
       primaryKey: true,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING(80),
+    user_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-    }, 
+    },
+    group_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     // to make the tabel name equal the model name
@@ -21,4 +25,4 @@ const Auth_Group = seqeulize.define(
     timestamps: false,
   }
 );
-export default Auth_Group;
+export default Auth_User_Groups;

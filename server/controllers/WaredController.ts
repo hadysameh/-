@@ -3,7 +3,7 @@ import WaredRepo from "../repos/WaredRepo";
 
 class WaredController {
   public static async getOne(req: Request, res: Response): Promise<any> {
-    console.log({ reqParams: req.query });
+    // console.log({ reqParams: req.query });
     let id = req.query.id;
     try {
       let result = await WaredRepo.getById(id);
@@ -39,10 +39,8 @@ class WaredController {
   }
   public static async getSearch(req: Request, res: Response): Promise<any> {
     let params = req.query;
-    // console.log({params})
     try {
       let result = await WaredRepo.getWithParams(params);
-      // console.log({result});
       res.json(result);
     } catch (error) {
       console.log({ error });
@@ -50,14 +48,12 @@ class WaredController {
   }
 
   public static async store(req: Request, res: Response): Promise<any> {
-    /*console.log({body:req.body})
-    console.log({file:req.file})*/
-    // console.log({ filePath: req.file?.path });
-    //  the file is stored due to multer middleware
+   
     let filePathInUploadsFolder = req.file?.destination.replace(
-      "./server/uploads/",
+      "./uploads/",
       ""
     );
+    // console.log({file:req.file})
     let filePathToStore: string = req.file
       ? filePathInUploadsFolder + "/" + req.file.filename
       : "";
@@ -71,12 +67,12 @@ class WaredController {
     }
   }
   public static async update(req: Request, res: Response): Promise<any> {
-    console.log({ body: req.body });
+    // console.log({ body: req.body });
     // console.log({file:req.file})
     let filePathToStore: string | null = null;
     if (req.file) {
       let filePathInUploadsFolder = req.file?.destination.replace(
-        "./server/uploads/",
+        "./uploads/",
         ""
       );
       filePathToStore = req.file

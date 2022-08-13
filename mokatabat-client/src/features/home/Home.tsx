@@ -11,6 +11,7 @@ function Home() {
   const [saderCount, setSaderCount] = useState(0);
   const [redCircleCount, setRedCircleCount] = useState(0);
   const [greenCircleCount, setGreenCircleCount] = useState(0);
+
   useEffect(() => {
     axios.get(serverApiUrl + "api/home").then((res) => {
       let { data } = res;
@@ -53,14 +54,14 @@ function Home() {
             backGroundColor="rgb(28 187 55 / 78%)"
             textUnderCircle="بعيدة عن الحد الأقصى"
             textInCircle={String(greenCircleCount)}
-            link="/greencircle"
+            link="/greencirclewaredbox"
           />
 
           <Circle
             backGroundColor="#d4203fc7"
             textUnderCircle="قريبة من او تجاوزت الحد الأقصى"
             textInCircle={String(redCircleCount)}
-            link="/redcircle"
+            link="/redcirclewaredbox"
           />
         </div>
 

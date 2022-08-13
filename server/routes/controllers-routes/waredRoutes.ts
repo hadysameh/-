@@ -1,7 +1,8 @@
 import WaredController from "../../controllers/WaredController";
 import express from "express";
-import {Request,Response} from 'express'
-import {waredUpload} from '../../middelwares/multer'
+import { Request, Response } from "express";
+import { waredUpload } from "../../middelwares/multer";
+import isAuth from "../../middelwares/isAuth";
 
 const waredRouter = express.Router();
 
@@ -10,11 +11,25 @@ const waredRouter = express.Router();
 //     res.json('testing is done')
 
 // })
-waredRouter.get('/wared',WaredController.getOne)
+waredRouter.get("/wared", isAuth, WaredController.getOne);
 // waredRouter.get('/waredbox',WaredController.get)
-waredRouter.get('/waredbox/searchOptions',WaredController.getSearchOptions)
-waredRouter.get('/waredbox/search',WaredController.getSearch)
-waredRouter.post('/waredbox/store', waredUpload.single('mokatbaPdf'),WaredController.store)
+waredRouter.get(
+  "/waredbox/searchOptions",
+  isAuth,
+  WaredController.getSearchOptions
+);
+waredRouter.get("/waredbox/search", isAuth,WaredController.getSearch);
+waredRouter.post(
+  "/waredbox/store",
+  [isAuth,
+  waredUpload.single("mokatbaPdf")],
+  WaredController.store
+);
 
-waredRouter.put('/waredbox/edit', waredUpload.single('mokatbaPdf'),WaredController.update)
-export default waredRouter
+waredRouter.put(
+  "/waredbox/edit",
+  [isAuth,
+  waredUpload.single("mokatbaPdf")],
+  WaredController.update
+);
+export default waredRouter;

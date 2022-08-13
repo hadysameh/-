@@ -7,16 +7,6 @@ function EditWared() {
   let navigate = useNavigate();
   let { mokatbaId } = useParams();
   const requiredFileds = {
-    docNum: true,
-    docDepNum: true,
-    mokatbaDate: true,
-    mokatbaDeliveryDate: true,
-    subject: true,
-    deadLineDate: true,
-    type: true,
-    selectedGehaa: true,
-    selectedBranchs: true,
-    selectedOfficers: true,
     selectedFile: false,
   };
   const submitEditWared = useCallback((formData: FormData) => {

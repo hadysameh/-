@@ -3,7 +3,7 @@ import multer from "multer";
 import fs from "fs";
 import getCurrentYear from "../utils/getCurrentYear";
 function waredDestination(req: any, file: any, cb: any) {
-  let folderPath = "./server/uploads/waredPdf/" + getCurrentYear();
+  let folderPath = "./uploads/waredPdf/" + getCurrentYear();
   let isFolderExist = fs.existsSync(folderPath);
   if (isFolderExist) {
     cb(null, folderPath);
@@ -13,7 +13,7 @@ function waredDestination(req: any, file: any, cb: any) {
   cb(null, folderPath);
 }
 function saderDestination(req: any, file: any, cb: any) {
-  let folderPath = "./server/uploads/saderPdf/" + getCurrentYear();
+  let folderPath = "./uploads/saderPdf/" + getCurrentYear();
   let isFolderExist = fs.existsSync(folderPath);
   if (isFolderExist) {
     cb(null, folderPath);
@@ -35,10 +35,10 @@ const saderStorage = multer.diskStorage({
   },
 });
 const waredUpload = multer({
-  /* dest: 'server/uploads/',*/ storage: waredStorage,
+  /* dest: '/uploads/',*/ storage: waredStorage,
 });
 const saderUpload = multer({
-  /* dest: 'server/uploads/',*/ storage: saderStorage,
+  /* dest: '/uploads/',*/ storage: saderStorage,
 });
 
 export { waredUpload, saderUpload };

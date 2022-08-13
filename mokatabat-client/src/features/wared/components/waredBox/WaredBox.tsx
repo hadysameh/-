@@ -1,12 +1,23 @@
-import { SearchBox } from "../../features/wared";
-import { WaredTabelTR } from "../../features/wared";
+import { SearchBox } from "../searchBox";
+import { WaredTabelTR } from "../waredTabelTR";
 import { useEffect } from "react";
-import HorizontalSpinner from "../../components/HorizontalSpinner";
+import HorizontalSpinner from "../../../../components/HorizontalSpinner";
 import axios from "axios";
 import { useState } from "react";
-import { serverApiUrl } from "../../config";
+import { serverApiUrl } from "../../../../config";
+import { waredBoxType } from "../../../../types";
 
-function WaredBox() {
+interface IProps {
+  /**
+   *
+   */
+  waredBoxType: string;
+}
+function WaredBox(props: IProps) {
+  const [waredBoxTypeTitle, setWaredBoxTypeTitle] = useState<string>("");
+  const [waredBoxTypeTitleColor, setWaredBoxTypeTitleColor] = useState<string>(
+    ""
+  );
   const [waredBoxRecords, setWaredBoxRecords] = useState<any[]>([]);
   const [numOfRecords, setNumOfRecords] = useState<any>(20);
   const [pageNum, setPageNum] = useState<any>(1);
@@ -24,14 +35,23 @@ function WaredBox() {
   1 : قريبة من الحد الاقصى للتنفي 
   2 : بعيدة عن الحد الاقثى للتنفبذ
   */
-  const [withinExcutionTimeType, setWithinExcutionTimeType] = useState("0");
+  const withinExcutionTimeTypeDefaultValue =
+    props.waredBoxType === waredBoxType.normal
+      ? "0"
+      : props.waredBoxType === waredBoxType.red
+      ? "1"
+      : "2";
+
+  const [withinExcutionTimeType, setWithinExcutionTimeType] = useState<string>(
+    withinExcutionTimeTypeDefaultValue
+  );
 
   const fetchSearchResults = () => {
     setIsShowSpinner(true);
     setWaredBoxRecords([]);
     setPageNum(1);
     axios
-      .get(serverApiUrl+"api/waredbox/search", {
+      .get(serverApiUrl + "api/waredbox/search", {
         params: {
           docNum,
           docDeptNum,
@@ -64,7 +84,7 @@ function WaredBox() {
     setWaredBoxRecords([]);
 
     axios
-      .get(serverApiUrl+"api/waredbox/search", {
+      .get(serverApiUrl + "api/waredbox/search", {
         params: {
           docNum,
           docDeptNum,
@@ -91,32 +111,64 @@ function WaredBox() {
         }
       });
   };
+  /**
+   *if it's a red circle/green Page default params must have ExcutionTime params
+   *
+   */
   const fetchRowsWithNoParams = () => {
     window.scroll(0, 450);
+
+    let excutionTimeParams =
+      props.waredBoxType !== waredBoxType.normal
+        ? { DaysBeforeExecution, withinExcutionTimeType }
+        : {};
+    // console.log({ excutionTimeParams });
     axios
-      .get(serverApiUrl+"api/waredbox/search", {
+      .get(serverApiUrl + "api/waredbox/search", {
         params: {
           withinExcutionTimeType: "0",
           pageNum: 0,
           numOfRecords,
+          ...excutionTimeParams,
         },
       })
       .then((res) => {
         if (res.data) {
           setIsShowSpinner(false);
           setWaredBoxRecords(res.data);
-          console.log(res.data.length);
+          // console.log(res.data.length);
         }
       })
       .catch((err) => console.log({ err }));
   };
+  useEffect(() => {
+    if (props.waredBoxType === waredBoxType.normal) {
+      setWaredBoxTypeTitle("صندوق الوارد");
+      setWithinExcutionTimeType("0");
+    } else if (props.waredBoxType === waredBoxType.red) {
+      setWaredBoxTypeTitle("مكاتبات قريبة من او تجاوزت الحد الاقى للتنفيذ");
+      setWaredBoxTypeTitleColor("red");
+      setWithinExcutionTimeType("1");
+    } else if (props.waredBoxType === waredBoxType.green) {
+      setWaredBoxTypeTitle("مكاتبات بعيدة عن الحد الأقصى للتنفيذ");
+      setWaredBoxTypeTitleColor("green");
+      setWithinExcutionTimeType("2");
+    }
+  }, []);
   useEffect(() => {
     fetchRowsWithParams();
   }, [pageNum, numOfRecords]);
   return (
     <>
       <div className={"container"} style={{ minHeight: "1000" }}>
-        <div className="fs-2 fw-bold">صندوق الوارد</div>
+        <div
+          className="fs-2 fw-bold"
+          style={{
+            color: waredBoxTypeTitleColor ? waredBoxTypeTitleColor : "black",
+          }}
+        >
+          {waredBoxTypeTitle}
+        </div>
         <SearchBox
           docNum={docNum}
           setDocNum={setDocNum}
@@ -138,6 +190,8 @@ function WaredBox() {
           setWithinExcutionTimeType={setWithinExcutionTimeType}
           fetchSearchResults={fetchSearchResults}
           fetchRowsWithNoParams={fetchRowsWithNoParams}
+          //TODO
+          waredBoxType={props.waredBoxType}
         />
         <span className="fs-3">رقم الصفحة :{pageNum}</span>
         <div className="fs-4">
@@ -223,4 +277,4 @@ function WaredBox() {
   );
 }
 
-export default WaredBox;
+export { WaredBox };

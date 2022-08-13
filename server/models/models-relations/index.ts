@@ -1,9 +1,9 @@
 import Arms from "../ArmsModel";
-import Auth_Group from "../Auth_GroupModel";
-import Auth_Permission from "../Auth_PermissionModel";
-import Auth_User_Groups from "../Auth_User_GroupsModel";
-import Auth_User_User_Permissions from "../Auth_User_User_PermissionsModel";
-import Auth_User from "../Auth_User";
+import Auth_Group from "../OldAuthModels/Auth_GroupModel";
+import Auth_Permission from "../OldAuthModels/Auth_PermissionModel";
+import Auth_User_Groups from "../OldAuthModels/Auth_User_GroupsModel";
+import Auth_User_User_Permissions from "../OldAuthModels/Auth_User_User_PermissionsModel";
+import Auth_User from "../OldAuthModels/Auth_User";
 import Branches from "../BranchesModel";
 import Gehaa from "../GehaaModel";
 import Officers from "../OfficersModel";
@@ -15,6 +15,9 @@ import Wared from "../WaredModel";
 import Wared_Branches from "../Wared_BranchesModel";
 import Wared_Officers from "../Wared_OfficersModel";
 import WaredTrackingOfficers from "../WaredTrackingOfficersModel";
+import UserType from "../NewAuthModels/UserTypes";
+import User from "../NewAuthModels/User";
+import Premission from '../NewAuthModels/Premissions'
 // wared relations
 Wared.belongsTo(Gehaa, {
   foreignKey: "gehaa_id",
@@ -40,7 +43,6 @@ Wared.belongsToMany(Officers, {
   otherKey: "officers_id",
   onDelete: "CASCADE",
 });
-
 Wared.belongsToMany(Officers, {
   through: WaredTrackingOfficers,
   as: "WaredTrackingOfficers",
@@ -54,16 +56,13 @@ Wared.belongsToMany(Officers, {
 Sader.belongsTo(Wared, {
   foreignKey: "lastWared_id",
 });
-
 Sader.belongsTo(Officers, {
   foreignKey: "officer_id",
-  as:'SaderOfficer'
+  as: "SaderOfficer",
 });
-
 Sader.belongsTo(Branches, {
   foreignKey: "branch_id",
 });
-
 Sader.belongsToMany(Officers, {
   through: Sadertrackingofficers,
   as: "Sadertrackingofficers",
@@ -71,10 +70,23 @@ Sader.belongsToMany(Officers, {
   foreignKey: "sader_id", // replaces `productId`
   otherKey: "officer_id",
 });
-
 Sader.belongsToMany(Gehaa, {
   through: Sader_Gehaa,
   foreignKey: "sader_id", // replaces `productId`
   otherKey: "gehaa_id",
   constraints: false,
 });
+
+//------------------------------------------------------------
+
+User.belongsTo(UserType,{
+  foreignKey: "userTypeId",
+});
+
+User.belongsTo(Officers,{
+  foreignKey: "officerId",
+});
+
+UserType.belongsToMany(Premission,{
+  through:'UserType_premission'
+})

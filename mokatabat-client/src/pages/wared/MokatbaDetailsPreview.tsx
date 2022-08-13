@@ -4,6 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
 import { serverApiUrl } from "../../config";
+
 function MokatbaDetailsPreview() {
   let { mokatbaId } = useParams();
   const [mokatbaData, setMokatbaData] = useState<any>({});
@@ -193,4 +194,4 @@ function MokatbaDetailsPreview() {
     </>
   );
 }
-export { MokatbaDetailsPreview };
+export default MokatbaDetailsPreview ;

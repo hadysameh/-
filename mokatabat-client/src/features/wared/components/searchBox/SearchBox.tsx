@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { serverApiUrl } from "../../../../config";
+import { waredBoxType } from "../../../../types";
 
 interface SearchFormProps {
   setDocNum: any;
@@ -23,6 +24,7 @@ interface SearchFormProps {
   setMokatbaDate: any;
   DaysBeforeExecution: any;
   withinExcutionTimeType: any;
+  waredBoxType: string;
 }
 function SearchBox(props: SearchFormProps) {
   const [isSearched, setIsSearched] = useState(false);
@@ -33,17 +35,30 @@ function SearchBox(props: SearchFormProps) {
   const [selectedGehaaName, setSelectedGehaaName] = useState("");
   const [selectedBranchName, setSelectedBranchName] = useState("");
   const [selectedOfficerName, setSelectedOfficerName] = useState("");
+
   /*
   0 : بدون حد ادني او اقصى للتنفيذ
   1 : قريبة من الحد الاقصى للتنفي 
   2 : بعيدة عن الحد الاقثى للتنفبذ
   */
+  const [
+    showDaysBeforeExecutionFields,
+    setShowDaysBeforeExecutionFields,
+  ] = useState<boolean>(true);
+  const [defaultDaysBeforeExecution, setDefaultDaysBeforeExecution] = useState(
+    "7"
+  );
+
   useEffect(() => {
     axios.get(serverApiUrl + "api/waredbox/searchoptions").then((res) => {
       setGehaat(res.data.gehaat);
       setBranchs(res.data.branches);
       setOfficers(res.data.officers);
     });
+    // TODO : fetch from srever
+    setDefaultDaysBeforeExecution("7");
+    
+    setShowDaysBeforeExecutionFields(props.waredBoxType === waredBoxType.normal&&true);
   }, []);
 
   return (
@@ -68,6 +83,7 @@ function SearchBox(props: SearchFormProps) {
               }}
             />
           </div>
+
           <div className="col-md-3">
             <label className="form-label">رقم الإدارة</label>
             <input
@@ -81,6 +97,7 @@ function SearchBox(props: SearchFormProps) {
               }}
             />
           </div>
+
           <div className="col-md-3">
             <label className="form-label">جهة الوارد</label>
             <input
@@ -108,6 +125,7 @@ function SearchBox(props: SearchFormProps) {
               })}
             </datalist>
           </div>
+
           <div className="col-md-3">
             <label className="form-label">موضوع المكاتبة</label>
             <input
@@ -142,6 +160,7 @@ function SearchBox(props: SearchFormProps) {
                 props.setBranchId(choosedBranchId);
               }}
             ></input>
+
             <datalist id="branchsOptions">
               {branchs.map((branch: any) => {
                 return (
@@ -169,6 +188,7 @@ function SearchBox(props: SearchFormProps) {
                 props.setOfficerId(choosedOfficerId);
               }}
             ></input>
+
             <datalist id="officersOptions">
               {officers.map((officer: any) => {
                 return (
@@ -193,6 +213,43 @@ function SearchBox(props: SearchFormProps) {
               }}
             />
           </div>
+
+          {showDaysBeforeExecutionFields && (
+            <>
+              <div className="col-md-3">
+                <label className="form-label">الحد الأقصى للتنفيذ (يوم)</label>
+                <input
+                  type="text"
+                  className="form-control fs-3"
+                  id="exampleInputEmail1"
+                  // defaultValue={props.DaysBeforeExecution}
+                  value={props.DaysBeforeExecution}
+                  aria-describedby="emailHelp"
+                  onChange={(e) => {
+                    props.setDaysBeforeExecution(e.target.value);
+                  }}
+                />
+              </div>
+
+              <div className="col-md-3">
+                <label className="form-label">ضمن موعد محدد للتنفيذ</label>
+                <select
+                  id="inputState"
+                  className="form-select fs-3"
+                  value={props.withinExcutionTimeType}
+                  onChange={(e) => {
+                    props.setWithinExcutionTimeType(e.target.value);
+                  }}
+                >
+                  <option selected value="0">
+                    غير محدد
+                  </option>
+                  <option value="1">قريبة من أو تجاوزت الحد الأقصى</option>
+                  <option value="2">بعيدة عن الحد الأقصى</option>
+                </select>
+              </div>
+            </>
+          )}
           <div className="d-flex justify-content-evenly">
             <button
               className="btn btn-primary fs-4 btn-lg  px-5"
@@ -206,6 +263,12 @@ function SearchBox(props: SearchFormProps) {
             <button
               className="btn btn-danger fs-4 btn-lg px-5"
               onClick={() => {
+                const withinExcutionTimeTypeDefaultValue =
+                  props.waredBoxType === waredBoxType.normal
+                    ? "0"
+                    : props.waredBoxType === waredBoxType.red
+                    ? "1"
+                    : "2";
                 props.setDocNum("");
                 props.setGehaaId("");
                 props.setsubject("");
@@ -213,8 +276,10 @@ function SearchBox(props: SearchFormProps) {
                 props.setOfficerId("");
                 props.setMokatbaDate("");
                 props.setDocDeptNum("");
-                props.setDaysBeforeExecution("4");
-                props.setWithinExcutionTimeType("0");
+                props.setDaysBeforeExecution(defaultDaysBeforeExecution);
+                props.setWithinExcutionTimeType(
+                  withinExcutionTimeTypeDefaultValue
+                );
                 props.fetchRowsWithNoParams();
                 setSelectedOfficerName("");
                 setSelectedBranchName("");

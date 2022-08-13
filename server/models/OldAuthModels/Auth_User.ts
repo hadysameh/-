@@ -1,4 +1,4 @@
-import seqeulize from "../db/seqeulize";
+import seqeulize from "../../db/seqeulize";
 import { DataTypes } from "sequelize";
 
 const Auth_User = seqeulize.define(

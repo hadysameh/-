@@ -6,19 +6,13 @@ import seqeulize from "./db/seqeulize";
 import "./models/models-relations/index";
 import bodyParser from "body-parser";
 import path from "path";
+import cookieParser from 'cookie-parser'
 require("dotenv").config();
 
-// seqeulize.sync().then(() => {
-//   console.log("mysql database is connected");
-// });
-
 const app: Express = express();
+app.use(cookieParser())
 app.use(cors());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-// app.use("/uploads/", (req, res, next) => {
-//   console.log({ res, req, next });
-//   return express.static("./server/uploads");
-// });
 app.use(express.json());
 app.use(express.raw());
 app.use(express.urlencoded({ extended: true }));

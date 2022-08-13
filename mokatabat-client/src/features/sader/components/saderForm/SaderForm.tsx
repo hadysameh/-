@@ -47,6 +47,31 @@ function SaderForm({
       setOfficers(res.data.officers);
     });
   }, []);
+
+  useEffect(() => {
+    if (saderIdToEdit) {
+      axios
+        .get("http://localhost:3125/api/onesader", {
+          params: { id: saderIdToEdit },
+        })
+        .then((res) => {
+          let { data } = res;
+          setDocNum(data.doc_num);
+          setMokatbaDate(data.doc_date);
+          setSubject(data.subject);
+          setLastWaredNum(data.lastWared_id);
+          setType(data.type);
+          setSelectedGehaat(
+            data?.gehaas?.map((gehaa: any) => {
+              return { label: gehaa.name, value: gehaa.id };
+            })
+          );
+          setSelectedBranch(data.branch);
+          setSelectedOfficer(data.SaderOfficer);
+        });
+    }
+  }, []);
+
   return (
     <div className="container">
       <div className="border-start border-end p-4">
@@ -257,10 +282,10 @@ function SaderForm({
                   onChange={(e) => {
                     if (e.target.files) {
                       setSelectedFile(e.target.files[0]);
-                      console.log({ isFilePicked });
+                      // console.log({ isFilePicked });
                       setIsFilePicked(false);
                       if (e.target.files[0]) {
-                        console.log({ file: e.target.files[0] });
+                        // console.log({ file: e.target.files[0] });
                         setIsFilePicked(true);
                       }
                     }
@@ -287,6 +312,18 @@ function SaderForm({
             className="btn btn-primary fs-3"
             onClick={() => {
               // const isReqFieldsFilled = true;
+              const isFieldValid = (
+                filed: any,
+                isFieldRequired: boolean
+              ): boolean => {
+                if (isFieldRequired) {
+                  if (filed) {
+                    return true;
+                  }
+                  return false;
+                }
+                return true;
+              };
               const isReqFieldsFilled = (): boolean => {
                 if (
                   docNum &&
@@ -295,15 +332,26 @@ function SaderForm({
                   !isArrEmpty(selectedGehaat) &&
                   !isObjEmpty(selectedBranch) &&
                   !isObjEmpty(selectedOfficer) &&
-                  selectedFile
+                  isFieldValid(selectedFile,requiredFields.selectedFile)  
                 ) {
                   return true;
                 }
+                console.log({
+                  docNum,
+                  mokatbaDate,
+                  subject,
+                  lastWaredNum,
+                  selectedGehaat,
+                  selectedBranch,
+                  selectedFile,
+                });
                 return false;
               };
               if (isReqFieldsFilled()) {
                 let formData = new FormData();
-
+                if (saderIdToEdit) {
+                  formData.append("saderId", saderIdToEdit);
+                }
                 formData.append("doc_num", docNum);
                 formData.append("type", type);
                 formData.append("doc_date", mokatbaDate);

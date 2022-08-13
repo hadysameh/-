@@ -1,8 +1,8 @@
-import seqeulize from "../db/seqeulize";
+import seqeulize from "../../db/seqeulize";
 import { DataTypes } from "sequelize";
 
-const Auth_Permission = seqeulize.define(
-  "auth_permission",
+const Auth_User_User_Permissions = seqeulize.define(
+  "auth_user_user_permissions",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -10,16 +10,12 @@ const Auth_Permission = seqeulize.define(
       primaryKey: true,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING(80),
-      allowNull: false,
-    },
-    content_type_id: {
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    codename: {
-      type: DataTypes.STRING(100),
+    permission_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },
@@ -29,4 +25,4 @@ const Auth_Permission = seqeulize.define(
     timestamps: false,
   }
 );
-export default Auth_Permission;
+export default Auth_User_User_Permissions;

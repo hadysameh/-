@@ -1,4 +1,3 @@
-import { dbConnection } from "../db";
 import Wared from "../models/WaredModel";
 import Officers from "../models/OfficersModel";
 import Branches from "../models/BranchesModel";
@@ -60,12 +59,13 @@ class WaredRepo {
         });
     });
   }
+
   public static async getWithParams(searchParams: any): Promise<any> {
     const todaysDate = new Date().toISOString().slice(0, 19).replace(/T.*/, "");
     const addDaysToDate = (date: string, numOfDays: any) => {
       let tempDate = new Date(date);
       tempDate.setDate(tempDate.getDate() + Number(numOfDays));
-      
+
       let result = new Date(tempDate)
         .toISOString()
         .slice(0, 19)
@@ -157,7 +157,7 @@ class WaredRepo {
     reqBodyData: any,
     fileLocationPath: string
   ): Promise<any> {
-    // console.log({ reqBodyData, fileLocationPath });
+    // console.log({ reqBodyData });
 
     return new Promise(async (resolve: any, reject: any) => {
       const t = await sequelize.transaction();
@@ -191,7 +191,7 @@ class WaredRepo {
           doc_dept_num: reqBodyData.doc_dept_num,
           doc_date: reqBodyData.doc_date,
           subject: reqBodyData.subject,
-          docDeadline: reqBodyData.docDeadline ? reqBodyData.docDeadline : null,
+          docDeadline: reqBodyData.hasDeadLine == 'true' ? reqBodyData.docDeadline : null,
           gehaa_id: reqBodyData.gehaa_id,
           known: reqBodyData.docDeadline ? "0" : "1",
           deliver_date: reqBodyData.deliver_date,
@@ -280,6 +280,8 @@ class WaredRepo {
     //   reqBodyData,
     //   // fileLocationPath,
     // });
+    // console.log({ reqBodyData });
+
     return new Promise(async (resolve: any, reject: any) => {
       const t = await sequelize.transaction();
 
@@ -296,7 +298,7 @@ class WaredRepo {
             return { id: selectedOfficer.value };
           }
         );
-        console.log({ officersIdsObjs });
+        // console.log({ officersIdsObjs });
         let branchesIdsArr = selectedBranchs.map((branch: any) => {
           return branch.value;
         });
@@ -313,7 +315,7 @@ class WaredRepo {
           doc_dept_num: reqBodyData.doc_dept_num,
           doc_date: reqBodyData.doc_date,
           subject: reqBodyData.subject,
-          docDeadline: reqBodyData.docDeadline ? reqBodyData.docDeadline : null,
+          docDeadline: reqBodyData.hasDeadLine == 'true' ? reqBodyData.docDeadline : null,
           gehaa_id: reqBodyData.gehaa_id,
           known: reqBodyData.docDeadline ? "0" : "1",
           deliver_date: reqBodyData.deliver_date,

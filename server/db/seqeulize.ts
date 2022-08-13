@@ -4,6 +4,8 @@ const sequelize = new Sequelize( {
     host:'localhost',
     password:'',
     database:'trc3',
-    username:'root'
+    username:'root',
+    logging: false
+
 });
 export default sequelize
