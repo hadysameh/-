@@ -18,6 +18,7 @@ import WaredTrackingOfficers from "../WaredTrackingOfficersModel";
 import UserType from "../NewAuthModels/UserTypes";
 import User from "../NewAuthModels/User";
 import Premission from '../NewAuthModels/Premissions'
+import UserType_premission from '../UserType_premissionModel'
 // wared relations
 Wared.belongsTo(Gehaa, {
   foreignKey: "gehaa_id",
@@ -67,12 +68,12 @@ Sader.belongsToMany(Officers, {
   through: Sadertrackingofficers,
   as: "Sadertrackingofficers",
 
-  foreignKey: "sader_id", // replaces `productId`
+  foreignKey: "sader_id",  
   otherKey: "officer_id",
 });
 Sader.belongsToMany(Gehaa, {
   through: Sader_Gehaa,
-  foreignKey: "sader_id", // replaces `productId`
+  foreignKey: "sader_id",  
   otherKey: "gehaa_id",
   constraints: false,
 });
@@ -88,5 +89,22 @@ User.belongsTo(Officers,{
 });
 
 UserType.belongsToMany(Premission,{
-  through:'UserType_premission'
+  through:UserType_premission,
+  foreignKey: "userTypeId", 
+  otherKey: "premissionId",
+})
+
+//------------------------------------------------------------
+
+
+Officers.belongsTo(Branches,{
+  foreignKey: "branches_id",
+})
+
+Officers.belongsTo(Arms,{
+  foreignKey: "arms_id",
+})
+
+Officers.belongsTo(Ranks,{
+  foreignKey: "Ranks_id",
 })

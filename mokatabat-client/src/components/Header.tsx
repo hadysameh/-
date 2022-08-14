@@ -87,11 +87,11 @@ function Header() {
                     تسجيل الدخول
                   </Link>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <Link to="/register" className="nav-link active text-white">
                     انشاء حساب
                   </Link>
-                </li>
+                </li> */}
               </>
             </HideIfAuth>
             <HideIfNotAuth>

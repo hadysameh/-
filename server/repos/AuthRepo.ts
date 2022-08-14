@@ -2,7 +2,7 @@ import Premission from "../models/NewAuthModels/Premissions";
 import User from "../models/NewAuthModels/User";
 import UserType from "../models/NewAuthModels/UserTypes";
 import Officers from "../models/OfficersModel";
-import { IUserInfo } from "../types/types";
+import { IUserInfo } from "../types";
 export default class AuthRepo {
   static async storeUser(useData: IUserInfo): Promise<any> {
     return new Promise(async (resolve, reject) => {
