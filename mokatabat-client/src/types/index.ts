@@ -3,3 +3,6 @@ export enum waredBoxType {
     red = "red circle wared box",
     green = "green circle wared box",
   }
+export enum premissions{
+  
+}

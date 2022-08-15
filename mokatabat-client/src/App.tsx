@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+// import './App.css';
 import routes  from './routes';
 import axios from 'axios'
 import { selectToken } from "./features/user";

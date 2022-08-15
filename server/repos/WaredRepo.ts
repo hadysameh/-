@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import Wared from "../models/WaredModel";
 import Officers from "../models/OfficersModel";
 import Branches from "../models/BranchesModel";
@@ -60,7 +61,10 @@ class WaredRepo {
     });
   }
 
-  public static async getWithParams(searchParams: any,user:any): Promise<any> {
+  public static async getWithParams(
+    searchParams: any,
+    user: any
+  ): Promise<any> {
     const todaysDate = new Date().toISOString().slice(0, 19).replace(/T.*/, "");
     const addDaysToDate = (date: string, numOfDays: any) => {
       let tempDate = new Date(date);
@@ -191,7 +195,8 @@ class WaredRepo {
           doc_dept_num: reqBodyData.doc_dept_num,
           doc_date: reqBodyData.doc_date,
           subject: reqBodyData.subject,
-          docDeadline: reqBodyData.hasDeadLine == 'true' ? reqBodyData.docDeadline : null,
+          docDeadline:
+            reqBodyData.hasDeadLine == "true" ? reqBodyData.docDeadline : null,
           gehaa_id: reqBodyData.gehaa_id,
           known: reqBodyData.docDeadline ? "0" : "1",
           deliver_date: reqBodyData.deliver_date,
@@ -276,12 +281,6 @@ class WaredRepo {
     reqBodyData: any,
     fileLocationPath: string | null = null
   ) {
-    // console.log({
-    //   reqBodyData,
-    //   // fileLocationPath,
-    // });
-    // console.log({ reqBodyData });
-
     return new Promise(async (resolve: any, reject: any) => {
       const t = await sequelize.transaction();
 
@@ -315,7 +314,8 @@ class WaredRepo {
           doc_dept_num: reqBodyData.doc_dept_num,
           doc_date: reqBodyData.doc_date,
           subject: reqBodyData.subject,
-          docDeadline: reqBodyData.hasDeadLine == 'true' ? reqBodyData.docDeadline : null,
+          docDeadline:
+            reqBodyData.hasDeadLine == "true" ? reqBodyData.docDeadline : null,
           gehaa_id: reqBodyData.gehaa_id,
           known: reqBodyData.docDeadline ? "0" : "1",
           deliver_date: reqBodyData.deliver_date,
@@ -415,6 +415,75 @@ class WaredRepo {
         //     where: { wared_id: reqBodyData["waredId"] },
         //   }
         // );
+        resolve();
+        await t.commit();
+      } catch (error) {
+        console.log(error);
+        // If the execution reaches this line, an error was thrown.
+        // We rollback the transaction.
+        await t.rollback();
+        reject("");
+      }
+    });
+  }
+  public static async updateOfficersAndBranches(req: Request) {
+    return new Promise(async (resolve: any, reject: any) => {
+      const t = await sequelize.transaction();
+
+      try {
+        req.body.selectedBranchs;
+        // console.log({ body: req.body });
+
+        const waredId = req.body["waredId"];
+        let selectedBranchs = JSON.parse(req.body.selectedBranchs);
+        let selectedOfficers = JSON.parse(req.body.selectedOfficers);
+        let branchesIdsObjs: { id: any }[] = selectedBranchs.map(
+          (branch: any) => {
+            return { id: branch.value };
+          }
+        );
+
+        let officersIdsObjs: { id: any }[] = selectedOfficers.map(
+          (selectedOfficer: any) => {
+            return { id: selectedOfficer.value };
+          }
+        );
+        // await Wared.update(c,{ where: { id: reqBodyData["waredId"] }})
+        await Wared_Branches.destroy({
+          where: {
+            wared_id: waredId,
+          },
+        });
+        await Wared_Officers.destroy({
+          where: {
+            wared_id: waredId,
+          },
+        });
+
+        let wared_branchesRows = branchesIdsObjs.map(
+          (brancheIdObj: { id: any }) => {
+            return {
+              wared_id: waredId,
+              branches_id: brancheIdObj.id,
+            };
+          }
+        );
+        let wared_officersRows = officersIdsObjs.map(
+          (officerIdObj: { id: any }) => {
+            return {
+              wared_id: waredId,
+              officers_id: officerIdObj.id,
+            };
+          }
+        );
+
+        console.log({ wared_branchesRows, wared_officersRows });
+        await Wared_Branches.bulkCreate(wared_branchesRows, {
+          updateOnDuplicate: ["wared_id"],
+        });
+        await Wared_Officers.bulkCreate(wared_officersRows, {
+          updateOnDuplicate: ["wared_id"],
+        });
         resolve();
         await t.commit();
       } catch (error) {

@@ -32,4 +32,10 @@ waredRouter.put(
   waredUpload.single("mokatbaPdf")],
   WaredController.update
 );
+
+waredRouter.put(
+  "/waredbox/updateOfficersAndBranches",
+  isAuth,
+  WaredController.updateOfficersAndBranches
+);
 export default waredRouter;

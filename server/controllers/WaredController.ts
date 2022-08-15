@@ -12,6 +12,7 @@ class WaredController {
       console.log({ error });
     }
   }
+
   public static async get(req: Request, res: Response): Promise<any> {
     let numOfRecords = req.query.numOfRecords;
     let pageNum = req.query.pageNum;
@@ -24,6 +25,7 @@ class WaredController {
       console.log({ error });
     }
   }
+
   public static async getSearchOptions(
     req: Request,
     res: Response
@@ -36,6 +38,7 @@ class WaredController {
       console.log({ error });
     }
   }
+
   public static async getSearch(req: Request, res: Response): Promise<any> {
     let params = req.query;
     try {
@@ -65,6 +68,7 @@ class WaredController {
       res.status(500).json({ error });
     }
   }
+
   public static async update(req: Request, res: Response): Promise<any> {
     // console.log({ body: req.body });
     // console.log({file:req.file})
@@ -90,6 +94,21 @@ class WaredController {
       res.status(500).json("wrong password please try again");
     }
   }
+
   public static async delete(req: Request, res: Response): Promise<any> {}
+
+  public static async updateOfficersAndBranches(req: Request, res: Response): Promise<any> {
+    WaredRepo.updateOfficersAndBranches(req)
+    try {
+      // console.log({ filePath: req.file?.path });
+
+      await WaredRepo.updateOfficersAndBranches(req)
+      res.status(200).json({ msg: "ok" });
+    } catch (error) {
+      console.log(error, { msg: "faild to store" });
+      // res.status(500);
+      res.status(500).json("wrong password please try again");
+    }
+  }
 }
 export default WaredController;

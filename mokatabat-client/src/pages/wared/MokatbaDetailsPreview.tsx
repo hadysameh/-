@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
 import { serverApiUrl } from "../../config";
-
+import BranchesAndOfficers from "../../features/wared/components/branchesAndOfficersSelect";
 function MokatbaDetailsPreview() {
   let { mokatbaId } = useParams();
   const [mokatbaData, setMokatbaData] = useState<any>({});
@@ -13,7 +13,7 @@ function MokatbaDetailsPreview() {
     axios
       .get(serverApiUrl + "api/wared/", { params: { id: mokatbaId } })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setMokatbaData(res.data);
       });
   }, []);
@@ -87,39 +87,15 @@ function MokatbaDetailsPreview() {
                 </span>
               </div>
             </div>
-            <div className="row align-items-start pt-5">
-              <div className="">
-                الضباط المختصين:
-                <div style={{ paddingRight: "20px" }}>
-                  <ul>
-                    {mokatbaData.Wared_Officers &&
-                    mokatbaData.Wared_Officers.length > 0
-                      ? mokatbaData.Wared_Officers.map((officer: any) => {
-                          return (
-                            <li className="text-secondary">{officer.name}</li>
-                          );
-                        })
-                      : "غير محدد"}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="row align-items-start pt-5">
-              <div className="">
-                الأفرع المختصة
-                <div style={{ paddingRight: "20px" }}>
-                  <ul>
-                    {mokatbaData.branches
-                      ? mokatbaData.branches.map((branche: any) => {
-                          return (
-                            <li className="text-secondary">{branche.name}</li>
-                          );
-                        })
-                      : "غير محدد"}
-                  </ul>
-                </div>
-              </div>
-            </div>
+
+            {mokatbaData.branches && mokatbaData.Wared_Officers && (
+              <BranchesAndOfficers
+                mokatbaData={mokatbaData}
+                selectedBranches={mokatbaData.branches}
+                selectedOfficers={mokatbaData.Wared_Officers}
+              />
+            )}
+
             <div className="row align-items-start pt-5">
               <div className="">
                 اخر معاد للتنفيذ:
@@ -194,4 +170,4 @@ function MokatbaDetailsPreview() {
     </>
   );
 }
-export default MokatbaDetailsPreview ;
+export default MokatbaDetailsPreview;
