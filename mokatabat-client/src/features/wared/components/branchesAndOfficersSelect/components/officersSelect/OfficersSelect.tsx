@@ -36,7 +36,7 @@ function OfficersSelect({
           </div>
         </div>
 
-        <div className="col-6">
+        {!isArrEmpty(officersChoices)&&<div className="col-6">
           <label className="form-label">تعديل الضباط المختصين</label>
           {!isArrEmpty(officersChoices) && (
             <MultiSelect
@@ -48,7 +48,7 @@ function OfficersSelect({
               labelledBy="Select"
             />
           )}
-        </div>
+        </div>}
       </div>
     </>
   );

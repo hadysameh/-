@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { serverApiUrl } from "../../../../config";
 import { waredBoxType } from "../../../../types";
-
+import isArrEmpty from "../../../../utils/isArrEmpty";
 interface SearchFormProps {
   setDocNum: any;
   setGehaaId: any;
@@ -50,15 +50,18 @@ function SearchBox(props: SearchFormProps) {
   );
 
   useEffect(() => {
-    axios.get(serverApiUrl + "api/waredbox/searchoptions").then((res) => {
+    axios.get(serverApiUrl + "api/waredoptions").then((res) => {
+      // console.log({ res });
       setGehaat(res.data.gehaat);
       setBranchs(res.data.branches);
       setOfficers(res.data.officers);
     });
     // TODO : fetch from srever
     setDefaultDaysBeforeExecution("7");
-    
-    setShowDaysBeforeExecutionFields(props.waredBoxType === waredBoxType.normal&&true);
+    setShowDaysBeforeExecutionFields(false)
+    // setShowDaysBeforeExecutionFields(
+    //   props.waredBoxType === waredBoxType.normal && true
+    // );
   }, []);
 
   return (
@@ -140,65 +143,71 @@ function SearchBox(props: SearchFormProps) {
             />
           </div>
 
-          <div className="col-md-3">
-            <label className="form-label">الفرع المختص</label>
+          {!isArrEmpty(branchs) && (
+            <div className="col-md-3">
+              <label className="form-label">الفرع المختص</label>
 
-            <input
-              className="form-control fs-3"
-              list="branchsOptions"
-              id="exampleDataList"
-              placeholder="Type to search..."
-              value={selectedBranchName}
-              onChange={(e) => {
-                let choosedBranchName = e.target.value;
-                setSelectedBranchName(e.target.value);
-                let choosedBranch: any = branchs.find((branch: any) => {
-                  return branch.name === choosedBranchName;
-                });
-                let choosedBranchId = choosedBranch ? choosedBranch.id : "";
-                // console.log(choosedBranchId);
-                props.setBranchId(choosedBranchId);
-              }}
-            ></input>
+              <input
+                className="form-control fs-3"
+                list="branchsOptions"
+                id="exampleDataList"
+                placeholder="Type to search..."
+                value={selectedBranchName}
+                onChange={(e) => {
+                  let choosedBranchName = e.target.value;
+                  setSelectedBranchName(e.target.value);
+                  let choosedBranch: any = branchs.find((branch: any) => {
+                    return branch.name === choosedBranchName;
+                  });
+                  let choosedBranchId = choosedBranch ? choosedBranch.id : "";
+                  // console.log(choosedBranchId);
+                  props.setBranchId(choosedBranchId);
+                }}
+              ></input>
 
-            <datalist id="branchsOptions">
-              {branchs.map((branch: any) => {
-                return (
-                  <option key={branch.id + branch.name}>{branch.name}</option>
-                );
-              })}
-            </datalist>
-          </div>
+              <datalist id="branchsOptions">
+                {branchs.map((branch: any) => {
+                  return (
+                    <option key={branch.id + branch.name}>{branch.name}</option>
+                  );
+                })}
+              </datalist>
+            </div>
+          )}
 
-          <div className="col-md-3">
-            <label className="form-label">الضابط المختص</label>
-            <input
-              className="form-control fs-3"
-              list="officersOptions"
-              id="exampleDataList"
-              placeholder="Type to search..."
-              value={selectedOfficerName}
-              onChange={(e) => {
-                let choosedOfficerName = e.target.value;
-                setSelectedOfficerName(e.target.value);
-                let choosedOfficer: any = officers.find((officer: any) => {
-                  return officer.name == choosedOfficerName;
-                });
-                let choosedOfficerId = choosedOfficer ? choosedOfficer.id : "";
-                props.setOfficerId(choosedOfficerId);
-              }}
-            ></input>
+          {!isArrEmpty(officers) && (
+            <div className="col-md-3">
+              <label className="form-label">الضابط المختص</label>
+              <input
+                className="form-control fs-3"
+                list="officersOptions"
+                id="exampleDataList"
+                placeholder="Type to search..."
+                value={selectedOfficerName}
+                onChange={(e) => {
+                  let choosedOfficerName = e.target.value;
+                  setSelectedOfficerName(e.target.value);
+                  let choosedOfficer: any = officers.find((officer: any) => {
+                    return officer.name == choosedOfficerName;
+                  });
+                  let choosedOfficerId = choosedOfficer
+                    ? choosedOfficer.id
+                    : "";
+                  props.setOfficerId(choosedOfficerId);
+                }}
+              ></input>
 
-            <datalist id="officersOptions">
-              {officers.map((officer: any) => {
-                return (
-                  <option key={officer.id + officer.name}>
-                    {officer.name}
-                  </option>
-                );
-              })}
-            </datalist>
-          </div>
+              <datalist id="officersOptions">
+                {officers.map((officer: any) => {
+                  return (
+                    <option key={officer.id + officer.name}>
+                      {officer.name}
+                    </option>
+                  );
+                })}
+              </datalist>
+            </div>
+          )}
 
           <div className="col-md-3">
             <label className="form-label">تاريخ المكاتبة</label>

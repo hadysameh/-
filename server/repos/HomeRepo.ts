@@ -14,8 +14,7 @@ class HomeRepo {
         where: [
           {
             docDeadline: {
-              // $gt: new Date(),
-              [Op.lte]: `${addDaysToDate(getTodaysDate(), 7)}`,
+              [Op.lte]: `${addDaysToDate(getTodaysDate(), daysBeforeExec)}`,
             },
             closedSader_id: null,
             known: 0,
@@ -27,7 +26,7 @@ class HomeRepo {
           {
             docDeadline: {
               // $gt: new Date(),
-              [Op.gt]: `${addDaysToDate(getTodaysDate(), 7)}`,
+              [Op.gt]: `${addDaysToDate(getTodaysDate(), daysBeforeExec)}`,
             },
             closedSader_id: null,
             known: 0,

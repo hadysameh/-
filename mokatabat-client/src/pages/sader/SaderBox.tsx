@@ -213,7 +213,7 @@ function SaderBox() {
               {saderBoxRecords.length >= numOfRecords && (
                 <li className="page-item">
                   <button
-                    className="page-link"
+                    className="page-link fs-3"
                     onClick={() => {
                       setPageNum(pageNum + 1);
                     }}

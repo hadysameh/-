@@ -23,7 +23,7 @@ class SaderController {
     let params = req.query;
     // console.log({params})
     try {
-      let result = await SaderRepo.getWithParams(params);
+      let result = await SaderRepo.getWithParams(params,req);
       // console.log({result});
       res.json(result);
     } catch (error) {

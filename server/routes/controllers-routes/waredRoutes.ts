@@ -13,11 +13,11 @@ const waredRouter = express.Router();
 // })
 waredRouter.get("/wared", isAuth, WaredController.getOne);
 // waredRouter.get('/waredbox',WaredController.get)
-waredRouter.get(
-  "/waredbox/searchOptions",
-  isAuth,
-  WaredController.getSearchOptions
-);
+// waredRouter.get(
+//   "/waredbox/searchOptions",
+//   isAuth,
+//   WaredController.getSearchOptions
+// );
 waredRouter.get("/waredbox/search", isAuth,WaredController.getSearch);
 waredRouter.post(
   "/waredbox/store",

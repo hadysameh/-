@@ -2,10 +2,11 @@ import { Link } from "react-router-dom";
 import HideIfAuth from "../middlewares/componentsGaurds/HideIfAuth";
 import HideIfNotAuth from "../middlewares/componentsGaurds/HideIfNotAuth";
 import { useSelector } from "react-redux";
-import { selectToken } from "../features/user/stores/userSlice";
+import { selectToken, selectOfficer } from "../features/user/stores/userSlice";
 import { useEffect } from "react";
 function Header() {
   const token = useSelector(selectToken);
+  const officer = useSelector(selectOfficer);
   useEffect(() => {
     console.log({ tokenFromHeader: token });
   }, [token]);
@@ -95,10 +96,27 @@ function Header() {
               </>
             </HideIfAuth>
             <HideIfNotAuth>
-              <li className="nav-item">
-                <Link to="/logout" className="nav-link active text-white">
-                  تسجيل الخروج
-                </Link>
+              <li className="nav-item dropdown  ">
+                <a
+                  className="nav-link dropdown-toggle text-white"
+                  href="#"
+                  id="navbarDropdownMenuLink"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {officer.name}
+                </a>
+                <ul
+                  className="dropdown-menu fs-3"
+                  aria-labelledby="navbarDropdownMenuLink"
+                >
+                  <li className="nav-item">
+                    <Link to="/logout" className="nav-link active ">
+                      تسجيل الخروج
+                    </Link>
+                  </li>
+                </ul>
               </li>
             </HideIfNotAuth>
           </ul>

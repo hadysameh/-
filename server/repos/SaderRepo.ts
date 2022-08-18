@@ -7,7 +7,7 @@ import Wared_Branches from "../models/Wared_BranchesModel";
 import Wared_Officers from "../models/Wared_OfficersModel";
 import WaredTrackingOfficers from "../models/WaredTrackingOfficersModel";
 import sequelize from "../db/seqeulize";
-
+import { Request } from "express";
 import getTodaysDate from "../utils/getTodaysDate";
 import getCurrentYear from "../utils/getCurrentYear";
 import addDaysToDate from "../utils/addDaysToDate";
@@ -63,7 +63,19 @@ export default class SaderRepo {
         });
     });
   }
-  public static async getWithParams(searchParams: any): Promise<any> {
+  public static async getWithParams(searchParams: any,req:Request): Promise<any> {
+
+    const hasAccessToAllSader =
+      req.user.userType.premissions.find((premission: any) => {
+        return premission.premission === "has access to all sader";
+      }) || req.user.userType.type === "admin";
+
+    const hasAccessToBranchSader = req.user.userType.premissions.find(
+      (premission: any) => {
+        return premission.premission === "has access to branch sader";
+      }
+    );
+
     const todaysDate = getTodaysDate();
     let whereParams: any = {};
     let includeParams: any = [];
@@ -99,6 +111,21 @@ export default class SaderRepo {
         where: { doc_num: searchParams.lastWaredNum },
       });
       // whereParams["branch_id"] = `${searchParams.branchId}`;
+    }
+
+    if (!hasAccessToAllSader) {
+      if (hasAccessToBranchSader) {
+        includeParams.push({
+          model: Branches,
+          where: { id: req.user.officer.branches_id },
+        });
+      } else {
+        includeParams.push({
+          model: Officers,
+          as: "Wared_Officers",
+          where: { id: req.user.officerId },
+        });
+      }
     }
     // console.log({ whereParams });
     let saders = await Sader.findAll({

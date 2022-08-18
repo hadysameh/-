@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { serverApiUrl } from "../../../../config";
-
+import isArrEmpty from "../../../../utils/isArrEmpty";
+import isObjEmpty from "../../../../utils/isObjEmpty";
 interface SearchFormProps {
   setDocNum: any;
   setGehaaId: any;
@@ -44,13 +45,8 @@ function SearchBox(props: SearchFormProps) {
     setIsSearched(false);
   };
   useEffect(() => {
-    axios.get(serverApiUrl + "api/saderbox/searchoptions").then((res) => {
-      // console.log(res.data);
-      // console.log({
-      //   gehaat: res.data.gehaat,
-      //   branches: res.data.branches,
-      //   officers: res.data.officers,
-      // });
+    axios.get(serverApiUrl + "api/saderoptions").then((res) => {
+       
       setGehaat(res.data.gehaat);
       setBranchs(res.data.branches);
       setOfficers(res.data.officers);
@@ -133,7 +129,7 @@ function SearchBox(props: SearchFormProps) {
             </datalist>
           </div>
 
-          <div className="col-md-3">
+         {!isArrEmpty(officers)&& <div className="col-md-3">
             <label className="form-label">الضابط المختص</label>
             <input
               className="form-control fs-3"
@@ -161,9 +157,9 @@ function SearchBox(props: SearchFormProps) {
                 );
               })}
             </datalist>
-          </div>
+          </div>}
 
-          <div className="col-md-3">
+          {!isArrEmpty(branchs)&&<div className="col-md-3">
             <label className="form-label">الفرع المختص</label>
 
             <input
@@ -190,7 +186,7 @@ function SearchBox(props: SearchFormProps) {
                 );
               })}
             </datalist>
-          </div>
+          </div>}
 
           {/* TODO */}
           <div className="col-md-3">

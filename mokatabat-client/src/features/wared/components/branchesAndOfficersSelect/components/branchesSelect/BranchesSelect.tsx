@@ -37,7 +37,7 @@ function BranchesSelect({
           </div>
         </div>
 
-        <div className="col-6">
+        {!isArrEmpty(branchesChoises)&&<div className="col-6">
           <label className="form-label"> تعديل الأفرع المختصة </label>
           {!isArrEmpty(branchesChoises) && (
             <MultiSelect
@@ -49,7 +49,7 @@ function BranchesSelect({
               labelledBy="Select"
             />
           )}
-        </div>
+        </div>}
       </div>
     </>
   );

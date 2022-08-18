@@ -63,8 +63,19 @@ class WaredRepo {
 
   public static async getWithParams(
     searchParams: any,
-    user: any
+    req: Request
   ): Promise<any> {
+    const hasAccessToAllWared =
+      req.user.userType.premissions.find((premission: any) => {
+        return premission.premission === "has access to all wared";
+      }) || req.user.userType.type === "admin";
+
+    const hasAccessToBranchWared = req.user.userType.premissions.find(
+      (premission: any) => {
+        return premission.premission === "has access to branch wared";
+      }
+    );
+
     const todaysDate = new Date().toISOString().slice(0, 19).replace(/T.*/, "");
     const addDaysToDate = (date: string, numOfDays: any) => {
       let tempDate = new Date(date);
@@ -139,6 +150,22 @@ class WaredRepo {
         orderByArr.push(["docDeadline", "DESC"]);
       }
     }
+
+    if (!hasAccessToAllWared) {
+      if (hasAccessToBranchWared) {
+        includeParams.push({
+          model: Branches,
+          where: { id: req.user.officer.branches_id },
+        });
+      } else {
+        includeParams.push({
+          model: Officers,
+          as: "Wared_Officers",
+          where: { id: req.user.officerId },
+        });
+      }
+    }
+
     // console.log({ whereParams });
     let wareds = await Wared.findAll({
       where: whereParams,

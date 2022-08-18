@@ -4,13 +4,46 @@ import User from "../models/NewAuthModels/User";
 import UserType from "../models/NewAuthModels/UserTypes";
 import Premission from "../models/NewAuthModels/Premissions";
 import Officers from "../models/OfficersModel";
+import Branches from "../models/BranchesModel";
 declare global {
   namespace Express {
     interface Request {
-      user: any
+      user: {
+        id: string;
+        userName: string;
+        password: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        userTypeId: string;
+        officerId: string;
+        officer: {
+          id: string;
+          mil_num: string;
+          akdameh_num: string;
+          national_number: string;
+          name: string;
+          sub_seen: string;
+          level: string;
+          arms_id: string;
+          branches_id: string;
+          Ranks_id: string;
+          subbranches_id: string;
+          user_id: string;
+          branch: { id: string; name: string; manager_id: string };
+        };
+        userType: {
+          id: any;
+          type: any;
+          createdAt: any;
+          updatedAt: any;
+          premissions: any[];
+        };
+      };
     }
   }
 }
+ 
 export default async function isAuth(req: any, res: Response, next: any) {
   try {
     let privateKey = String(process.env.jwtKey);
@@ -23,11 +56,15 @@ export default async function isAuth(req: any, res: Response, next: any) {
         where: {
           id: decoded,
         },
-        include: [{ model: UserType, include: [Premission] }, Officers],
+        include: [
+          { model: UserType, include: [Premission] },
+          { model: Officers, include: [Branches] },
+        ],
       }).catch(() => {
         return null;
       });
       if (user) {
+        // console.log({ user: JSON.stringify(user) });
         req.user = user;
         next();
       } else {

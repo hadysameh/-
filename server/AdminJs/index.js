@@ -19,6 +19,7 @@ import UserType_premission from "../models/UserType_premissionModel";
 import Arms from "../models/ArmsModel";
 import Ranks from "../models/RanksMode";
 import sequelize from "../db/seqeulize";
+import bcrypt from "bcrypt";
 AdminJS.registerAdapter(AdminJSSequelize);
 const userParent = {
   name: "User Controlls",
@@ -42,6 +43,13 @@ const adminJs = new AdminJS({
           },
         },
       },
+      // actions: {
+      //   new: {
+      //     before: async (request) => {
+      //       return request
+      //     },
+      //   }
+      // }
     },
     {
       resource: Branches,
@@ -161,6 +169,26 @@ const adminJs = new AdminJS({
   ],
 });
 
-const router = AdminJSExpress.buildRouter(adminJs);
+const router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
+  authenticate: async (email, password) => {
+    const user = await User.findOne({
+      where: [
+        {
+          userName: email,
+        },
+      ],
+      include: [{ model: UserType, include: [Premission] }, Officers],
+    });
+    if (user.userType.type=='admin') {
+      const matched = await bcrypt.compare(password, user.password);
+
+      if (matched) {
+        return user;
+      }
+    }
+    return false;
+  },
+  cookiePassword: "some-secret-password-used-to-secure-cookie",
+});
 
 export { router, adminJs };

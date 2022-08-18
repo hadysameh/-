@@ -21,7 +21,7 @@ function BranchesAndOfficers(props: IProps) {
   const [officersChoices, setOfficersChoices] = useState([]);
 
   useEffect(() => {
-    axios.get(serverApiUrl + "api/waredbox/searchoptions").then((res) => {
+    axios.get(serverApiUrl + "api/waredoptions").then((res) => {
       const branches = res.data.branches;
       const officers = res.data.officers;
       setBranchesChoices(branches);
