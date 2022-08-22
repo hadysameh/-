@@ -2,12 +2,12 @@ import Premission from "../models/NewAuthModels/Premissions";
 import User from "../models/NewAuthModels/User";
 import UserType from "../models/NewAuthModels/UserTypes";
 import Officers from "../models/OfficersModel";
+import Ranks from "../models/RanksMode";
 import { IUserInfo } from "../types";
 export default class AuthRepo {
   static async storeUser(useData: IUserInfo): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log({ useData });
         let storedUser = await User.create({
           userName: useData.userName,
           password: useData.password,
@@ -28,7 +28,10 @@ export default class AuthRepo {
           where: {
             userName: userName,
           },
-          include: [{ model: UserType, include: [Premission] }, Officers],
+          include: [
+            { model: UserType, include: [Premission] },
+            { model: Officers, include: [Ranks] },
+          ],
         });
         resolve(user);
       } catch (error) {

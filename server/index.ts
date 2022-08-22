@@ -14,8 +14,10 @@ require("dotenv").config();
 //   console.log("seqeulize is in sync with db");
 // });
 const app: Express = express();
-//adminjs routes and bod parser mus be first
-
+/**
+ * adminjs routes and bodyParser mus be first
+ * 
+ */
 app.use(adminJs.options.rootPath, router);
 app.use(bodyParser())
 app.use(bodyParser.json())

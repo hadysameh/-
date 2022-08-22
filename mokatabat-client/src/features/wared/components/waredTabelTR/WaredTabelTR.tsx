@@ -1,10 +1,25 @@
+import { useSelector } from "react-redux";
+
+import { selectUser, selectOfficer } from "../../../user/stores/userSlice";
 let aStyle = {
   textDecoration: "none",
   color: "#000",
 };
 function WaredTabelTR({ row }: { row: any }) {
+  // console.log(row);
+
+  const officer = useSelector(selectOfficer);
+  // console.log({ user });
+  const hasOfficerSeenWared = row.WaredTrackingOfficers.find(
+    (WaredTrackedfficer: any) => {
+      if (WaredTrackedfficer.id === officer.id) {
+        return true;
+      }
+      return false;
+    }
+  );
   return (
-    <tr>
+    <tr style={{ background: hasOfficerSeenWared ? "rgb(182 182 182)" : "" }}>
       <td>
         <a
           href={`/wared/${row.id}`}

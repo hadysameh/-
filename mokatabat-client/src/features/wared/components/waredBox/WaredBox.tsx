@@ -101,6 +101,8 @@ function WaredBox(props: IProps) {
       })
       .then((res) => {
         if (res.data) {
+          console.log({ wareds: res.data });
+
           setIsShowSpinner(false);
           setWaredBoxRecords(res.data);
           window.scroll({
@@ -247,7 +249,7 @@ function WaredBox(props: IProps) {
                 {pageNum > 1 && (
                   <li className="page-item">
                     <button
-                      className="page-link"
+                      className="page-link fs-3"
                       onClick={() => {
                         setPageNum(pageNum - 1);
                       }}

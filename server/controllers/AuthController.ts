@@ -13,7 +13,7 @@ export default class AuthController {
         lastName: data.lastName,
         email: data.email ? data.email : null,
       };
-      console.log({ userData });
+      // console.log({ userData });
       let storedUser = await AuthRepo.storeUser(userData);
       res.status(200).json(storedUser);
     } catch (error) {
@@ -34,12 +34,12 @@ export default class AuthController {
       if (user) {
         let isCorrectPassword = await compareHashed(password, user.password);
         if (isCorrectPassword) {
-          
           let privateKey = String(process.env.jwtKey);
           let token = jwt.sign(user.id, privateKey);
-          // console.log({token})
-          res.json({user,token}) 
+          
+          res.json({ user, token });
         } else {
+
           res.status(403).json({ msg: "password is incorrect" });
         }
       } else {
@@ -48,6 +48,6 @@ export default class AuthController {
     } catch (error) {}
   }
   static async isAuth(req: any, res: Response): Promise<any> {
-    res.send(req.user)
+    res.send(req.user);
   }
 }

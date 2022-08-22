@@ -1,14 +1,21 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
 import { serverApiUrl } from "../../config";
+import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
+import * as premissions from "../../utils/premissions";
 
 function SaderDetailsPreview() {
   let { saderId } = useParams();
-  console.log({ saderId });
   const [saderData, setSaderData] = useState<any>({});
+  const [isConfirmDeleteShown, setIsConfirmDeleteShown] = useState(false);
+  const deleteSader = useCallback(() => {
+    axios
+      .post(serverApiUrl + "api/saderbox/deletesader", { saderId })
+      .then((res) => {});
+  }, []);
   useEffect(() => {
     axios
       .get(serverApiUrl + "api/onesader", { params: { id: saderId } })
@@ -16,6 +23,11 @@ function SaderDetailsPreview() {
         console.log({ data: res.data });
         setSaderData(res.data);
       });
+    axios
+      .post(serverApiUrl + "api/sadertrackingofficers/", {
+        saderId,
+      })
+      .then((res) => console.log(res));
   }, []);
   return (
     <>
@@ -24,7 +36,7 @@ function SaderDetailsPreview() {
           className="border-start border-end p-4"
           style={{ height: "100vh" }}
         >
-          <div className="row align-items-start ">
+          <div className="row align-items-start my-3">
             <div className="row align-items-start ">
               <div className="col-6">
                 <div className="">
@@ -126,20 +138,67 @@ function SaderDetailsPreview() {
               </div>
             </div>
 
-            <div className="row align-items-start pt-5">
-              <div className="">
-                <Link
-                  to={`/sader/edit/${saderId}`}
-                  style={{
-                    marginBottom: "50px",
-                  }}
-                  className="btn btn-lg btn-success fs-3"
-                >
-                  تعديل الصادر
-                </Link>
-                <br />
+            <HasAccessToShowComponent
+              condition={premissions.hasEditWaredPremission()}
+            >
+              <div className="row align-items-start pt-5">
+                <div className="">
+                  <Link
+                    to={`/sader/edit/${saderId}`}
+                    className="btn btn-lg btn-success fs-3"
+                  >
+                    تعديل الصادر
+                  </Link>
+                  <br />
+                </div>
               </div>
-            </div>
+            </HasAccessToShowComponent>
+
+            <HasAccessToShowComponent
+              condition={premissions.hasDeleteSaderPremission()}
+            >
+              <>
+                <div className="row align-items-start pt-5">
+                  <div className="">
+                    <a
+                      onClick={() => {
+                        setIsConfirmDeleteShown(true);
+                      }}
+                      target="blank"
+                      className="btn btn-lg btn-danger fs-3"
+                    >
+                      حذف الصادر
+                    </a>
+                  </div>
+                </div>
+
+                {isConfirmDeleteShown && (
+                  <div className="row align-items-start pt-5">
+                    <div className="d">
+                      <a
+                        onClick={() => {
+                          deleteSader();
+                        }}
+                        target="blank"
+                        className="btn btn-lg btn-danger fs-3 ml-3"
+                      >
+                        تأكيد حذف الصادر
+                      </a>
+
+                      <a
+                        onClick={() => {
+                          setIsConfirmDeleteShown(false);
+                        }}
+                        target="blank"
+                        className="btn btn-lg btn-success fs-3 mr-3"
+                      >
+                        إالغاء
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </>
+            </HasAccessToShowComponent>
           </div>
         </div>
       </div>

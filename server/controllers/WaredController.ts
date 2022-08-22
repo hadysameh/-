@@ -42,7 +42,7 @@ class WaredController {
   public static async getSearch(req: Request, res: Response): Promise<any> {
     let params = req.query;
     try {
-      let result = await WaredRepo.getWithParams(params,req);
+      let result = await WaredRepo.getWithParams(params, req);
       res.json(result);
     } catch (error) {
       console.log({ error });
@@ -50,7 +50,6 @@ class WaredController {
   }
 
   public static async store(req: Request, res: Response): Promise<any> {
-   
     let filePathInUploadsFolder = req.file?.destination.replace(
       "./uploads/",
       ""
@@ -95,14 +94,27 @@ class WaredController {
     }
   }
 
-  public static async delete(req: Request, res: Response): Promise<any> {}
+  public static async delete(req: Request, res: Response): Promise<any> {
+    try {
+      await WaredRepo.deleteWared(req)
+        .then((msg) => {
+          res.status(200).json(msg);
+        })
+        .catch((msg) => {
+          res.status(400).json(msg);
+        });
+    } catch (error) {}
+  }
 
-  public static async updateOfficersAndBranches(req: Request, res: Response): Promise<any> {
-    WaredRepo.updateOfficersAndBranches(req)
+  public static async updateOfficersAndBranches(
+    req: Request,
+    res: Response
+  ): Promise<any> {
+    WaredRepo.updateOfficersAndBranches(req);
     try {
       // console.log({ filePath: req.file?.path });
 
-      await WaredRepo.updateOfficersAndBranches(req)
+      await WaredRepo.updateOfficersAndBranches(req);
       res.status(200).json({ msg: "ok" });
     } catch (error) {
       console.log(error, { msg: "faild to store" });

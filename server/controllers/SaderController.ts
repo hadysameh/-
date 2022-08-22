@@ -48,7 +48,17 @@ class SaderController {
     }
   }
 
-  public static async delete(req: Request, res: Response): Promise<any> {}
+  public static async delete(req: Request, res: Response): Promise<any> {
+    try {
+      await SaderRepo.delete(req)
+        .then((msg) => {
+          res.status(200).json(msg);
+        })
+        .catch((msg) => {
+          res.status(400).json(msg);
+        });
+    } catch (error) {}
+  }
   public static async update(req: Request, res: Response): Promise<any> {
     let filePathToStore: string | null = null;
     if (req.file) {

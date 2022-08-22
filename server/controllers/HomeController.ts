@@ -4,7 +4,7 @@ class HomeController {
   public static async index(req: Request, res: Response): Promise<any> {
     try {
       // console.log({ filePath: req.file?.path });
-      let data = await HomeRepo.index();
+      let data = await HomeRepo.index(req);
       res.json(data);
     } catch (error) {
       console.log(error, { msg: "faild to fetch" });

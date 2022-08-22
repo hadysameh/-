@@ -63,8 +63,10 @@ export default class SaderRepo {
         });
     });
   }
-  public static async getWithParams(searchParams: any,req:Request): Promise<any> {
-
+  public static async getWithParams(
+    searchParams: any,
+    req: Request
+  ): Promise<any> {
     const hasAccessToAllSader =
       req.user.userType.premissions.find((premission: any) => {
         return premission.premission === "has access to all sader";
@@ -122,7 +124,8 @@ export default class SaderRepo {
       } else {
         includeParams.push({
           model: Officers,
-          as: "Wared_Officers",
+          as: "SaderOfficer",
+
           where: { id: req.user.officerId },
         });
       }
@@ -134,6 +137,10 @@ export default class SaderRepo {
         {
           model: Officers,
           as: "SaderOfficer",
+        },
+        {
+          model: Officers,
+          as: "Sadertrackingofficers",
         },
         Branches,
         Wared,
@@ -299,6 +306,16 @@ export default class SaderRepo {
         t.rollback();
         reject(error);
       }
+    });
+  }
+  public static async delete(req:Request){
+    return new Promise((resolve: any, reject: any) => {
+      let saderId = req.body.saderId;
+      Sader.destroy({
+        where: {
+          id: saderId,
+        },
+      }).then(()=>{resolve('deleted wared')}).catch(()=>{reject('faild to delete wared')})
     });
   }
 }

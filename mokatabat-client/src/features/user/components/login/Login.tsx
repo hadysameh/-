@@ -23,22 +23,25 @@ export function Login() {
               .then((res: any) => {
                 let data = res.data;
                 // let { user } = data;
-                // console.log({ res });
+                // console.log({ data });
                 let token = data.token;
                 let user = {
                   userName: data.user.userName,
+                  id: data.user.id,
                 };
                 let officer = data.user.officer;
                 let userType = data.user.userType.type;
                 let premissions = data.user.userType.premissions.map(
                   (premission: any) => premission.premission
                 );
+                let rank = data.user.officer.rank.name;
                 const dataToStore = {
                   user,
                   premissions,
                   userType,
                   officer,
                   token,
+                  rank,
                 };
                 console.log({ dataToStore });
                 dispatch(setData(dataToStore));
@@ -48,7 +51,7 @@ export function Login() {
               })
               .catch((err) => {
                 console.log({ err });
-                alert(err);
+                alert(err.response.data.msg);
               });
           }}
         >

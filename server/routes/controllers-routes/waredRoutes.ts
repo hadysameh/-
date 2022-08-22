@@ -38,4 +38,10 @@ waredRouter.put(
   isAuth,
   WaredController.updateOfficersAndBranches
 );
+
+waredRouter.delete(
+  "/waredbox/deletewared",
+  isAuth,
+  WaredController.delete
+);
 export default waredRouter;

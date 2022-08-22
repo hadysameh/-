@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { removeData, selectToken } from "../../stores/userSlice";
+import { removeData, selectUserType } from "../../stores/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 export function Logout() {
   const dispatch = useDispatch();

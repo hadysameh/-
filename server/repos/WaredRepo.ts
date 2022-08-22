@@ -85,7 +85,7 @@ class WaredRepo {
         .toISOString()
         .slice(0, 19)
         .replace(/T.*/, "");
-      console.log({ result });
+      // console.log({ result });
       return result;
     };
     let whereParams: any = {};
@@ -173,6 +173,10 @@ class WaredRepo {
         {
           model: Officers,
           as: "Wared_Officers",
+        },
+        {
+          model: Officers,
+          as: "WaredTrackingOfficers",
         },
         Branches,
         Gehaa,
@@ -263,7 +267,7 @@ class WaredRepo {
             },
           },
         });
-
+        /*
         //this should be consists of the officers ids and branches managers ids
 
         //pt1 for the branches managers
@@ -292,7 +296,7 @@ class WaredRepo {
         // console.log({stored_wared_officers});
         let storedWaredTrackingOfficers = await WaredTrackingOfficers.bulkCreate(
           waredtrackingOfficersRows
-        );
+        );*/
         resolve();
         await t.commit();
       } catch (error) {
@@ -504,7 +508,7 @@ class WaredRepo {
           }
         );
 
-        console.log({ wared_branchesRows, wared_officersRows });
+        // console.log({ wared_branchesRows, wared_officersRows });
         await Wared_Branches.bulkCreate(wared_branchesRows, {
           updateOnDuplicate: ["wared_id"],
         });
@@ -520,6 +524,16 @@ class WaredRepo {
         await t.rollback();
         reject("");
       }
+    });
+  }
+  public static async deleteWared(req: Request) {
+    return new Promise((resolve: any, reject: any) => {
+      let waredId = req.body.waredId;
+      Wared.destroy({
+        where: {
+          id: waredId,
+        },
+      }).then(()=>{resolve('deleted wared')}).catch(()=>{reject('faild to delete wared')})
     });
   }
 }

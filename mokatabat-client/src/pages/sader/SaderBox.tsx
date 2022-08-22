@@ -201,7 +201,7 @@ function SaderBox() {
               {pageNum > 1 && (
                 <li className="page-item">
                   <button
-                    className="page-link"
+                    className="page-link fs-3"
                     onClick={() => {
                       setPageNum(pageNum - 1);
                     }}

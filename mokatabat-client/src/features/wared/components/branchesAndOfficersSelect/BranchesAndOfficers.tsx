@@ -4,7 +4,7 @@ import { BranchesSelect } from "./components/branchesSelect";
 import { serverApiUrl } from "../../../../config";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-
+import * as premisions from "../../../../utils/premissions";
 interface IProps {
   selectedOfficers: any;
   selectedBranches: any;
@@ -13,7 +13,10 @@ interface IProps {
 
 function BranchesAndOfficers(props: IProps) {
   let navigate = useNavigate();
-
+  console.log(
+    premisions.hasAccessToEditWaredBranchs() ,
+      premisions.hasAccessToEditWaredOfficers()
+  );
   const [selectedEditedBranches, setSelectedEditedBranches] = useState<any>([]);
   const [selectedEditedOfficers, setselectedEditedOfficers] = useState<any>([]);
 
@@ -27,7 +30,7 @@ function BranchesAndOfficers(props: IProps) {
       setBranchesChoices(branches);
       setOfficersChoices(officers);
 
-      console.log({ mokatbaData:props.mokatbaData });
+      // console.log({ mokatbaData: props.mokatbaData });
 
       let selectedOfficers = props.mokatbaData.Wared_Officers.map(
         (officer: any) => {
@@ -80,31 +83,34 @@ function BranchesAndOfficers(props: IProps) {
           selectedEditedBranches={selectedEditedBranches}
           setSelectedEditedBranches={setSelectedEditedBranches}
         />
-        <div
-          style={{
-            marginTop: "15px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <button
-            type="submit"
-            className="btn btn-primary fs-4"
-            onClick={() => {
-              console.log({
-                selectedEditedBranches,
-                selectedEditedOfficers,
-              });
-              submitModifiedWared({
-                waredId: props.mokatbaData.id,
-                selectedOfficers: JSON.stringify(selectedEditedOfficers),
-                selectedBranchs: JSON.stringify(selectedEditedBranches),
-              });
+        {(premisions.hasAccessToEditWaredBranchs() ||
+          premisions.hasAccessToEditWaredOfficers()) && (
+          <div
+            style={{
+              marginTop: "15px",
+              display: "flex",
+              justifyContent: "center",
             }}
           >
-            تعديل
-          </button>
-        </div>
+            <button
+              type="submit"
+              className="btn btn-primary fs-4"
+              onClick={() => {
+                console.log({
+                  selectedEditedBranches,
+                  selectedEditedOfficers,
+                });
+                submitModifiedWared({
+                  waredId: props.mokatbaData.id,
+                  selectedOfficers: JSON.stringify(selectedEditedOfficers),
+                  selectedBranchs: JSON.stringify(selectedEditedBranches),
+                });
+              }}
+            >
+              تعديل
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

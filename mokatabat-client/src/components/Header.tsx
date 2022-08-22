@@ -1,15 +1,21 @@
 import { Link } from "react-router-dom";
-import HideIfAuth from "../middlewares/componentsGaurds/HideIfAuth";
-import HideIfNotAuth from "../middlewares/componentsGaurds/HideIfNotAuth";
+import HasAccessToShowComponent from "../middlewares/componentsGaurds/HasAccessToShowComponent";
 import { useSelector } from "react-redux";
-import { selectToken, selectOfficer } from "../features/user/stores/userSlice";
-import { useEffect } from "react";
+import {
+  selectUserType,
+  selectOfficer,
+  selectToken,
+  selectRank,
+  selectPremissions,
+} from "../features/user/stores/userSlice";
+import * as premissions from "../utils/premissions";
+import { useEffect, useState } from "react";
 function Header() {
   const token = useSelector(selectToken);
   const officer = useSelector(selectOfficer);
-  useEffect(() => {
-    console.log({ tokenFromHeader: token });
-  }, [token]);
+  const userType = useSelector(selectUserType);
+  const rank = useSelector(selectRank);
+
   return (
     <div className=" " key={token}>
       <div className="container mt-4">
@@ -28,7 +34,7 @@ function Header() {
       <nav className="navbar navbar-expand-lg navbar-light bg-primary mt-3">
         <div className="collapse navbar-collapse container fs-3" id="navbarNav">
           <ul className="navbar-nav ">
-            <HideIfNotAuth>
+            {token && (
               <>
                 <li className="nav-item">
                   <Link to="/" className="nav-link active text-white">
@@ -46,42 +52,57 @@ function Header() {
                   </Link>
                 </li>
 
-                <li className="nav-item dropdown  ">
-                  <a
-                    className="nav-link dropdown-toggle text-white"
-                    href="#"
-                    id="navbarDropdownMenuLink"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    اضافة مكاتبة
-                  </a>
-                  <ul
-                    className="dropdown-menu fs-3"
-                    aria-labelledby="navbarDropdownMenuLink"
-                  >
-                    <li>
-                      <Link
-                        to="/createwared"
-                        className="nav-link active text-dark text-center"
+                <HasAccessToShowComponent
+                  condition={
+                    premissions.hasAddWaredPremission() &&
+                    premissions.hasAddSaderPremission()
+                  }
+                >
+                  <li className="nav-item dropdown  ">
+                    <a
+                      className="nav-link dropdown-toggle text-white"
+                      href="#"
+                      id="navbarDropdownMenuLink"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      اضافة مكاتبة
+                    </a>
+                    <ul
+                      className="dropdown-menu fs-3"
+                      aria-labelledby="navbarDropdownMenuLink"
+                    >
+                      <HasAccessToShowComponent
+                        condition={premissions.hasAddWaredPremission()}
                       >
-                        اضافة وارد
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/createsader"
-                        className="nav-link active text-dark text-center"
+                        <li>
+                          <Link
+                            to="/createwared"
+                            className="nav-link active text-dark text-center"
+                          >
+                            اضافة وارد
+                          </Link>
+                        </li>
+                      </HasAccessToShowComponent>
+                      <HasAccessToShowComponent
+                        condition={premissions.hasAddSaderPremission()}
                       >
-                        اضافة صادر
-                      </Link>
-                    </li>
-                  </ul>
-                </li>
+                        <li>
+                          <Link
+                            to="/createsader"
+                            className="nav-link active text-dark text-center"
+                          >
+                            اضافة صادر
+                          </Link>
+                        </li>
+                      </HasAccessToShowComponent>
+                    </ul>
+                  </li>
+                </HasAccessToShowComponent>
               </>
-            </HideIfNotAuth>
-            <HideIfAuth>
+            )}
+            {!token && (
               <>
                 <li className="nav-item">
                   <Link to="/login" className="nav-link active text-white">
@@ -94,8 +115,8 @@ function Header() {
                   </Link>
                 </li> */}
               </>
-            </HideIfAuth>
-            <HideIfNotAuth>
+            )}
+            {token && (
               <li className="nav-item dropdown  ">
                 <a
                   className="nav-link dropdown-toggle text-white"
@@ -105,7 +126,7 @@ function Header() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  {officer.name}
+                  {rank + " : " + officer.name}
                 </a>
                 <ul
                   className="dropdown-menu fs-3"
@@ -118,7 +139,7 @@ function Header() {
                   </li>
                 </ul>
               </li>
-            </HideIfNotAuth>
+            )}
           </ul>
         </div>
       </nav>

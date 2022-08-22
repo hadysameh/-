@@ -1,21 +1,34 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
 import { serverApiUrl } from "../../config";
 import BranchesAndOfficers from "../../features/wared/components/branchesAndOfficersSelect";
+import * as premissions from "../../utils/premissions";
+import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
 function MokatbaDetailsPreview() {
   let { mokatbaId } = useParams();
   const [mokatbaData, setMokatbaData] = useState<any>({});
+  const [isConfirmDeleteShown, setIsConfirmDeleteShown] = useState(false);
+  const deleteWared = useCallback(() => {
+    axios
+      .post(serverApiUrl + "api/waredbox/deletewared", { waredTd: mokatbaId })
+      .then((res) => {});
+  }, []);
   useEffect(() => {
     // console.log("will fetch");
     axios
       .get(serverApiUrl + "api/wared/", { params: { id: mokatbaId } })
       .then((res) => {
-        // console.log(res.data);
         setMokatbaData(res.data);
       });
+
+    axios
+      .post(serverApiUrl + "api/waredtrackingofficers/", {
+        waredId: mokatbaId,
+      })
+      .then((res) => console.log(res));
   }, []);
   return (
     <>
@@ -149,21 +162,66 @@ function MokatbaDetailsPreview() {
                 </a>
               </div>
             </div>
-
-            <div className="row align-items-start pt-5">
-              <div className="">
-                <Link
-                  to={`/wared/edit/${mokatbaId}`}
-                  style={{
-                    marginBottom: "50px",
-                  }}
-                  className="btn btn-lg btn-success fs-3"
-                >
-                  تعديل المكاتبة
-                </Link>
-                <br />
+            <HasAccessToShowComponent
+              condition={premissions.hasEditWaredPremission()}
+            >
+              <div className="row align-items-start pt-5">
+                <div className="">
+                  <Link
+                    to={`/wared/edit/${mokatbaId}`}
+                    className="btn btn-lg btn-success fs-3"
+                  >
+                    تعديل المكاتبة
+                  </Link>
+                  <br />
+                </div>
               </div>
-            </div>
+            </HasAccessToShowComponent>
+            <HasAccessToShowComponent
+              condition={premissions.hasDeleteSaderPremission()}
+            >
+              <>
+                <div className="row align-items-start pt-5">
+                  <div className="">
+                    <a
+                      onClick={() => {
+                        setIsConfirmDeleteShown(true);
+                      }}
+                      target="blank"
+                      className="btn btn-lg btn-danger fs-3"
+                    >
+                      حذف الوارد
+                    </a>
+                  </div>
+                </div>
+
+                {isConfirmDeleteShown && (
+                  <div className="row align-items-start pt-5">
+                    <div className="d">
+                      <a
+                        onClick={() => {
+                          deleteWared();
+                        }}
+                        target="blank"
+                        className="btn btn-lg btn-danger fs-3 ml-3"
+                      >
+                        تأكيد حذف الوارد
+                      </a>
+
+                      <a
+                        onClick={() => {
+                          setIsConfirmDeleteShown(false);
+                        }}
+                        target="blank"
+                        className="btn btn-lg btn-success fs-3 mr-3"
+                      >
+                        إالغاء
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </>
+            </HasAccessToShowComponent>
           </div>
         </div>
       </div>

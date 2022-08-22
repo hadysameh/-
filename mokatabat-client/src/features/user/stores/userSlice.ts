@@ -11,13 +11,15 @@ interface userState {
   userType: string | null;
   officer: any;
   token: any;
+  rank: any;
 }
 const initialState: userState = {
-  premissions: null,
+  premissions: [],
   user: null,
   userType: null,
   officer: null,
   token: null,
+  rank: null,
 };
 
 export const userSlice = createSlice({
@@ -31,6 +33,7 @@ export const userSlice = createSlice({
       state.userType = data.userType;
       state.officer = data.officer;
       state.token = data.token;
+      state.rank = data.rank;
     },
     removeData: (state: userState) => {
       state.user = null;
@@ -38,6 +41,7 @@ export const userSlice = createSlice({
       state.userType = null;
       state.officer = null;
       state.token = null;
+      state.rank = null;
     },
   },
 });
@@ -49,12 +53,28 @@ export const { setData, removeData } = userSlice.actions;
 export const selectUser = (state: any) => {
   return state.userSlice.user;
 };
-export const selectPremissions = (state: any) => {
+export const selectPremissions = (state: any): string[] => {
   return state.userSlice.premissions;
 };
 export const selectOfficer = (state: any) => {
   return state.userSlice.officer;
 };
-export const selectToken = (state: any) =>  state.userSlice.token
+export const selectToken = (state: any) => state.userSlice.token;
+
+export const selectUserType = (state: any) => state.userSlice.userType;
+
+export const selectRank = (state: any) => state.userSlice.rank;
+
+export const getUser = () => (dispatch: any, getState: any) => {
+  return getState().userSlice.user;
+};
+
+export const getPremissions = () => (dispatch: any, getState: any):any[] => {
+  return getState().userSlice.premissions;
+};
+
+export const getUserType = () => (dispatch: any, getState: any) => {
+  return getState().userSlice.userType;
+};
 
 export default userSlice.reducer;
