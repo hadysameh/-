@@ -528,7 +528,7 @@ class WaredRepo {
   }
   public static async deleteWared(req: Request) {
     return new Promise((resolve: any, reject: any) => {
-      console.log({waredId:req.body.waredId})
+      // console.log({waredId:req.body.waredId})
       let waredId = req.body.waredId;
       Wared.destroy({
         where: {

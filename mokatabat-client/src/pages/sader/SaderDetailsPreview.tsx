@@ -1,20 +1,24 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
 import { serverApiUrl } from "../../config";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
 import * as premissions from "../../utils/premissions";
 
 function SaderDetailsPreview() {
+  let navigate = useNavigate();
+
   let { saderId } = useParams();
   const [saderData, setSaderData] = useState<any>({});
   const [isConfirmDeleteShown, setIsConfirmDeleteShown] = useState(false);
   const deleteSader = useCallback(() => {
     axios
-      .post(serverApiUrl + "api/saderbox/deletesader", { saderId })
-      .then((res) => {});
+      .delete(serverApiUrl + "api/saderbox/deletesader", { data: { saderId } })
+      .then((res) => {
+        navigate("/saderbox");
+      });
   }, []);
   useEffect(() => {
     axios

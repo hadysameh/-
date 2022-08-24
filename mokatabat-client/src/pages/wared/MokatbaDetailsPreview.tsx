@@ -23,7 +23,6 @@ function MokatbaDetailsPreview() {
       });
   }, []);
   useEffect(() => {
-    // console.log("will fetch");
     axios
       .get(serverApiUrl + "api/wared/", { params: { id: mokatbaId } })
       .then((res) => {

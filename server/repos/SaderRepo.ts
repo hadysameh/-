@@ -311,6 +311,8 @@ export default class SaderRepo {
   public static async delete(req:Request){
     return new Promise((resolve: any, reject: any) => {
       let saderId = req.body.saderId;
+      console.log({saderId:req.body.saderId})
+
       Sader.destroy({
         where: {
           id: saderId,
