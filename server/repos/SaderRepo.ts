@@ -158,11 +158,11 @@ export default class SaderRepo {
     reqBodyData: any,
     fileLocationPath: string
   ): Promise<any> {
-    console.log({ reqBodyData, fileLocationPath });
+    // console.log({ reqBodyData, fileLocationPath });
     return new Promise(async (resolve: any, reject: any) => {
       const t = await sequelize.transaction();
       try {
-        console.log({ selectedGehaat: reqBodyData.gehaat });
+        // console.log({ selectedGehaat: reqBodyData.gehaat });
         let selectedGehaat = JSON.parse(reqBodyData.gehaat);
         let lastWared = await Wared.findOne({
           where: {
@@ -213,7 +213,7 @@ export default class SaderRepo {
             gehaa_id: gehaaIdObj.id,
           };
         });
-        console.log({ Sader_GehaaRows });
+        // console.log({ Sader_GehaaRows });
 
         await Sader_Gehaa.bulkCreate(Sader_GehaaRows);
 

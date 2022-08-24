@@ -68,6 +68,7 @@ export default class WaredOptionsController {
               branches: values[1],
               officers: values[2],
             };
+            // console.log({result})
             resolve(result);
           })
           .catch((err) => {

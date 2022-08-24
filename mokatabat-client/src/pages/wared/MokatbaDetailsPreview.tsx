@@ -1,20 +1,26 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
 import { serverApiUrl } from "../../config";
 import BranchesAndOfficers from "../../features/wared/components/branchesAndOfficersSelect";
 import * as premissions from "../../utils/premissions";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
 function MokatbaDetailsPreview() {
+  let navigate = useNavigate();
+
   let { mokatbaId } = useParams();
   const [mokatbaData, setMokatbaData] = useState<any>({});
   const [isConfirmDeleteShown, setIsConfirmDeleteShown] = useState(false);
   const deleteWared = useCallback(() => {
     axios
-      .post(serverApiUrl + "api/waredbox/deletewared", { waredTd: mokatbaId })
-      .then((res) => {});
+      .delete(serverApiUrl + "api/waredbox/deletewared", {
+        data: { waredId: mokatbaId },
+      })
+      .then((res) => {
+        navigate("/waredbox");
+      });
   }, []);
   useEffect(() => {
     // console.log("will fetch");

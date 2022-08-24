@@ -3,7 +3,7 @@ import SaderRepo from "../repos/SaderRepo";
 class SaderController {
   public static async getOne(req: Request, res: Response): Promise<any> {
     let saderId = req.query.id;
-    console.log({ saderId, req: req.query });
+    // console.log({ saderId, req: req.query });
     let sader = await SaderRepo.getById(saderId);
     res.json(sader);
   }

@@ -41,7 +41,7 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
   const [isFilePicked, setIsFilePicked] = useState(false);
 
   useEffect(() => {
-    axios.get(serverApiUrl + "api/waredbox/searchoptions").then((res) => {
+    axios.get(serverApiUrl + "api/waredoptions").then((res) => {
       setGehaat(res.data.gehaat);
       setBranchs(res.data.branches);
       setOfficers(res.data.officers);

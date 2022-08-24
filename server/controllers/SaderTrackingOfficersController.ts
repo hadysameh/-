@@ -5,7 +5,7 @@ export default class SaderTrackingOfficersController {
   public static async store(req: Request, res: Response): Promise<any> {
     let officerId = req.user.officerId;
     let saderId = req.body.saderId;
-    console.log({ officerId, saderId });
+    // console.log({ officerId, saderId });
     try {
       const [
         saderTrackingOfficersRow,
