@@ -2,6 +2,16 @@ import { Request, Response } from "express";
 import WaredRepo from "../repos/WaredRepo";
 
 class WaredController {
+  public static async getNumberOfUnreadWared(req: Request, res: Response): Promise<any> {
+
+    let id = req.query.id;
+    try {
+      let result = await WaredRepo.getNumberOfUnreadWared(req);
+      res.json(result);
+    } catch (error) {
+      console.log({ error });
+    }
+  }
   public static async getOne(req: Request, res: Response): Promise<any> {
     // console.log({ reqParams: req.query });
     let id = req.query.id;

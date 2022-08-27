@@ -165,6 +165,7 @@ function SaderDetailsPreview() {
                 <div className="row align-items-start pt-5">
                   <div className="">
                     <a
+                      href="#"
                       onClick={() => {
                         setIsConfirmDeleteShown(true);
                       }}
@@ -180,6 +181,7 @@ function SaderDetailsPreview() {
                   <div className="row align-items-start pt-5">
                     <div className="d">
                       <a
+                        href="#"
                         onClick={() => {
                           deleteSader();
                         }}
@@ -190,6 +192,7 @@ function SaderDetailsPreview() {
                       </a>
 
                       <a
+                        href="#"
                         onClick={() => {
                           setIsConfirmDeleteShown(false);
                         }}

@@ -38,6 +38,7 @@
     "mysql2": "^2.3.3",
     "react-router-dom": "^6.3.0",
     "sequelize": "^6.21.2",
+    "socket.io": "^4.5.1",
     "tslib": "^2.4.0"
   }
 }

@@ -8,6 +8,8 @@ import {
   selectRank,
   selectPremissions,
 } from "../features/user/stores/userSlice";
+import { serverApiUrl } from "../config";
+import axios from "axios";
 import * as premissions from "../utils/premissions";
 import { useEffect, useState } from "react";
 function Header() {
@@ -15,6 +17,26 @@ function Header() {
   const officer = useSelector(selectOfficer);
   const userType = useSelector(selectUserType);
   const rank = useSelector(selectRank);
+  const [numOfUnreadWared, setnumOfUnreadWared] = useState("0");
+  const [numOfUnreadSader, setnumOfUnreadSader] = useState("0");
+
+  useEffect(() => {
+    axios
+      .get(serverApiUrl + "api/waredbox/getNumberOfUnreadWared")
+      .then((res) => {
+        let { data } = res;
+        console.log({ numOfUnreadWared: data });
+        setnumOfUnreadWared(data);
+      });
+
+    axios
+      .get(serverApiUrl + "api/saderbox/getNumberOfUnreadSader")
+      .then((res) => {
+        let { data } = res;
+        console.log({ numOfUnreadSader: data });
+        setnumOfUnreadSader(data);
+      });
+  }, []);
 
   return (
     <div className=" " key={token}>
@@ -44,11 +66,17 @@ function Header() {
                 <li className="nav-item">
                   <Link to="/waredbox" className="nav-link active text-white">
                     صندوق الوارد
+                    <span style={{ background: "red" }}>
+                      {numOfUnreadWared}
+                    </span>
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link to="/saderbox" className="nav-link active text-white">
                     صندوق الصادر
+                    <span style={{ background: "red" }}>
+                      {numOfUnreadSader}
+                    </span>
                   </Link>
                 </li>
 

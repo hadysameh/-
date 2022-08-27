@@ -1,6 +1,18 @@
 import { Request, Response } from "express";
 import SaderRepo from "../repos/SaderRepo";
 class SaderController {
+  public static async getNumberOfUnreadSader(
+    req: Request,
+    res: Response
+  ): Promise<any> {
+    try {
+      let result = await SaderRepo.getNumberOfUnreadSader(req);
+      res.json(result);
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
   public static async getOne(req: Request, res: Response): Promise<any> {
     let saderId = req.query.id;
     // console.log({ saderId, req: req.query });
@@ -23,7 +35,7 @@ class SaderController {
     let params = req.query;
     // console.log({params})
     try {
-      let result = await SaderRepo.getWithParams(params,req);
+      let result = await SaderRepo.getWithParams(params, req);
       // console.log({result});
       res.json(result);
     } catch (error) {

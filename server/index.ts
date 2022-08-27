@@ -8,19 +8,24 @@ import bodyParser from "body-parser";
 import path from "path";
 import cookieParser from "cookie-parser";
 import { router, adminJs } from "./AdminJs";
-
+import Config from "./models/ConfigModel";
+import { Server } from "socket.io";
 require("dotenv").config();
-// seqeulize.sync().then(() => {
-//   console.log("seqeulize is in sync with db");
-// });
+  // seqeulize.sync().then(() => {
+  //   console.log("seqeulize is in sync with db");
+  // });
+
+// console.log({ configRow: Config.findAll() });
 const app: Express = express();
+const server = require('http').createServer(app);
+const io = new Server(server);
 /**
  * adminjs routes and bodyParser mus be first
- * 
+ *
  */
 app.use(adminJs.options.rootPath, router);
-app.use(bodyParser())
-app.use(bodyParser.json())
+app.use(bodyParser());
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.raw());
 app.use(express.urlencoded({ extended: true }));
@@ -33,6 +38,6 @@ app.get("/", (req: Request, res: Response) => {
   res.json("hello from TS");
 });
 let port: string = process.env.PORT as string;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log("app runs on " + port);
 });

@@ -12,12 +12,13 @@ const waredRouter = express.Router();
 
 // })
 waredRouter.get("/wared", isAuth, WaredController.getOne);
-// waredRouter.get('/waredbox',WaredController.get)
-// waredRouter.get(
-//   "/waredbox/searchOptions",
-//   isAuth,
-//   WaredController.getSearchOptions
-// );
+
+waredRouter.get(
+  "/waredbox/getNumberOfUnreadWared",
+  isAuth,
+  WaredController.getNumberOfUnreadWared
+);
+
 waredRouter.get("/waredbox/search", isAuth,WaredController.getSearch);
 waredRouter.post(
   "/waredbox/store",
@@ -44,4 +45,6 @@ waredRouter.delete(
   isAuth,
   WaredController.delete
 );
+
+
 export default waredRouter;

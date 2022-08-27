@@ -7,7 +7,13 @@ import isAuth from "../../middelwares/isAuth";
 const saderRouter = express.Router();
 
 saderRouter.get("/onesader", isAuth, SaderController.getOne);
-// waredRouter.get('/waredbox',WaredController.get)
+
+saderRouter.get(
+  "/saderbox/getNumberOfUnreadSader",
+  isAuth,
+  SaderController.getNumberOfUnreadSader
+);
+
 saderRouter.get(
   "/saderbox/searchOptions",
   isAuth,

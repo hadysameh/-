@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { serverApiUrl } from "../../../../config";
 import { waredBoxType } from "../../../../types";
 import isArrEmpty from "../../../../utils/isArrEmpty";
+import Select from "react-select";
 interface SearchFormProps {
   setDocNum: any;
   setGehaaId: any;
@@ -28,9 +29,9 @@ interface SearchFormProps {
 }
 function SearchBox(props: SearchFormProps) {
   const [isSearched, setIsSearched] = useState(false);
-  const [gehaat, setGehaat] = useState([]);
-  const [branchs, setBranchs] = useState([]);
-  const [officers, setOfficers] = useState([""]);
+  const [gehaatOptions, setGehaatOptions] = useState([]);
+  const [branchsOptions, setBranchsOptions] = useState([]);
+  const [officersOptions, setOfficersOptions] = useState([""]);
 
   const [selectedGehaaName, setSelectedGehaaName] = useState("");
   const [selectedBranchName, setSelectedBranchName] = useState("");
@@ -49,16 +50,41 @@ function SearchBox(props: SearchFormProps) {
     "7"
   );
 
+  const getOptionNameById = useCallback((optionId: string, options: any[]) => {
+    // console.log({gehaaId})
+    let optionObj: any = options.find((option: any) => option.id === optionId);
+    // console.log({ gehaaObj, gehaaId });
+
+    if (optionObj) {
+      return optionObj.name;
+    } else {
+      return "";
+    }
+  }, []);
+
+  const getGehaaNameById = (gehaaId:string,gehaatOptions:any[]) => {
+    return getOptionNameById(gehaaId, gehaatOptions);
+  };
+
+  const getBranchNameById = (branchId:string,branchsOptions:any[]) => {
+    return getOptionNameById(branchId, branchsOptions);
+  };
+
+  const getOfficerNameById = (officerId:string,officersOptions:any[]) => {
+    return getOptionNameById(officerId, officersOptions);
+  };
+  
+
   useEffect(() => {
     axios.get(serverApiUrl + "api/waredoptions").then((res) => {
       // console.log({ res });
-      setGehaat(res.data.gehaat);
-      setBranchs(res.data.branches);
-      setOfficers(res.data.officers);
+      setGehaatOptions(res.data.gehaat);
+      setBranchsOptions(res.data.branches);
+      setOfficersOptions(res.data.officers);
     });
     // TODO : fetch from srever
     setDefaultDaysBeforeExecution("7");
-    setShowDaysBeforeExecutionFields(false)
+    setShowDaysBeforeExecutionFields(false);
     // setShowDaysBeforeExecutionFields(
     //   props.waredBoxType === waredBoxType.normal && true
     // );
@@ -103,30 +129,21 @@ function SearchBox(props: SearchFormProps) {
 
           <div className="col-md-3">
             <label className="form-label">جهة الوارد</label>
-            <input
-              className="form-control fs-3"
-              list="gehaatOptions"
-              id="exampleDataList"
-              placeholder="Type to search..."
-              value={selectedGehaaName}
-              onChange={(e) => {
-                let choosedGehaaName = e.target.value;
-                setSelectedGehaaName(e.target.value);
-                let choosedGehaa: any = gehaat.find((gehaa: any) => {
-                  return gehaa.name === choosedGehaaName;
-                });
-                let choosedGehaaId = choosedGehaa ? choosedGehaa.id : "";
-                // console.log(choosedBranchId);
-                props.setGehaaId(choosedGehaaId);
+            <Select
+              value={{
+                value: props.gehaaId,
+                label: getGehaaNameById(props.gehaaId,gehaatOptions),
               }}
-            ></input>
-            <datalist id="gehaatOptions">
-              {gehaat.map((gehaa: any) => {
-                return (
-                  <option key={gehaa.id + gehaa.name}>{gehaa.name}</option>
-                );
+              onChange={(gehaaOption: any) => {
+                props.setGehaaId(gehaaOption.value);
+              }}
+              options={gehaatOptions.map((gehaa: any) => {
+                return {
+                  value: gehaa.id,
+                  label: gehaa.name,
+                };
               })}
-            </datalist>
+            />
           </div>
 
           <div className="col-md-3">
@@ -143,11 +160,26 @@ function SearchBox(props: SearchFormProps) {
             />
           </div>
 
-          {!isArrEmpty(branchs) && (
+          {!isArrEmpty(branchsOptions) && (
             <div className="col-md-3">
               <label className="form-label">الفرع المختص</label>
 
-              <input
+              <Select
+              value={{
+                value: props.branchId,
+                label: getBranchNameById(props.branchId,branchsOptions),
+              }}
+              onChange={(branchOption: any) => {
+                props.setBranchId(branchOption.value);
+              }}
+              options={branchsOptions.map((branch: any) => {
+                return {
+                  value: branch.id,
+                  label: branch.name,
+                };
+              })}
+            />
+              {/* <input
                 className="form-control fs-3"
                 list="branchsOptions"
                 id="exampleDataList"
@@ -156,9 +188,11 @@ function SearchBox(props: SearchFormProps) {
                 onChange={(e) => {
                   let choosedBranchName = e.target.value;
                   setSelectedBranchName(e.target.value);
-                  let choosedBranch: any = branchs.find((branch: any) => {
-                    return branch.name === choosedBranchName;
-                  });
+                  let choosedBranch: any = branchsOptions.find(
+                    (branch: any) => {
+                      return branch.name === choosedBranchName;
+                    }
+                  );
                   let choosedBranchId = choosedBranch ? choosedBranch.id : "";
                   // console.log(choosedBranchId);
                   props.setBranchId(choosedBranchId);
@@ -166,19 +200,34 @@ function SearchBox(props: SearchFormProps) {
               ></input>
 
               <datalist id="branchsOptions">
-                {branchs.map((branch: any) => {
+                {branchsOptions.map((branch: any) => {
                   return (
                     <option key={branch.id + branch.name}>{branch.name}</option>
                   );
                 })}
-              </datalist>
+              </datalist> */}
             </div>
           )}
 
-          {!isArrEmpty(officers) && (
+          {!isArrEmpty(officersOptions) && (
             <div className="col-md-3">
               <label className="form-label">الضابط المختص</label>
-              <input
+              <Select
+              value={{
+                value: props.officerId,
+                label: getOfficerNameById(props.officerId,officersOptions),
+              }}
+              onChange={(officerOption: any) => {
+                props.setOfficerId(officerOption.value);
+              }}
+              options={officersOptions.map((branch: any) => {
+                return {
+                  value: branch.id,
+                  label: branch.name,
+                };
+              })}
+            />
+              {/* <input
                 className="form-control fs-3"
                 list="officersOptions"
                 id="exampleDataList"
@@ -187,9 +236,11 @@ function SearchBox(props: SearchFormProps) {
                 onChange={(e) => {
                   let choosedOfficerName = e.target.value;
                   setSelectedOfficerName(e.target.value);
-                  let choosedOfficer: any = officers.find((officer: any) => {
-                    return officer.name == choosedOfficerName;
-                  });
+                  let choosedOfficer: any = officersOptions.find(
+                    (officer: any) => {
+                      return officer.name == choosedOfficerName;
+                    }
+                  );
                   let choosedOfficerId = choosedOfficer
                     ? choosedOfficer.id
                     : "";
@@ -198,14 +249,14 @@ function SearchBox(props: SearchFormProps) {
               ></input>
 
               <datalist id="officersOptions">
-                {officers.map((officer: any) => {
+                {officersOptions.map((officer: any) => {
                   return (
                     <option key={officer.id + officer.name}>
                       {officer.name}
                     </option>
                   );
                 })}
-              </datalist>
+              </datalist> */}
             </div>
           )}
 

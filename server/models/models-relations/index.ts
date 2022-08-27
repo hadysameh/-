@@ -19,6 +19,7 @@ import UserType from "../NewAuthModels/UserTypes";
 import User from "../NewAuthModels/User";
 import Premission from '../NewAuthModels/Premissions'
 import UserType_premission from '../UserType_premissionModel'
+import Config from '../ConfigModel'
 // wared relations
 Wared.belongsTo(Gehaa, {
   foreignKey: "gehaa_id",
@@ -44,6 +45,7 @@ Wared.belongsToMany(Officers, {
   otherKey: "officers_id",
   onDelete: "CASCADE",
 });
+
 Wared.belongsToMany(Officers, {
   through: WaredTrackingOfficers,
   as: "WaredTrackingOfficers",
@@ -52,6 +54,19 @@ Wared.belongsToMany(Officers, {
   onDelete: "CASCADE",
 });
 
+
+// WaredTrackingOfficers.belongsTo(Wared, {
+//   foreignKey: "wared_id",
+//   onDelete: "CASCADE",
+//   as:'Wared_WaredTrackingOfficers'
+// });
+
+// WaredTrackingOfficers.belongsTo(Officers, {
+//   foreignKey: "officer_id",
+//   onDelete: "CASCADE",
+//   as:'Officers_WaredTrackingOfficers'
+
+// });
 //------------------------------------------------------------
 
 Sader.belongsTo(Wared, {
@@ -78,6 +93,15 @@ Sader.belongsToMany(Gehaa, {
   constraints: false,
 });
 
+// Sadertrackingofficers.belongsTo(Sader, {
+//   foreignKey: "sader_id",
+//   onDelete: "CASCADE",
+// });
+
+// Sadertrackingofficers.belongsTo(Officers, {
+//   foreignKey: "officer_id",
+//   onDelete: "CASCADE",
+// });
 //------------------------------------------------------------
 
 User.belongsTo(UserType,{

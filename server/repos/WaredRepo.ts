@@ -7,9 +7,65 @@ import Wared_Branches from "../models/Wared_BranchesModel";
 import Wared_Officers from "../models/Wared_OfficersModel";
 import WaredTrackingOfficers from "../models/WaredTrackingOfficersModel";
 import sequelize from "../db/seqeulize";
+import Config from "../models/ConfigModel";
 import { Op } from "sequelize";
 // import dateFormat from 'date-format'
 class WaredRepo {
+  public static async getNumberOfUnreadWared(req: Request) {
+    let waredIncludeParams = [];
+
+    let config = await Config.findOne();
+    const hasAccessToAllWared =
+      req.user.userType.premissions.find((premission: any) => {
+        return premission.premission === "has access to all wared";
+      }) || req.user.userType.type === "admin";
+
+    const hasAccessToBranchWared = req.user.userType.premissions.find(
+      (premission: any) => {
+        return premission.premission === "has access to branch wared";
+      }
+    );
+
+    if (!hasAccessToAllWared) {
+      if (hasAccessToBranchWared) {
+        waredIncludeParams.push({
+          model: Branches,
+          where: { id: req.user.officer.branches_id },
+        });
+      } else {
+        waredIncludeParams.push({
+          model: Officers,
+          as: "Wared_Officers",
+          where: { id: req.user.officerId },
+        });
+      }
+    }
+
+    let numberOfWaredAfterLaunchForOfficer = await Wared.count({
+      where: {
+        doc_date: { [Op.gte]: config?.getDataValue("dateOfLaunch") },
+      },
+      include: [...waredIncludeParams],
+    });
+
+    let numberOfreadWared = await Wared.count({
+      where: {
+        doc_date: { [Op.gte]: config?.getDataValue("dateOfLaunch") },
+      },
+      include: [
+        ...waredIncludeParams,
+        {
+          model: Officers,
+          where: { id: { [Op.eq]: req.user.officerId } },
+          as: "WaredTrackingOfficers",
+        },
+      ],
+    });
+    
+    // console.log({ numberOfUnreadWared: numberOfWaredAfterLaunchForOfficer-numberOfreadWared , officerId:req.user.officerId});
+    return numberOfWaredAfterLaunchForOfficer-numberOfreadWared;
+   }
+
   public static async getById(id: any): Promise<any> {
     let mokatba = await Wared.findOne({
       where: {
@@ -534,7 +590,13 @@ class WaredRepo {
         where: {
           id: waredId,
         },
-      }).then(()=>{resolve('deleted wared')}).catch(()=>{reject('faild to delete wared')})
+      })
+        .then(() => {
+          resolve("deleted wared");
+        })
+        .catch(() => {
+          reject("faild to delete wared");
+        });
     });
   }
 }

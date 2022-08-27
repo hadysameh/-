@@ -101,7 +101,6 @@ function WaredBox(props: IProps) {
       })
       .then((res) => {
         if (res.data) {
-          console.log({ wareds: res.data });
 
           setIsShowSpinner(false);
           setWaredBoxRecords(res.data);
@@ -160,6 +159,10 @@ function WaredBox(props: IProps) {
   useEffect(() => {
     fetchRowsWithParams();
   }, [pageNum, numOfRecords]);
+
+  useEffect(()=>{
+    console.log(gehaaId)
+  },[gehaaId])
   return (
     <>
       <div className={"container"} style={{ minHeight: "1000" }}>

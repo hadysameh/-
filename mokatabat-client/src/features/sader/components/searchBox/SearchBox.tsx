@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { serverApiUrl } from "../../../../config";
 import isArrEmpty from "../../../../utils/isArrEmpty";
 import isObjEmpty from "../../../../utils/isObjEmpty";
+import Select from "react-select";
+
 interface SearchFormProps {
   setDocNum: any;
   setGehaaId: any;
@@ -23,9 +25,9 @@ interface SearchFormProps {
 }
 function SearchBox(props: SearchFormProps) {
   const [isSearched, setIsSearched] = useState(false);
-  const [gehaat, setGehaat] = useState([]);
-  const [branchs, setBranchs] = useState([]);
-  const [officers, setOfficers] = useState([""]);
+  const [gehaatOptions, setGehaatOptions] = useState([]);
+  const [branchsOptions, setBranchsOptions] = useState([]);
+  const [officersOptions, setOfficersOptions] = useState([""]);
 
   const [selectedGehaaName, setSelectedGehaaName] = useState("");
   const [selectedBranchName, setSelectedBranchName] = useState("");
@@ -46,13 +48,34 @@ function SearchBox(props: SearchFormProps) {
   };
   useEffect(() => {
     axios.get(serverApiUrl + "api/saderoptions").then((res) => {
-       
-      setGehaat(res.data.gehaat);
-      setBranchs(res.data.branches);
-      setOfficers(res.data.officers);
+      setGehaatOptions(res.data.gehaat);
+      setBranchsOptions(res.data.branches);
+      setOfficersOptions(res.data.officers);
     });
   }, []);
+  const getOptionNameById = useCallback((optionId: string, options: any[]) => {
+    // console.log({gehaaId})
+    let optionObj: any = options.find((option: any) => option.id === optionId);
+    // console.log({ gehaaObj, gehaaId });
 
+    if (optionObj) {
+      return optionObj.name;
+    } else {
+      return "";
+    }
+  }, []);
+
+  const getGehaaNameById = (gehaaId: string, gehaatOptions: any[]) => {
+    return getOptionNameById(gehaaId, gehaatOptions);
+  };
+
+  const getBranchNameById = (branchId: string, branchsOptions: any[]) => {
+    return getOptionNameById(branchId, branchsOptions);
+  };
+
+  const getOfficerNameById = (officerId: string, officersOptions: any[]) => {
+    return getOptionNameById(officerId, officersOptions);
+  };
   return (
     <div>
       <div className="p-3 border mb-4 mt-4" dir="">
@@ -103,7 +126,22 @@ function SearchBox(props: SearchFormProps) {
           </div>
           <div className="col-md-3">
             <label className="form-label">جهة الصادر</label>
-            <input
+            <Select
+              value={{
+                value: props.gehaaId,
+                label: getGehaaNameById(props.gehaaId, gehaatOptions),
+              }}
+              onChange={(gehaaOption: any) => {
+                props.setGehaaId(gehaaOption.value);
+              }}
+              options={gehaatOptions.map((gehaa: any) => {
+                return {
+                  value: gehaa.id,
+                  label: gehaa.name,
+                };
+              })}
+            />
+            {/* <input
               className="form-control fs-3"
               list="gehaatOptions"
               id="exampleDataList"
@@ -126,67 +164,106 @@ function SearchBox(props: SearchFormProps) {
                   <option key={gehaa.id + gehaa.name}>{gehaa.name}</option>
                 );
               })}
-            </datalist>
+            </datalist> */}
           </div>
 
-         {!isArrEmpty(officers)&& <div className="col-md-3">
-            <label className="form-label">الضابط المختص</label>
-            <input
-              className="form-control fs-3"
-              list="officersOptions"
-              id="exampleDataList"
-              placeholder="Type to search..."
-              value={selectedOfficerName}
-              onChange={(e) => {
-                let choosedOfficerName = e.target.value;
-                setSelectedOfficerName(e.target.value);
-                let choosedOfficer: any = officers.find((officer: any) => {
-                  return officer.name == choosedOfficerName;
-                });
-                let choosedOfficerId = choosedOfficer ? choosedOfficer.id : "";
-                // console.log(choosedOfficerId);
-                props.setOfficerId(choosedOfficerId);
-              }}
-            ></input>
-            <datalist id="officersOptions">
-              {officers.map((officer: any) => {
-                return (
-                  <option key={officer.id + officer.name}>
-                    {officer.name}
-                  </option>
-                );
-              })}
-            </datalist>
-          </div>}
+          {!isArrEmpty(officersOptions) && (
+            <div className="col-md-3">
+              <label className="form-label">الضابط المختص</label>
+              <Select
+                value={{
+                  value: props.officerId,
+                  label: getOfficerNameById(props.officerId, officersOptions),
+                }}
+                onChange={(officerOption: any) => {
+                  props.setOfficerId(officerOption.value);
+                }}
+                options={officersOptions.map((branch: any) => {
+                  return {
+                    value: branch.id,
+                    label: branch.name,
+                  };
+                })}
+              />
+              {/* <input
+                className="form-control fs-3"
+                list="officersOptions"
+                id="exampleDataList"
+                placeholder="Type to search..."
+                value={selectedOfficerName}
+                onChange={(e) => {
+                  let choosedOfficerName = e.target.value;
+                  setSelectedOfficerName(e.target.value);
+                  let choosedOfficer: any = officersOptions.find(
+                    (officer: any) => {
+                      return officer.name == choosedOfficerName;
+                    }
+                  );
+                  let choosedOfficerId = choosedOfficer
+                    ? choosedOfficer.id
+                    : "";
+                  // console.log(choosedOfficerId);
+                  props.setOfficerId(choosedOfficerId);
+                }}
+              ></input>
+              <datalist id="officersOptions">
+                {officersOptions.map((officer: any) => {
+                  return (
+                    <option key={officer.id + officer.name}>
+                      {officer.name}
+                    </option>
+                  );
+                })}
+              </datalist> */}
+            </div>
+          )}
 
-          {!isArrEmpty(branchs)&&<div className="col-md-3">
-            <label className="form-label">الفرع المختص</label>
-
-            <input
-              className="form-control fs-3"
-              list="branchsOptions"
-              id="exampleDataList"
-              placeholder="Type to search..."
-              value={selectedBranchName}
-              onChange={(e) => {
-                let choosedBranchName = e.target.value;
-                setSelectedBranchName(e.target.value);
-                let choosedBranch: any = branchs.find((branch: any) => {
-                  return branch.name == choosedBranchName;
-                });
-                let choosedBranchId = choosedBranch ? choosedBranch.id : "";
-                // console.log(choosedBranchId);
-                props.setBranchId(choosedBranchId);
-              }}
-            ></input>
-            <datalist id="branchsOptions">
-              {branchs.map((branch: any) => {
-                return (
-                  <option key={branch.id + branch.name}>{branch.name}</option>
-                );
-              })}
-            </datalist>
-          </div>}
+          {!isArrEmpty(branchsOptions) && (
+            <div className="col-md-3">
+              <label className="form-label">الفرع المختص</label>
+              <Select
+                value={{
+                  value: props.branchId,
+                  label: getBranchNameById(props.branchId, branchsOptions),
+                }}
+                onChange={(branchOption: any) => {
+                  props.setBranchId(branchOption.value);
+                }}
+                options={branchsOptions.map((branch: any) => {
+                  return {
+                    value: branch.id,
+                    label: branch.name,
+                  };
+                })}
+              />
+              {/* <input
+                className="form-control fs-3"
+                list="branchsOptions"
+                id="exampleDataList"
+                placeholder="Type to search..."
+                value={selectedBranchName}
+                onChange={(e) => {
+                  let choosedBranchName = e.target.value;
+                  setSelectedBranchName(e.target.value);
+                  let choosedBranch: any = branchsOptions.find(
+                    (branch: any) => {
+                      return branch.name == choosedBranchName;
+                    }
+                  );
+                  let choosedBranchId = choosedBranch ? choosedBranch.id : "";
+                  // console.log(choosedBranchId);
+                  props.setBranchId(choosedBranchId);
+                }}
+              ></input>
+              <datalist id="branchsOptions">
+                {branchsOptions.map((branch: any) => {
+                  return (
+                    <option key={branch.id + branch.name}>{branch.name}</option>
+                  );
+                })}
+              </datalist> */}
+            </div>
+          )}
 
           {/* TODO */}
           <div className="col-md-3">

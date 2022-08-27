@@ -12,9 +12,71 @@ import getTodaysDate from "../utils/getTodaysDate";
 import getCurrentYear from "../utils/getCurrentYear";
 import addDaysToDate from "../utils/addDaysToDate";
 import { Op } from "sequelize";
+import Config from "../models/ConfigModel";
+
 import Sadertrackingofficers from "../models/SadertrackingofficersModel";
 import Sader_Gehaa from "../models/Sader_GehaaModel";
 export default class SaderRepo {
+  public static async getNumberOfUnreadSader(req: Request) {
+    let saderIncludeParams = [];
+
+    let config = await Config.findOne();
+    const hasAccessToAllWared =
+      req.user.userType.premissions.find((premission: any) => {
+        return premission.premission === "has access to all wared";
+      }) || req.user.userType.type === "admin";
+
+    const hasAccessToBranchWared = req.user.userType.premissions.find(
+      (premission: any) => {
+        return premission.premission === "has access to branch wared";
+      }
+    );
+
+    if (!hasAccessToAllWared) {
+      if (hasAccessToBranchWared) {
+        saderIncludeParams.push({
+          model: Branches,
+          where: { id: req.user.officer.branches_id },
+        });
+      } else {
+        saderIncludeParams.push({
+          model: Officers,
+          as: "Wared_Officers",
+          where: { id: req.user.officerId },
+        });
+      }
+    }
+
+    let numberOfSaderAfterLaunchForOfficer = await Sader.count({
+      where: {
+        doc_date: { [Op.gte]: config?.getDataValue("dateOfLaunch") },
+      },
+      include: [...saderIncludeParams],
+    });
+
+    let numberOfreadSader = await Sader.count({
+      where: {
+        doc_date: { [Op.gte]: config?.getDataValue("dateOfLaunch") },
+      },
+      include: [
+        ...saderIncludeParams,
+        {
+          model: Officers,
+          where: { id: { [Op.eq]: req.user.officerId } },
+          as: "Sadertrackingofficers",
+        },
+      ],
+    });
+
+    // console.log({
+    //   numberOfSaderAfterLaunchForOfficer,
+    //   numberOfUnreadSader:
+    //     numberOfSaderAfterLaunchForOfficer - numberOfreadSader,
+    //   officerId: req.user.officerId,
+    // });
+    return numberOfSaderAfterLaunchForOfficer - numberOfreadSader;
+  }
+
   public static async getById(id: any): Promise<any> {
     let mokatba = await Sader.findOne({
       where: {
@@ -308,16 +370,22 @@ export default class SaderRepo {
       }
     });
   }
-  public static async delete(req:Request){
+  public static async delete(req: Request) {
     return new Promise((resolve: any, reject: any) => {
       let saderId = req.body.saderId;
-      console.log({saderId:req.body.saderId})
+      console.log({ saderId: req.body.saderId });
 
       Sader.destroy({
         where: {
           id: saderId,
         },
-      }).then(()=>{resolve('deleted wared')}).catch(()=>{reject('faild to delete wared')})
+      })
+        .then(() => {
+          resolve("deleted wared");
+        })
+        .catch(() => {
+          reject("faild to delete wared");
+        });
     });
   }
 }
