@@ -1,5 +1,6 @@
 import seqeulize from "../db/seqeulize";
 import { DataTypes } from "sequelize";
+import emitSocketEvent from "../helpers/socketIo";
 
 const Sader = seqeulize.define(
   "sader",
@@ -105,4 +106,7 @@ const Sader = seqeulize.define(
     timestamps: false,
   }
 );
+
+ 
+
 export default Sader;

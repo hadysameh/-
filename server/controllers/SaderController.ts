@@ -1,3 +1,4 @@
+import emitSocketEvent from "../helpers/socketIo";
 import { Request, Response } from "express";
 import SaderRepo from "../repos/SaderRepo";
 class SaderController {
@@ -52,6 +53,8 @@ class SaderController {
       : "";
     try {
       await SaderRepo.store(req.body, filePathToStore);
+      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+
       res.status(200).json({ msg: "ok" });
     } catch (error) {
       console.log(error, { msg: "faild to store" });
@@ -64,6 +67,8 @@ class SaderController {
     try {
       await SaderRepo.delete(req)
         .then((msg) => {
+      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+
           res.status(200).json(msg);
         })
         .catch((msg) => {
@@ -85,6 +90,8 @@ class SaderController {
     // console.log(req.body);
     try {
       await SaderRepo.update(req.body, filePathToStore);
+      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+
       res.status(200).json({ msg: "ok" });
     } catch (error) {
       console.log(error, { msg: "faild to store" });

@@ -6,6 +6,7 @@ import axios from "axios";
 import { useState } from "react";
 import { serverApiUrl } from "../../../../config";
 import { waredBoxType } from "../../../../types";
+import { io } from "socket.io-client";
 
 interface IProps {
   /**
@@ -101,7 +102,6 @@ function WaredBox(props: IProps) {
       })
       .then((res) => {
         if (res.data) {
-
           setIsShowSpinner(false);
           setWaredBoxRecords(res.data);
           window.scroll({
@@ -160,9 +160,24 @@ function WaredBox(props: IProps) {
     fetchRowsWithParams();
   }, [pageNum, numOfRecords]);
 
-  useEffect(()=>{
-    console.log(gehaaId)
-  },[gehaaId])
+  useEffect(() => {
+    const socket = io(serverApiUrl);
+    socket
+      .off("refetchWaredAndSaderUnreadNumbers")
+      .on("refetchWaredAndSaderUnreadNumbers", () => {
+        fetchRowsWithParams();
+      });
+      socket
+      .off("refetchWaredAndSaderUnreadNumbersNoSound")
+      .on("refetchWaredAndSaderUnreadNumbersNoSound", () => {
+        fetchRowsWithParams();
+      });
+    return () => {
+      socket.off("refetchWaredAndSaderUnreadNumbers");
+      socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
+    };
+  }, []);
+
   return (
     <>
       <div className={"container"} style={{ minHeight: "1000" }}>

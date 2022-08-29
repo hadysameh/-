@@ -22,16 +22,17 @@ function SaderDetailsPreview() {
   }, []);
   useEffect(() => {
     axios
+      .post(serverApiUrl + "api/sadertrackingofficers/", {
+        saderId,
+      })
+      .then((res) => console.log(res));
+    axios
       .get(serverApiUrl + "api/onesader", { params: { id: saderId } })
       .then((res) => {
         console.log({ data: res.data });
         setSaderData(res.data);
       });
-    axios
-      .post(serverApiUrl + "api/sadertrackingofficers/", {
-        saderId,
-      })
-      .then((res) => console.log(res));
+    
   }, []);
   return (
     <>

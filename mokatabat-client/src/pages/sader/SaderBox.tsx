@@ -3,6 +3,8 @@ import { SaderTabelTR } from "../../features/sader/components/saderTabelTr";
 import { SearchBox } from "../../features/sader/components/searchBox";
 import axios from "axios";
 import Spinner from "../../components/HorizontalSpinner";
+import { io } from "socket.io-client";
+import { serverApiUrl } from "../../config";
 
 function SaderBox() {
   const [saderBoxRecords, setSaderBoxRecords] = useState<any[]>([]);
@@ -120,7 +122,24 @@ function SaderBox() {
   useEffect(() => {
     fetchRowsWithParams();
   }, [pageNum, numOfRecords]);
-
+  
+  useEffect(() => {
+    const socket = io(serverApiUrl);
+    socket
+      .off("refetchWaredAndSaderUnreadNumbers")
+      .on("refetchWaredAndSaderUnreadNumbers", () => {
+        fetchRowsWithParams();
+      });
+    socket
+      .off("refetchWaredAndSaderUnreadNumbersNoSound")
+      .on("refetchWaredAndSaderUnreadNumbersNoSound", () => {
+        fetchRowsWithParams();
+      });
+    return () => {
+      socket.off("refetchWaredAndSaderUnreadNumbers");
+      socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
+    };
+  }, []);
   return (
     <div className={"container"} style={{ minHeight: "1000" }}>
       <div className="fs-2 fw-bold">صندوق الصادر</div>

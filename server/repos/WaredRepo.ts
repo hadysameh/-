@@ -10,11 +10,16 @@ import sequelize from "../db/seqeulize";
 import Config from "../models/ConfigModel";
 import { Op } from "sequelize";
 // import dateFormat from 'date-format'
+
 class WaredRepo {
   public static async getNumberOfUnreadWared(req: Request) {
     let waredIncludeParams = [];
 
-    let config = await Config.findOne();
+    let config = await Config.findOne({
+      where: {
+        id: 1,
+      },
+    });
     const hasAccessToAllWared =
       req.user.userType.premissions.find((premission: any) => {
         return premission.premission === "has access to all wared";
@@ -61,10 +66,14 @@ class WaredRepo {
         },
       ],
     });
-    
-    // console.log({ numberOfUnreadWared: numberOfWaredAfterLaunchForOfficer-numberOfreadWared , officerId:req.user.officerId});
-    return numberOfWaredAfterLaunchForOfficer-numberOfreadWared;
-   }
+
+    // console.log({
+    //   numberOfUnreadWared:
+    //     numberOfWaredAfterLaunchForOfficer - numberOfreadWared,
+    //   officerId: req.user.officerId,
+    // });
+    return numberOfWaredAfterLaunchForOfficer - numberOfreadWared;
+  }
 
   public static async getById(id: any): Promise<any> {
     let mokatba = await Wared.findOne({
@@ -222,7 +231,7 @@ class WaredRepo {
       }
     }
 
-    // console.log({ whereParams });
+    // console.log({ includeParams });
     let wareds = await Wared.findAll({
       where: whereParams,
       include: [
@@ -244,6 +253,7 @@ class WaredRepo {
     });
     return wareds;
   }
+
   public static async store(
     reqBodyData: any,
     fileLocationPath: string
@@ -353,8 +363,9 @@ class WaredRepo {
         let storedWaredTrackingOfficers = await WaredTrackingOfficers.bulkCreate(
           waredtrackingOfficersRows
         );*/
-        resolve();
+
         await t.commit();
+        resolve();
       } catch (error) {
         // console.log(error)
         // If the execution reaches this line, an error was thrown.
@@ -364,6 +375,7 @@ class WaredRepo {
       }
     });
   }
+
   public static async update(
     reqBodyData: any,
     fileLocationPath: string | null = null
@@ -462,48 +474,37 @@ class WaredRepo {
         //this should be consists of the officers ids and branches managers ids
 
         //pt1 for the branches managers
-        let waredTrackingOfficersRowsPt1 = selectedBranchesManagers.map(
-          (selectedBranchesManagers) => {
-            return {
-              wared_id: reqBodyData["waredId"],
-              officer_id: selectedBranchesManagers.getDataValue("manager_id"),
-            };
-          }
-        );
+        // let waredTrackingOfficersRowsPt1 = selectedBranchesManagers.map(
+        //   (selectedBranchesManagers) => {
+        //     return {
+        //       wared_id: reqBodyData["waredId"],
+        //       officer_id: selectedBranchesManagers.getDataValue("manager_id"),
+        //     };
+        //   }
+        // );
 
-        //pt2 for the officers
-        let waredTrackingOfficersRowsPt2 = officersIdsObjs.map(
-          (officerIdObj) => {
-            return {
-              wared_id: Number(reqBodyData["waredId"]),
-              officer_id: officerIdObj.id,
-            };
-          }
-        );
-        let waredtrackingOfficersRows = [
-          ...waredTrackingOfficersRowsPt1,
-          ...waredTrackingOfficersRowsPt2,
-        ];
+        // //pt2 for the officers
+        // let waredTrackingOfficersRowsPt2 = officersIdsObjs.map(
+        //   (officerIdObj) => {
+        //     return {
+        //       wared_id: Number(reqBodyData["waredId"]),
+        //       officer_id: officerIdObj.id,
+        //     };
+        //   }
+        // );
+        // let waredtrackingOfficersRows = [
+        //   ...waredTrackingOfficersRowsPt1,
+        //   ...waredTrackingOfficersRowsPt2,
+        // ];
 
         await WaredTrackingOfficers.destroy({
           where: {
             wared_id: reqBodyData["waredId"],
           },
         });
-        let modifiedWaredTrackingOfficers = await WaredTrackingOfficers.bulkCreate(
-          waredtrackingOfficersRows,
-          {
-            updateOnDuplicate: ["wared_id"],
-          }
-        );
-        // let modifiedWaredTrackingOfficers = await WaredTrackingOfficers.update(
-        //   waredtrackingOfficersRows,
-        //   {
-        //     where: { wared_id: reqBodyData["waredId"] },
-        //   }
-        // );
-        resolve();
+
         await t.commit();
+        resolve();
       } catch (error) {
         console.log(error);
         // If the execution reaches this line, an error was thrown.
@@ -513,6 +514,7 @@ class WaredRepo {
       }
     });
   }
+
   public static async updateOfficersAndBranches(req: Request) {
     return new Promise(async (resolve: any, reject: any) => {
       const t = await sequelize.transaction();
@@ -571,8 +573,8 @@ class WaredRepo {
         await Wared_Officers.bulkCreate(wared_officersRows, {
           updateOnDuplicate: ["wared_id"],
         });
-        resolve();
         await t.commit();
+        resolve();
       } catch (error) {
         console.log(error);
         // If the execution reaches this line, an error was thrown.
@@ -582,6 +584,7 @@ class WaredRepo {
       }
     });
   }
+
   public static async deleteWared(req: Request) {
     return new Promise((resolve: any, reject: any) => {
       // console.log({waredId:req.body.waredId})
@@ -591,6 +594,7 @@ class WaredRepo {
           id: waredId,
         },
       })
+
         .then(() => {
           resolve("deleted wared");
         })

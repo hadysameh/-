@@ -1,3 +1,4 @@
+import Select from "react-select";
 import { MultiSelect } from "react-multi-select-component";
 import { useEffect, useState } from "react";
 import isObjEmpty from "../../../../utils/isObjEmpty";
@@ -203,6 +204,7 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
           <div className="mb-3">
             <div className="col-10">
               <label className="form-label">جهة الوارد</label>
+
               {!isArrEmpty(gehaat) && (
                 <>
                   <input
@@ -258,9 +260,17 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
 
                 {!isArrEmpty(officers) && (
                   <MultiSelect
-                    options={officers.map((officer: any) => {
-                      return { label: officer.name, value: officer.id };
-                    })}
+                    options={officers
+                      .filter((officer: any) => {
+                        return selectedBranchs.some((branch: any) => {
+                          // console.log(officer.branches_id  , branch.value)
+                          //branch.value here is the branch id
+                          return officer.branches_id === branch.value;
+                        });
+                      })
+                      .map((officer: any) => {
+                        return { label: officer.name, value: officer.id };
+                      })}
                     value={selectedOfficers}
                     onChange={setSelectedOfficers}
                     labelledBy="Select"

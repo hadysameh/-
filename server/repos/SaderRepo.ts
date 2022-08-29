@@ -41,7 +41,7 @@ export default class SaderRepo {
       } else {
         saderIncludeParams.push({
           model: Officers,
-          as: "Wared_Officers",
+          as: "SaderOfficer",
           where: { id: req.user.officerId },
         });
       }
@@ -256,16 +256,17 @@ export default class SaderRepo {
           attach: fileLocationPath,
         });
 
-        await Sadertrackingofficers.bulkCreate([
-          {
-            officer_id: assistantBranchId,
-            sader_id: storedSader.getDataValue("id"),
-          },
-          {
-            officer_id: reqBodyData.officer_id,
-            sader_id: storedSader.getDataValue("id"),
-          },
-        ]);
+        // await Sadertrackingofficers.bulkCreate([
+        //   {
+        //     officer_id: assistantBranchId,
+        //     sader_id: storedSader.getDataValue("id"),
+        //   },
+        //   {
+        //     officer_id: reqBodyData.officer_id,
+        //     sader_id: storedSader.getDataValue("id"),
+        //   },
+        // ]);
+
         let gehaatIdsObjs: { id: any }[] = selectedGehaat.map((branch: any) => {
           return { id: branch.value };
         });
@@ -280,6 +281,7 @@ export default class SaderRepo {
         await Sader_Gehaa.bulkCreate(Sader_GehaaRows);
 
         t.commit();
+
         resolve();
       } catch (error) {
         t.rollback();
@@ -335,16 +337,16 @@ export default class SaderRepo {
             sader_id: reqBodyData["saderId"],
           },
         });
-        await Sadertrackingofficers.bulkCreate([
-          {
-            officer_id: assistantBranchId,
-            sader_id: reqBodyData["saderId"],
-          },
-          {
-            officer_id: reqBodyData.officer_id,
-            sader_id: reqBodyData["saderId"],
-          },
-        ]);
+        // await Sadertrackingofficers.bulkCreate([
+        //   {
+        //     officer_id: assistantBranchId,
+        //     sader_id: reqBodyData["saderId"],
+        //   },
+        //   {
+        //     officer_id: reqBodyData.officer_id,
+        //     sader_id: reqBodyData["saderId"],
+        //   },
+        // ]);
         let gehaatIdsObjs: { id: any }[] = selectedGehaat.map((branch: any) => {
           return { id: branch.value };
         });
@@ -363,6 +365,7 @@ export default class SaderRepo {
         await Sader_Gehaa.bulkCreate(Sader_GehaaRows);
 
         t.commit();
+
         resolve();
       } catch (error) {
         t.rollback();

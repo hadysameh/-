@@ -1,6 +1,7 @@
 import seqeulize from "../db/seqeulize";
 import { DataTypes } from "sequelize";
 import getCurrentYear from "../utils/getCurrentYear";
+import emitSocketEvent from "../helpers/socketIo";
 const Wared = seqeulize.define(
   "wared",
   {
@@ -160,4 +161,5 @@ const Wared = seqeulize.define(
     ],*/
   }
 );
+
 export default Wared;

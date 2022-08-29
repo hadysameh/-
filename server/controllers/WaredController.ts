@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import WaredRepo from "../repos/WaredRepo";
+import emitSocketEvent from "../helpers/socketIo";
 
 class WaredController {
   public static async getNumberOfUnreadWared(req: Request, res: Response): Promise<any> {
@@ -70,6 +71,8 @@ class WaredController {
       : "";
     try {
       await WaredRepo.store(req.body, filePathToStore);
+      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+
       res.status(200).json({ msg: "ok" });
     } catch (error) {
       console.log(error, { msg: "faild to store" });
@@ -96,6 +99,8 @@ class WaredController {
       // console.log({ filePath: req.file?.path });
 
       await WaredRepo.update(req.body, filePathToStore);
+      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+
       res.status(200).json({ msg: "ok" });
     } catch (error) {
       console.log(error, { msg: "faild to store" });
@@ -108,6 +113,8 @@ class WaredController {
     try {
       await WaredRepo.deleteWared(req)
         .then((msg) => {
+      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+
           res.status(200).json(msg);
         })
         .catch((msg) => {
@@ -125,6 +132,8 @@ class WaredController {
       // console.log({ filePath: req.file?.path });
 
       await WaredRepo.updateOfficersAndBranches(req);
+      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+
       res.status(200).json({ msg: "ok" });
     } catch (error) {
       console.log(error, { msg: "faild to store" });

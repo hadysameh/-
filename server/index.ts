@@ -11,14 +11,25 @@ import { router, adminJs } from "./AdminJs";
 import Config from "./models/ConfigModel";
 import { Server } from "socket.io";
 require("dotenv").config();
-  // seqeulize.sync().then(() => {
-  //   console.log("seqeulize is in sync with db");
-  // });
+// seqeulize.sync().then(() => {
+//   console.log("seqeulize is in sync with db");
+// });
 
 // console.log({ configRow: Config.findAll() });
 const app: Express = express();
-const server = require('http').createServer(app);
-const io = new Server(server);
+const server = require("http").createServer(app);
+const io = new Server(server,{
+  cors: {
+    origin: "http://localhost:5022",
+    methods: ["GET", "POST"],
+   
+  }
+});
+
+declare global {
+  var io: Server;
+}
+global.io = io;
 /**
  * adminjs routes and bodyParser mus be first
  *

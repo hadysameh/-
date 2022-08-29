@@ -48,7 +48,7 @@ function MokatbaDetailsPreview() {
                 <div className="">
                   رقم الوارد:
                   <span className="px-3 text-secondary">
-                    {mokatbaData.doc_num ? (
+                    {mokatbaData?.doc_num ? (
                       mokatbaData.doc_num
                     ) : (
                       <CircleSpinner />
@@ -60,7 +60,7 @@ function MokatbaDetailsPreview() {
                 <div className="">
                   رقم الإدارة:
                   <span className="px-3 text-secondary">
-                    {mokatbaData.doc_dept_num ? (
+                    {mokatbaData?.doc_dept_num ? (
                       mokatbaData.doc_dept_num
                     ) : (
                       <CircleSpinner />
@@ -73,7 +73,7 @@ function MokatbaDetailsPreview() {
               <div className="">
                 تاريخ الماكتبة :
                 <span className="px-3 text-secondary">
-                  {mokatbaData.doc_date ? (
+                  {mokatbaData?.doc_date ? (
                     mokatbaData.doc_date.replace(/T.*/, "")
                   ) : (
                     <CircleSpinner />
@@ -85,7 +85,7 @@ function MokatbaDetailsPreview() {
               <div className="">
                 الموضوع:
                 <span className="px-3 text-secondary">
-                  {mokatbaData.subject ? (
+                  {mokatbaData?.subject ? (
                     mokatbaData.subject
                   ) : (
                     <CircleSpinner />
@@ -97,7 +97,7 @@ function MokatbaDetailsPreview() {
               <div className="">
                 الجهة:
                 <span className="px-3 text-secondary">
-                  {mokatbaData.gehaa ? (
+                  {mokatbaData?.gehaa ? (
                     mokatbaData.gehaa.name
                   ) : (
                     <CircleSpinner />
@@ -106,11 +106,11 @@ function MokatbaDetailsPreview() {
               </div>
             </div>
 
-            {mokatbaData.branches && mokatbaData.Wared_Officers && (
+            {mokatbaData?.branches && mokatbaData.Wared_Officers && (
               <BranchesAndOfficers
                 mokatbaData={mokatbaData}
-                selectedBranches={mokatbaData.branches}
-                selectedOfficers={mokatbaData.Wared_Officers}
+                selectedBranches={mokatbaData?.branches}
+                selectedOfficers={mokatbaData?.Wared_Officers}
               />
             )}
 
@@ -118,7 +118,7 @@ function MokatbaDetailsPreview() {
               <div className="">
                 اخر معاد للتنفيذ:
                 <span className="px-3 text-secondary">
-                  {mokatbaData.docDeadline
+                  {mokatbaData?.docDeadline
                     ? mokatbaData.docDeadline
                     : "غير محدد"}
                 </span>
@@ -128,7 +128,7 @@ function MokatbaDetailsPreview() {
               <div className="">
                 رقم صادر اغلاق المكاتبة
                 <span className="px-3 text-secondary">
-                  {mokatbaData.closedSader_id
+                  {mokatbaData?.closedSader_id
                     ? mokatbaData.closedSader_id
                     : "لايوجد"}
                 </span>
@@ -138,7 +138,7 @@ function MokatbaDetailsPreview() {
               <div className="">
                 حالة الحد الاقصى للمكاتبة
                 <span className="px-3 text-secondary">
-                  {mokatbaData.docDeadline && mokatbaData.known == 0
+                  {mokatbaData?.docDeadline && mokatbaData.known == 0
                     ? "مفتوحة"
                     : "غير محدد"}
                 </span>
@@ -148,7 +148,7 @@ function MokatbaDetailsPreview() {
               <div className="">
                 تاريخ تسجيل الماكتبة :
                 <span className="px-3 text-secondary">
-                  {mokatbaData.register_date ? (
+                  {mokatbaData?.register_date ? (
                     mokatbaData.register_date.replace(/T.*/, "")
                   ) : (
                     <CircleSpinner />
@@ -159,7 +159,7 @@ function MokatbaDetailsPreview() {
             <div className="row align-items-start pt-5">
               <div className="">
                 <a
-                  href={`${serverApiUrl}uploads/${mokatbaData.attach}`}
+                  href={`${serverApiUrl}uploads/${mokatbaData?.attach}`}
                   target="blank"
                   className="btn btn-lg btn-primary fs-3"
                 >

@@ -77,7 +77,7 @@ function MiniWaredBox() {
                   </th>
                   <td>
                     <a
-                      href={`/wared/${saderBoxRecord.id}`}
+                      href={`/sader/${saderBoxRecord.id}`}
                       style={aStyle}
                       target={"_blank"}
                       rel="noreferrer"
@@ -87,7 +87,7 @@ function MiniWaredBox() {
                   </td>
                   <td>
                     <a
-                      href={`/wared/${saderBoxRecord.id}`}
+                      href={`/sader/${saderBoxRecord.id}`}
                       style={aStyle}
                       target={"_blank"}
                       rel="noreferrer"
@@ -97,7 +97,7 @@ function MiniWaredBox() {
                   </td>
                   <td>
                     <a
-                      href={`/wared/${saderBoxRecord.id}`}
+                      href={`/sader/${saderBoxRecord.id}`}
                       style={aStyle}
                       target={"_blank"}
                       rel="noreferrer"

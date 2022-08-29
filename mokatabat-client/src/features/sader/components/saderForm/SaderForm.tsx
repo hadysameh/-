@@ -5,6 +5,8 @@ import isArrEmpty from "../../../../utils/isArrEmpty";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { serverApiUrl } from "../../../../config";
+import Select from "react-select";
+
 interface IProps {
   submitFormDataMethod: Function;
   requiredFields: {
@@ -159,30 +161,25 @@ function SaderForm({
                 <label className="form-label">الفرع المختص</label>
                 {!isArrEmpty(branchs) && (
                   <>
-                    <input
-                      required
-                      className="form-control fs-3"
-                      list="branchesOptions"
-                      id="branchesDataList"
-                      placeholder="Type to search..."
-                      value={selectedBranch?.name}
-                      onChange={(e) => {
-                        let choosedBranchName = e.target.value;
+                    <Select
+                      value={{
+                        value: selectedBranch?.id,
+                        label: selectedBranch?.name,
+                      }}
+                      onChange={(gehaaOption: any) => {
                         let choosedBranch: any = branchs.find((branch: any) => {
-                          return branch.name == choosedBranchName;
+                          return branch.name == gehaaOption.label;
                         });
+                        console.log({choosedBranch})
                         setSelectedBranch(choosedBranch);
                       }}
-                    ></input>
-                    <datalist id="branchesOptions">
-                      {branchs.map((branch: any) => {
-                        return (
-                          <option key={branch.id + branch.name}>
-                            {branch.name}
-                          </option>
-                        );
+                      options={branchs.map((branch: any) => {
+                        return {
+                          label: branch.name,
+                          value: branch.id,
+                        };
                       })}
-                    </datalist>
+                    />
                   </>
                 )}
               </div>
@@ -194,7 +191,35 @@ function SaderForm({
                 <label className="form-label">الضابط المختص</label>
                 {!isArrEmpty(officers) && (
                   <>
-                    <input
+                    <Select
+                      value={{
+                        value: selectedOfficer?.id,
+                        label: selectedOfficer?.name,
+                      }}
+                      onChange={(officerOption: any) => {
+                        let choosedOfficer: any = officers.find(
+                          (officer: any) => {
+                            return officer.name == officerOption.label;
+                          }
+                        );
+                        setSelectedOfficer(choosedOfficer);
+                      }}
+                      options={officers
+                        .filter((officer: any) => {
+                          console.log(
+                            officer.branches_id,
+                            selectedBranch.value
+                          );
+                          return officer.branches_id === selectedBranch.id;
+                        })
+                        .map((branch: any) => {
+                          return {
+                            label: branch.name,
+                            value: branch.id,
+                          };
+                        })}
+                    />
+                    {/* <input
                       required
                       className="form-control fs-3"
                       list="officersOptions"
@@ -219,7 +244,7 @@ function SaderForm({
                           </option>
                         );
                       })}
-                    </datalist>
+                    </datalist> */}
                   </>
                 )}
               </div>
@@ -332,7 +357,7 @@ function SaderForm({
                   !isArrEmpty(selectedGehaat) &&
                   !isObjEmpty(selectedBranch) &&
                   !isObjEmpty(selectedOfficer) &&
-                  isFieldValid(selectedFile,requiredFields.selectedFile)  
+                  isFieldValid(selectedFile, requiredFields.selectedFile)
                 ) {
                   return true;
                 }

@@ -15,7 +15,8 @@ function CreateWared() {
       .post(serverApiUrl + "api/waredbox/store", formData)
       .then((res) => {
         console.log(res);
-        console.log("will navigate");
+        // console.log("will navigate");
+        alert(res)
         navigate("/waredbox");
       })
       .catch((err) => {

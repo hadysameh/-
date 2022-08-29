@@ -1,6 +1,6 @@
 import seqeulize from "../db/seqeulize";
 import { DataTypes } from "sequelize";
-
+import emitSocketEvent from "../helpers/socketIo";
 const Sadertrackingofficers = seqeulize.define(
   "sadertrackingofficers",
   {
@@ -37,4 +37,7 @@ const Sadertrackingofficers = seqeulize.define(
     timestamps: false,
   }
 );
+
+
+
 export default Sadertrackingofficers;

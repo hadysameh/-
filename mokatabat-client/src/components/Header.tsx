@@ -9,9 +9,11 @@ import {
   selectPremissions,
 } from "../features/user/stores/userSlice";
 import { serverApiUrl } from "../config";
+import { io } from "socket.io-client";
+
 import axios from "axios";
 import * as premissions from "../utils/premissions";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 function Header() {
   const token = useSelector(selectToken);
   const officer = useSelector(selectOfficer);
@@ -19,23 +21,74 @@ function Header() {
   const rank = useSelector(selectRank);
   const [numOfUnreadWared, setnumOfUnreadWared] = useState("0");
   const [numOfUnreadSader, setnumOfUnreadSader] = useState("0");
+  const audioRef = useRef<any>();
+
+  const getNumberOfUnreadWared = () => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(serverApiUrl + "api/waredbox/getNumberOfUnreadWared")
+        .then((res) => {
+          let { data } = res;
+          resolve(data);
+        })
+        .catch(() => {
+          reject("0");
+        });
+    });
+  };
+
+  const getNumberOfUnreadSader = () => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(serverApiUrl + "api/saderbox/getNumberOfUnreadSader")
+        .then((res) => {
+          let { data } = res;
+          resolve(data);
+        })
+        .catch(() => {
+          reject("0");
+        });
+    });
+  };
+  useEffect(() => {
+    getNumberOfUnreadWared().then((num:any)=>{
+      setnumOfUnreadWared(num);
+    });
+    getNumberOfUnreadSader().then((num:any)=>{
+      setnumOfUnreadSader(num);
+    });
+  }, []);
 
   useEffect(() => {
-    axios
-      .get(serverApiUrl + "api/waredbox/getNumberOfUnreadWared")
-      .then((res) => {
-        let { data } = res;
-        console.log({ numOfUnreadWared: data });
-        setnumOfUnreadWared(data);
+    const socket = io(serverApiUrl);
+    socket
+      .off("refetchWaredAndSaderUnreadNumbers")
+      .on("refetchWaredAndSaderUnreadNumbers", async () => {
+        // console.log("socket event recieved in header");
+        let numOfFetchedUnreadWared: any = await getNumberOfUnreadWared();
+        let numOfFetchedUnreadSader: any = await getNumberOfUnreadSader();
+        if (
+          numOfFetchedUnreadWared > numOfUnreadWared ||
+          numOfFetchedUnreadSader > numOfUnreadSader
+        ) {
+          audioRef.current.play();
+        }
+        setnumOfUnreadWared(numOfFetchedUnreadWared);
+        setnumOfUnreadSader(numOfFetchedUnreadSader);
       });
 
-    axios
-      .get(serverApiUrl + "api/saderbox/getNumberOfUnreadSader")
-      .then((res) => {
-        let { data } = res;
-        console.log({ numOfUnreadSader: data });
-        setnumOfUnreadSader(data);
+    socket
+      .off("refetchWaredAndSaderUnreadNumbersNoSound")
+      .on("refetchWaredAndSaderUnreadNumbersNoSound", async () => {
+        // console.log("socket event recieved in header");
+        let numOfFetchedUnreadWared: any = await getNumberOfUnreadWared();
+        let numOfFetchedUnreadSader: any = await getNumberOfUnreadSader();
+        setnumOfUnreadWared(numOfFetchedUnreadWared);
+        setnumOfUnreadSader(numOfFetchedUnreadSader);
       });
+    return () => {
+      socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
+    };
   }, []);
 
   return (
@@ -53,6 +106,7 @@ function Header() {
         </div>
       </div>
 
+      <audio src="./notificationSound.mkv" ref={audioRef}></audio>
       <nav className="navbar navbar-expand-lg navbar-light bg-primary mt-3">
         <div className="collapse navbar-collapse container fs-3" id="navbarNav">
           <ul className="navbar-nav ">

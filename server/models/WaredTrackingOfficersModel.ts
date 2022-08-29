@@ -1,5 +1,6 @@
 import seqeulize from "../db/seqeulize";
 import { DataTypes } from "sequelize";
+import emitSocketEvent from "../helpers/socketIo";
 
 const WaredTrackingOfficers = seqeulize.define(
   "waredtrackingofficers",
@@ -34,5 +35,16 @@ const WaredTrackingOfficers = seqeulize.define(
     freezeTableName: true,
     timestamps: false,
   }
-);
+); 
+WaredTrackingOfficers.afterCreate(() => {
+  emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+});
+WaredTrackingOfficers.afterUpdate(() => {
+  emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+});
+
+WaredTrackingOfficers.afterDestroy(() => {
+  emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+});
+
 export default WaredTrackingOfficers;
