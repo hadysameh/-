@@ -29,7 +29,7 @@ function SaderDetailsPreview() {
     axios
       .get(serverApiUrl + "api/onesader", { params: { id: saderId } })
       .then((res) => {
-        console.log({ data: res.data });
+        // console.log({ data: res.data });
         setSaderData(res.data);
       });
     

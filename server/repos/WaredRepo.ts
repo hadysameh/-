@@ -521,7 +521,7 @@ class WaredRepo {
 
       try {
         req.body.selectedBranchs;
-        // console.log({ body: req.body });
+        console.log({ body: req.body });
 
         const waredId = req.body["waredId"];
         let selectedBranchs = JSON.parse(req.body.selectedBranchs);

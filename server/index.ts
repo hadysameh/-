@@ -13,7 +13,7 @@ import { Server } from "socket.io";
 require("dotenv").config();
 // seqeulize.sync().then(() => {
 //   console.log("seqeulize is in sync with db");
-// });
+// }).catch((err)=>console.log({err}));
 
 // console.log({ configRow: Config.findAll() });
 const app: Express = express();

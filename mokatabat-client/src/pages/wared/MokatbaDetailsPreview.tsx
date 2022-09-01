@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
 import { serverApiUrl } from "../../config";
-import BranchesAndOfficers from "../../features/wared/components/branchesAndOfficersSelect";
+import BranchesAndOfficers from "../../features/wared/components/branchesAndOfficers";
 import * as premissions from "../../utils/premissions";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
 function MokatbaDetailsPreview() {

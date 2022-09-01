@@ -1,3 +1,4 @@
+import Config from "../models/ConfigModel";
 import { Request, Response } from "express";
 import Gehaa from "../models/GehaaModel";
 import Branches from "../models/BranchesModel";
@@ -58,15 +59,28 @@ export default class WaredOptionsController {
 
       return officers;
     };
-
+    const getDaysBeforeExecution = async () => {
+      let config = await Config.findOne({
+        where: {
+          id: 1,
+        },
+      });
+      return config?.getDataValue("dateOfLaunch");
+    };
     const getAllOptions = (): Promise<any> => {
       return new Promise((resolve: any, reject: any) => {
-        Promise.all([getGehaat(), getBranches(), getOfficers()])
+        Promise.all([
+          getGehaat(),
+          getBranches(),
+          getOfficers(),
+          getDaysBeforeExecution(),
+        ])
           .then((values) => {
             let result = {
               gehaat: values[0],
               branches: values[1],
               officers: values[2],
+              daysBeforeExecution: values[3],
             };
             // console.log({result})
             resolve(result);

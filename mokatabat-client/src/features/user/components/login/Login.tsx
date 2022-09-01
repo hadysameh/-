@@ -21,9 +21,7 @@ export function Login() {
               password,
             })
               .then((res: any) => {
-                let data = res.data;
-                // let { user } = data;
-                // console.log({ data });
+                let data = res.data; 
                 let token = data.token;
                 let user = {
                   userName: data.user.userName,

@@ -22,6 +22,15 @@ let userRoutes = (
         </RedirectIfNotAuth>
       }
     />
+
+<Route
+      path="/register"
+      element={
+        <RedirectIfAuth>
+          <Register />
+        </RedirectIfAuth>
+      }
+    />
   </>
 );
 export default userRoutes;

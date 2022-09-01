@@ -62,18 +62,17 @@ function SearchBox(props: SearchFormProps) {
     }
   }, []);
 
-  const getGehaaNameById = (gehaaId:string,gehaatOptions:any[]) => {
+  const getGehaaNameById = (gehaaId: string, gehaatOptions: any[]) => {
     return getOptionNameById(gehaaId, gehaatOptions);
   };
 
-  const getBranchNameById = (branchId:string,branchsOptions:any[]) => {
+  const getBranchNameById = (branchId: string, branchsOptions: any[]) => {
     return getOptionNameById(branchId, branchsOptions);
   };
 
-  const getOfficerNameById = (officerId:string,officersOptions:any[]) => {
+  const getOfficerNameById = (officerId: string, officersOptions: any[]) => {
     return getOptionNameById(officerId, officersOptions);
   };
-  
 
   useEffect(() => {
     axios.get(serverApiUrl + "api/waredoptions").then((res) => {
@@ -81,9 +80,11 @@ function SearchBox(props: SearchFormProps) {
       setGehaatOptions(res.data.gehaat);
       setBranchsOptions(res.data.branches);
       setOfficersOptions(res.data.officers);
+
+      setDefaultDaysBeforeExecution(res.data.daysBeforeExecution);
     });
     // TODO : fetch from srever
-    setDefaultDaysBeforeExecution("7");
+
     setShowDaysBeforeExecutionFields(false);
     // setShowDaysBeforeExecutionFields(
     //   props.waredBoxType === waredBoxType.normal && true
@@ -132,7 +133,7 @@ function SearchBox(props: SearchFormProps) {
             <Select
               value={{
                 value: props.gehaaId,
-                label: getGehaaNameById(props.gehaaId,gehaatOptions),
+                label: getGehaaNameById(props.gehaaId, gehaatOptions),
               }}
               onChange={(gehaaOption: any) => {
                 props.setGehaaId(gehaaOption.value);
@@ -165,20 +166,20 @@ function SearchBox(props: SearchFormProps) {
               <label className="form-label">الفرع المختص</label>
 
               <Select
-              value={{
-                value: props.branchId,
-                label: getBranchNameById(props.branchId,branchsOptions),
-              }}
-              onChange={(branchOption: any) => {
-                props.setBranchId(branchOption.value);
-              }}
-              options={branchsOptions.map((branch: any) => {
-                return {
-                  value: branch.id,
-                  label: branch.name,
-                };
-              })}
-            />
+                value={{
+                  value: props.branchId,
+                  label: getBranchNameById(props.branchId, branchsOptions),
+                }}
+                onChange={(branchOption: any) => {
+                  props.setBranchId(branchOption.value);
+                }}
+                options={branchsOptions.map((branch: any) => {
+                  return {
+                    value: branch.id,
+                    label: branch.name,
+                  };
+                })}
+              />
               {/* <input
                 className="form-control fs-3"
                 list="branchsOptions"
@@ -213,20 +214,20 @@ function SearchBox(props: SearchFormProps) {
             <div className="col-md-3">
               <label className="form-label">الضابط المختص</label>
               <Select
-              value={{
-                value: props.officerId,
-                label: getOfficerNameById(props.officerId,officersOptions),
-              }}
-              onChange={(officerOption: any) => {
-                props.setOfficerId(officerOption.value);
-              }}
-              options={officersOptions.map((branch: any) => {
-                return {
-                  value: branch.id,
-                  label: branch.name,
-                };
-              })}
-            />
+                value={{
+                  value: props.officerId,
+                  label: getOfficerNameById(props.officerId, officersOptions),
+                }}
+                onChange={(officerOption: any) => {
+                  props.setOfficerId(officerOption.value);
+                }}
+                options={officersOptions.map((branch: any) => {
+                  return {
+                    value: branch.id,
+                    label: branch.name,
+                  };
+                })}
+              />
               {/* <input
                 className="form-control fs-3"
                 list="officersOptions"

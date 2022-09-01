@@ -19,5 +19,4 @@ export enum premissions{
   hasAccessToBranchOfficers='has access to branch officers',
   hasAccessToBranchSader='has access to branch sader',
   hasAccessToBranchWared='has access to branch wared',
-
 }

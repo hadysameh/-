@@ -170,7 +170,7 @@ function SaderForm({
                         let choosedBranch: any = branchs.find((branch: any) => {
                           return branch.name == gehaaOption.label;
                         });
-                        console.log({choosedBranch})
+                        // console.log({choosedBranch})
                         setSelectedBranch(choosedBranch);
                       }}
                       options={branchs.map((branch: any) => {
@@ -206,10 +206,10 @@ function SaderForm({
                       }}
                       options={officers
                         .filter((officer: any) => {
-                          console.log(
-                            officer.branches_id,
-                            selectedBranch.value
-                          );
+                          // console.log(
+                          //   officer.branches_id,
+                          //   selectedBranch.value
+                          // );
                           return officer.branches_id === selectedBranch.id;
                         })
                         .map((branch: any) => {
@@ -361,15 +361,15 @@ function SaderForm({
                 ) {
                   return true;
                 }
-                console.log({
-                  docNum,
-                  mokatbaDate,
-                  subject,
-                  lastWaredNum,
-                  selectedGehaat,
-                  selectedBranch,
-                  selectedFile,
-                });
+                // console.log({
+                //   docNum,
+                //   mokatbaDate,
+                //   subject,
+                //   lastWaredNum,
+                //   selectedGehaat,
+                //   selectedBranch,
+                //   selectedFile,
+                // });
                 return false;
               };
               if (isReqFieldsFilled()) {

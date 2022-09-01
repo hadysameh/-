@@ -228,7 +228,7 @@ export default class SaderRepo {
         let selectedGehaat = JSON.parse(reqBodyData.gehaat);
         let lastWared = await Wared.findOne({
           where: {
-            doc_num: reqBodyData.lastWaredNum,
+            doc_num: reqBodyData.lastWaredNum?reqBodyData.lastWaredNum:'f',
           },
         }).catch((err) => {
           return null;
@@ -249,7 +249,7 @@ export default class SaderRepo {
           subject: reqBodyData.subject,
           known: reqBodyData.branch_id,
           officer_id: reqBodyData.officer_id,
-          lastWared_id,
+          lastWared_id:lastWared_id?lastWared_id:null,
           register_date: getTodaysDate(),
           type: reqBodyData.type,
           register_user: "1",

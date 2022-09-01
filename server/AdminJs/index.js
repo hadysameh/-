@@ -179,13 +179,17 @@ const router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
       ],
       include: [{ model: UserType, include: [Premission] }, Officers],
     });
-    if (user.userType.type=='admin') {
-      const matched = await bcrypt.compare(password, user.password);
+    // console.log({user})
+    if (user) {
+      if (user.userType.type == "admin") {
+        const matched = await bcrypt.compare(password, user.password);
 
-      if (matched) {
-        return user;
+        if (matched) {
+          return user;
+        }
       }
     }
+
     return false;
   },
   cookiePassword: "some-secret-password-used-to-secure-cookie",

@@ -25,7 +25,7 @@ export function Register() {
               email,
             })
               .then((res) => {
-                navigate("/");
+                // navigate("/");
               })
               .catch((err) => {
                 alert(err);

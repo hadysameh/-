@@ -14,8 +14,8 @@ interface IProps {
 function BranchesAndOfficers(props: IProps) {
   let navigate = useNavigate();
   console.log(
-    premisions.hasAccessToEditWaredBranchs() ,
-      premisions.hasAccessToEditWaredOfficers()
+    premisions.hasAccessToEditWaredBranchs(),
+    premisions.hasAccessToEditWaredOfficers()
   );
   const [selectedEditedBranches, setSelectedEditedBranches] = useState<any>([]);
   const [selectedEditedOfficers, setselectedEditedOfficers] = useState<any>([]);
@@ -60,7 +60,7 @@ function BranchesAndOfficers(props: IProps) {
         console.log({ err, msg: "error" });
       });
   };
-
+console.log({selectedEditedBranches})
   return (
     <>
       <div
@@ -70,18 +70,27 @@ function BranchesAndOfficers(props: IProps) {
           paddingTop: "55px",
         }}
       >
-        <OfficersSelect
-          officersChoices={officersChoices}
-          selectedOfficers={props.mokatbaData.Wared_Officers}
-          selectedEditedOfficers={selectedEditedOfficers}
-          setselectedEditedOfficers={setselectedEditedOfficers}
-        />
-        <br />
         <BranchesSelect
           branchesChoises={branchesChoises}
           selectedBranches={props.mokatbaData.branches}
           selectedEditedBranches={selectedEditedBranches}
           setSelectedEditedBranches={setSelectedEditedBranches}
+        />
+        <br />
+        <OfficersSelect
+          officersChoices={officersChoices
+          
+            .filter((officer: any) => {
+              return selectedEditedBranches.some((branch: any) => {
+                // console.log(officer.branches_id  , branch.value)
+                //branch.value here is the branch id
+                return officer.branches_id === branch.value;
+              });
+            })
+          }
+          selectedOfficers={props.mokatbaData.Wared_Officers}
+          selectedEditedOfficers={selectedEditedOfficers}
+          setselectedEditedOfficers={setselectedEditedOfficers}
         />
         {(premisions.hasAccessToEditWaredBranchs() ||
           premisions.hasAccessToEditWaredOfficers()) && (
