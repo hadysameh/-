@@ -36,10 +36,9 @@ export default class AuthController {
         if (isCorrectPassword) {
           let privateKey = String(process.env.jwtKey);
           let token = jwt.sign(user.id, privateKey);
-          
+
           res.json({ user, token });
         } else {
-
           res.status(403).json({ msg: "password is incorrect" });
         }
       } else {

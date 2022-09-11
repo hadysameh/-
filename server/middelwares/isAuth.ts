@@ -32,7 +32,7 @@ declare global {
           user_id: string;
           branch: { id: string; name: string; manager_id: string };
         };
-        userType: {
+        usertype: {
           id: any;
           type: any;
           createdAt: any;
@@ -43,7 +43,7 @@ declare global {
     }
   }
 }
- 
+
 export default async function isAuth(req: any, res: Response, next: any) {
   try {
     let privateKey = String(process.env.jwtKey);

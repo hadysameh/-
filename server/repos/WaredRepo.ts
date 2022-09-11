@@ -9,6 +9,7 @@ import WaredTrackingOfficers from "../models/WaredTrackingOfficersModel";
 import sequelize from "../db/seqeulize";
 import Config from "../models/ConfigModel";
 import { Op } from "sequelize";
+import { premissions } from "../types";
 // import dateFormat from 'date-format'
 
 class WaredRepo {
@@ -21,13 +22,13 @@ class WaredRepo {
       },
     });
     const hasAccessToAllWared =
-      req.user.userType.premissions.find((premission: any) => {
-        return premission.premission === "has access to all wared";
-      }) || req.user.userType.type === "admin";
+      req.user.usertype.premissions.find((premission: any) => {
+        return premission.premission === premissions.hasAccessToAllWared;
+      }) || req.user.usertype.type === "admin";
 
-    const hasAccessToBranchWared = req.user.userType.premissions.find(
+    const hasAccessToBranchWared = req.user.usertype.premissions.find(
       (premission: any) => {
-        return premission.premission === "has access to branch wared";
+        return premission.premission === premissions.hasAccessToBranchWared;
       }
     );
 
@@ -131,13 +132,13 @@ class WaredRepo {
     req: Request
   ): Promise<any> {
     const hasAccessToAllWared =
-      req.user.userType.premissions.find((premission: any) => {
-        return premission.premission === "has access to all wared";
-      }) || req.user.userType.type === "admin";
+      req.user.usertype.premissions.find((premission: any) => {
+        return premission.premission === premissions.hasAccessToAllWared;
+      }) || req.user.usertype.type === "admin";
 
-    const hasAccessToBranchWared = req.user.userType.premissions.find(
+    const hasAccessToBranchWared = req.user.usertype.premissions.find(
       (premission: any) => {
-        return premission.premission === "has access to branch wared";
+        return premission.premission === premissions.hasAccessToBranchWared;
       }
     );
 
@@ -521,7 +522,7 @@ class WaredRepo {
 
       try {
         req.body.selectedBranchs;
-        console.log({ body: req.body });
+        // console.log({ body: req.body });
 
         const waredId = req.body["waredId"];
         let selectedBranchs = JSON.parse(req.body.selectedBranchs);

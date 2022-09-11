@@ -8,13 +8,11 @@ export default class WaredTrackingOfficersController {
     let waredId = req.body.waredId;
 
     try {
-      const [
-        waredTrackingOfficersRow,
-        created,
-      ] = await WaredTrackingOfficers.upsert({
-        officer_id: officerId,
-        wared_id: waredId,
-      });
+      const [waredTrackingOfficersRow, created] =
+        await WaredTrackingOfficers.upsert({
+          officer_id: officerId,
+          wared_id: waredId,
+        });
       emitSocketEvent("refetchWaredAndSaderUnreadNumbersNoSound");
 
       res.status(200).json({});

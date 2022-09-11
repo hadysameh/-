@@ -9,4 +9,4 @@ waredTrackingOfficersRouter.post(
   isAuth,
   WaredTrackingOfficersController.store
 );
-export default waredTrackingOfficersRouter
+export default waredTrackingOfficersRouter;

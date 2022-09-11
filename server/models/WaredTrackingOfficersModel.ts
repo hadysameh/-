@@ -35,7 +35,7 @@ const WaredTrackingOfficers = seqeulize.define(
     freezeTableName: true,
     timestamps: false,
   }
-); 
+);
 WaredTrackingOfficers.afterCreate(() => {
   emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
 });

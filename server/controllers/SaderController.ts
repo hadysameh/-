@@ -67,7 +67,7 @@ class SaderController {
     try {
       await SaderRepo.delete(req)
         .then((msg) => {
-      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+          emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
 
           res.status(200).json(msg);
         })

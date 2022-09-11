@@ -3,8 +3,10 @@ import WaredRepo from "../repos/WaredRepo";
 import emitSocketEvent from "../helpers/socketIo";
 
 class WaredController {
-  public static async getNumberOfUnreadWared(req: Request, res: Response): Promise<any> {
-
+  public static async getNumberOfUnreadWared(
+    req: Request,
+    res: Response
+  ): Promise<any> {
     let id = req.query.id;
     try {
       let result = await WaredRepo.getNumberOfUnreadWared(req);
@@ -113,7 +115,7 @@ class WaredController {
     try {
       await WaredRepo.deleteWared(req)
         .then((msg) => {
-      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+          emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
 
           res.status(200).json(msg);
         })

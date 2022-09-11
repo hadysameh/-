@@ -4,5 +4,5 @@ import isAuth from "../../middelwares/isAuth";
 
 const saderOptionsRouter = express.Router();
 
-saderOptionsRouter.get("/saderoptions",isAuth, SaderOptionsController.get); 
+saderOptionsRouter.get("/saderoptions", isAuth, SaderOptionsController.get);
 export default saderOptionsRouter;

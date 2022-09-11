@@ -8,16 +8,14 @@ export default class SaderTrackingOfficersController {
     let saderId = req.body.saderId;
     // console.log({ officerId, saderId });
     try {
-      const [
-        saderTrackingOfficersRow,
-        created,
-      ] = await Sadertrackingofficers.upsert({
-        officer_id: officerId,
-        sader_id: saderId,
-      });
+      const [saderTrackingOfficersRow, created] =
+        await Sadertrackingofficers.upsert({
+          officer_id: officerId,
+          sader_id: saderId,
+        });
       emitSocketEvent("refetchWaredAndSaderUnreadNumbersNoSound");
 
-    //   console.log({ saderTrackingOfficersRow, created });
+      //   console.log({ saderTrackingOfficersRow, created });
       res.status(200).json({});
     } catch (error) {}
   }

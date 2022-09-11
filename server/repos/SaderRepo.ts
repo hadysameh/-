@@ -13,6 +13,7 @@ import getCurrentYear from "../utils/getCurrentYear";
 import addDaysToDate from "../utils/addDaysToDate";
 import { Op } from "sequelize";
 import Config from "../models/ConfigModel";
+import { premissions } from "../types";
 
 import Sadertrackingofficers from "../models/SadertrackingofficersModel";
 import Sader_Gehaa from "../models/Sader_GehaaModel";
@@ -22,13 +23,13 @@ export default class SaderRepo {
 
     let config = await Config.findOne();
     const hasAccessToAllWared =
-      req.user.userType.premissions.find((premission: any) => {
-        return premission.premission === "has access to all wared";
-      }) || req.user.userType.type === "admin";
+      req.user.usertype.premissions.find((premission: any) => {
+        return premission.premission === premissions.hasAccessToAllSader;
+      }) || req.user.usertype.type === "admin";
 
-    const hasAccessToBranchWared = req.user.userType.premissions.find(
+    const hasAccessToBranchWared = req.user.usertype.premissions.find(
       (premission: any) => {
-        return premission.premission === "has access to branch wared";
+        return premission.premission === premissions.hasAccessToBranchSader;
       }
     );
 
@@ -130,13 +131,13 @@ export default class SaderRepo {
     req: Request
   ): Promise<any> {
     const hasAccessToAllSader =
-      req.user.userType.premissions.find((premission: any) => {
-        return premission.premission === "has access to all sader";
-      }) || req.user.userType.type === "admin";
+      req.user.usertype.premissions.find((premission: any) => {
+        return premission.premission === premissions.hasAccessToAllSader;
+      }) || req.user.usertype.type === "admin";
 
-    const hasAccessToBranchSader = req.user.userType.premissions.find(
+    const hasAccessToBranchSader = req.user.usertype.premissions.find(
       (premission: any) => {
-        return premission.premission === "has access to branch sader";
+        return premission.premission === premissions.hasAccessToBranchSader;
       }
     );
 
@@ -228,7 +229,7 @@ export default class SaderRepo {
         let selectedGehaat = JSON.parse(reqBodyData.gehaat);
         let lastWared = await Wared.findOne({
           where: {
-            doc_num: reqBodyData.lastWaredNum?reqBodyData.lastWaredNum:'f',
+            doc_num: reqBodyData.lastWaredNum ? reqBodyData.lastWaredNum : "f",
           },
         }).catch((err) => {
           return null;
@@ -249,7 +250,7 @@ export default class SaderRepo {
           subject: reqBodyData.subject,
           known: reqBodyData.branch_id,
           officer_id: reqBodyData.officer_id,
-          lastWared_id:lastWared_id?lastWared_id:null,
+          lastWared_id: lastWared_id ? lastWared_id : null,
           register_date: getTodaysDate(),
           type: reqBodyData.type,
           register_user: "1",

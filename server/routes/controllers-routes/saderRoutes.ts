@@ -31,10 +31,6 @@ saderRouter.put(
   SaderController.update
 );
 
-saderRouter.delete(
-  "/saderbox/deletesader",
-  isAuth,
-  SaderController.delete
-);
+saderRouter.delete("/saderbox/deletesader", isAuth, SaderController.delete);
 // waredRouter.put('/waredbox/edit', upload.single('mokatbaPdf'),SaderController.update)
 export default saderRouter;

@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import Gehaa from "../models/GehaaModel";
 import Branches from "../models/BranchesModel";
 import Officers from "../models/OfficersModel";
-
+import { premissions } from "../types";
 export default class WaredOptionsController {
   static async get(req: Request, res: Response) {
     const getGehaat = async () => {
@@ -15,9 +15,12 @@ export default class WaredOptionsController {
       let branches: any[];
 
       const hasAccessToAllBranches =
-        req.user.userType.premissions.includes("has access to all branches") ||
-        req.user.userType.type === "admin";
+        req.user.usertype.premissions
+          .map((premission) => premission.premission)
+          .includes(premissions.hasAccessToAllBranches) ||
+        req.user.usertype.type === "admin";
 
+      console.log({ user: JSON.stringify(req.user), hasAccessToAllBranches });
       if (hasAccessToAllBranches) {
         branches = await Branches.findAll();
       } else {
@@ -31,13 +34,15 @@ export default class WaredOptionsController {
       let officers: any[];
 
       const hasAccessToAllOfficers =
-        req.user.userType.premissions.find((premission: any) => {
-          return premission.premission === "has access to all officers";
-        }) || req.user.userType.type === "admin";
+        req.user.usertype.premissions.find((premission: any) => {
+          return premission.premission === premissions.hasAccessToAllOfficers;
+        }) || req.user.usertype.type === "admin";
 
-      const hasAccessToBranchOfficers = req.user.userType.premissions.find(
+      const hasAccessToBranchOfficers = req.user.usertype.premissions.find(
         (premission: any) => {
-          return premission.premission === "has access to branch officers";
+          return (
+            premission.premission === premissions.hasAccessToBranchOfficers
+          );
         }
       );
       if (hasAccessToAllOfficers) {

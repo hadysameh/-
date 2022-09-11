@@ -38,6 +38,4 @@ const Sadertrackingofficers = seqeulize.define(
   }
 );
 
-
-
 export default Sadertrackingofficers;

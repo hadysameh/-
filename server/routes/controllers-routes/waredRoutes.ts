@@ -19,18 +19,16 @@ waredRouter.get(
   WaredController.getNumberOfUnreadWared
 );
 
-waredRouter.get("/waredbox/search", isAuth,WaredController.getSearch);
+waredRouter.get("/waredbox/search", isAuth, WaredController.getSearch);
 waredRouter.post(
   "/waredbox/store",
-  [isAuth,
-  waredUpload.single("mokatbaPdf")],
+  [isAuth, waredUpload.single("mokatbaPdf")],
   WaredController.store
 );
 
 waredRouter.put(
   "/waredbox/edit",
-  [isAuth,
-  waredUpload.single("mokatbaPdf")],
+  [isAuth, waredUpload.single("mokatbaPdf")],
   WaredController.update
 );
 
@@ -40,11 +38,6 @@ waredRouter.put(
   WaredController.updateOfficersAndBranches
 );
 
-waredRouter.delete(
-  "/waredbox/deletewared",
-  isAuth,
-  WaredController.delete
-);
-
+waredRouter.delete("/waredbox/deletewared", isAuth, WaredController.delete);
 
 export default waredRouter;

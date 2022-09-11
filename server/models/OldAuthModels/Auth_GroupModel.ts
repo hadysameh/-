@@ -13,7 +13,7 @@ const Auth_Group = seqeulize.define(
     name: {
       type: DataTypes.STRING(80),
       allowNull: false,
-    }, 
+    },
   },
   {
     // to make the tabel name equal the model name

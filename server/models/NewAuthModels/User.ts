@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 import { getHashed, compareHashed } from "../../utils/bcrypt";
 const User = seqeulize.define(
   //tabel will be named users in the database
-  "User",
+  "users",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -34,16 +34,16 @@ const User = seqeulize.define(
       type: DataTypes.STRING(254),
       allowNull: true,
     },
-    userTypeId:{
+    userTypeId: {
       type: DataTypes.INTEGER,
       defaultValue: null,
       allowNull: true,
     },
-    officerId:{
+    officerId: {
       type: DataTypes.INTEGER,
       defaultValue: null,
       allowNull: true,
-    }
+    },
   },
 
   {
@@ -59,6 +59,7 @@ const User = seqeulize.define(
         user.set("password", hashedPassword);
       },
     },
+    freezeTableName: true,
   }
 );
 

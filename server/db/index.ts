@@ -7,5 +7,3 @@
 //   dateStrings: true,
 //   database: 'trc3'
 // });
-
- 

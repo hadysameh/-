@@ -8,22 +8,22 @@ import bodyParser from "body-parser";
 import path from "path";
 import cookieParser from "cookie-parser";
 import { router, adminJs } from "./AdminJs";
-import Config from "./models/ConfigModel";
 import { Server } from "socket.io";
 require("dotenv").config();
-// seqeulize.sync().then(() => {
-//   console.log("seqeulize is in sync with db");
-// }).catch((err)=>console.log({err}));
+seqeulize
+  .sync()
+  .then(() => {
+    console.log("seqeulize is in sync with db");
+  })
+  .catch((err) => console.log({ err }));
 
-// console.log({ configRow: Config.findAll() });
 const app: Express = express();
 const server = require("http").createServer(app);
-const io = new Server(server,{
+const io = new Server(server, {
   cors: {
     origin: "http://localhost:5022",
     methods: ["GET", "POST"],
-   
-  }
+  },
 });
 
 declare global {
@@ -45,8 +45,14 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(cookieParser());
 
 routesAssigner(app);
-app.get("/", (req: Request, res: Response) => {
-  res.json("hello from TS");
+// app.get("/", (req: Request, res: Response) => {
+//   res.json("hello from TS");
+// });
+app.use(express.static("../mokatabat-client/build"));
+app.get("/*", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "../mokatabat-client/build/index.html"));
+  // res.sendFile('../mokatabat-client/build/index.html')
+  // res.json("hello from TS");
 });
 let port: string = process.env.PORT as string;
 server.listen(port, () => {

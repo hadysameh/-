@@ -17,9 +17,9 @@ import Wared_Officers from "../Wared_OfficersModel";
 import WaredTrackingOfficers from "../WaredTrackingOfficersModel";
 import UserType from "../NewAuthModels/UserTypes";
 import User from "../NewAuthModels/User";
-import Premission from '../NewAuthModels/Premissions'
-import UserType_premission from '../UserType_premissionModel'
-import Config from '../ConfigModel'
+import Premission from "../NewAuthModels/Premissions";
+import UserType_premission from "../UserType_premissionModel";
+import Config from "../ConfigModel";
 // wared relations
 Wared.belongsTo(Gehaa, {
   foreignKey: "gehaa_id",
@@ -54,7 +54,6 @@ Wared.belongsToMany(Officers, {
   onDelete: "CASCADE",
 });
 
-
 // WaredTrackingOfficers.belongsTo(Wared, {
 //   foreignKey: "wared_id",
 //   onDelete: "CASCADE",
@@ -83,12 +82,12 @@ Sader.belongsToMany(Officers, {
   through: Sadertrackingofficers,
   as: "Sadertrackingofficers",
 
-  foreignKey: "sader_id",  
+  foreignKey: "sader_id",
   otherKey: "officer_id",
 });
 Sader.belongsToMany(Gehaa, {
   through: Sader_Gehaa,
-  foreignKey: "sader_id",  
+  foreignKey: "sader_id",
   otherKey: "gehaa_id",
   constraints: false,
 });
@@ -104,31 +103,33 @@ Sader.belongsToMany(Gehaa, {
 // });
 //------------------------------------------------------------
 
-User.belongsTo(UserType,{
+User.belongsTo(UserType, {
   foreignKey: "userTypeId",
+  constraints: false,
 });
 
-User.belongsTo(Officers,{
+User.belongsTo(Officers, {
   foreignKey: "officerId",
+  constraints: false,
 });
 
-UserType.belongsToMany(Premission,{
-  through:UserType_premission,
-  foreignKey: "userTypeId", 
+UserType.belongsToMany(Premission, {
+  through: UserType_premission,
+  foreignKey: "userTypeId",
   otherKey: "premissionId",
-})
+  constraints: false,
+});
 
 //------------------------------------------------------------
 
-
-Officers.belongsTo(Branches,{
+Officers.belongsTo(Branches, {
   foreignKey: "branches_id",
-})
+});
 
-Officers.belongsTo(Arms,{
+Officers.belongsTo(Arms, {
   foreignKey: "arms_id",
-})
+});
 
-Officers.belongsTo(Ranks,{
+Officers.belongsTo(Ranks, {
   foreignKey: "Ranks_id",
-})
+});

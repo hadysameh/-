@@ -13,7 +13,7 @@ const Arms = seqeulize.define(
     name: {
       type: DataTypes.STRING(45),
       allowNull: false,
-    } 
+    },
   },
   {
     // to make the tabel name equal the model name

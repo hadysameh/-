@@ -2,7 +2,7 @@ import seqeulize from "../../db/seqeulize";
 import { DataTypes } from "sequelize";
 
 const UserType = seqeulize.define(
-  "userType",
+  "usertypes",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -13,7 +13,10 @@ const UserType = seqeulize.define(
     type: {
       type: DataTypes.STRING(80),
       allowNull: false,
-    }, 
-  } 
+    },
+  },
+  {
+    freezeTableName: true,
+  }
 );
 export default UserType;

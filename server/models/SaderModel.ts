@@ -107,6 +107,4 @@ const Sader = seqeulize.define(
   }
 );
 
- 
-
 export default Sader;

@@ -60,8 +60,7 @@ const Officers = seqeulize.define(
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue:'1',
-      
+      defaultValue: "1",
     },
   },
   {

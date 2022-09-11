@@ -10,4 +10,4 @@ saderTrackingOfficersRouter.post(
   SaderTrackingOfficersController.store
 );
 
-export default saderTrackingOfficersRouter
+export default saderTrackingOfficersRouter;
