@@ -57,7 +57,7 @@ function Header() {
     getNumberOfUnreadSader().then((num:any)=>{
       setnumOfUnreadSader(num);
     });
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const socket = io(serverApiUrl);

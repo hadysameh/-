@@ -56,7 +56,7 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
       })
       .then((res) => {
         let { data } = res;
-        console.log(res.data);
+        // console.log(res.data);
         setDocNum(data.doc_num);
         setDocDepNum(data.doc_dept_num);
         setMokatbaDate(data.doc_date);

@@ -16,7 +16,7 @@ function CreateWared() {
       .then((res) => {
         console.log(res);
         // console.log("will navigate");
-        alert(res)
+        // alert(res)
         navigate("/waredbox");
       })
       .catch((err) => {

@@ -21,15 +21,16 @@ export function Login() {
               password,
             })
               .then((res: any) => {
-                let data = res.data; 
+                let data = res.data;
+                console.log({ data });
                 let token = data.token;
                 let user = {
                   userName: data.user.userName,
                   id: data.user.id,
                 };
                 let officer = data.user.officer;
-                let userType = data.user.userType.type;
-                let premissions = data.user.userType.premissions.map(
+                let userType = data.user.usertype.type;
+                let premissions = data.user.usertype.premissions.map(
                   (premission: any) => premission.premission
                 );
                 let rank = data.user.officer.rank.name;
