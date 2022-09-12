@@ -7,6 +7,8 @@ import { serverApiUrl } from "../../config";
 import BranchesAndOfficers from "../../features/wared/components/branchesAndOfficers";
 import * as premissions from "../../utils/premissions";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
+import { io } from "socket.io-client";
+
 function MokatbaDetailsPreview() {
   let navigate = useNavigate();
 
@@ -22,19 +24,35 @@ function MokatbaDetailsPreview() {
         navigate("/waredbox");
       });
   }, []);
-  useEffect(() => {
+  const getAndSetMokatbaData=()=>{
     axios
-      .get(serverApiUrl + "api/wared/", { params: { id: mokatbaId } })
-      .then((res) => {
-        setMokatbaData(res.data);
-      });
+    .get(serverApiUrl + "api/wared/", { params: { id: mokatbaId } })
+    .then((res) => {
+      setMokatbaData(res.data);
+    });
 
+  }
+  useEffect(() => {
+    getAndSetMokatbaData()
     axios
       .post(serverApiUrl + "api/waredtrackingofficers/", {
         waredId: mokatbaId,
       })
       .then((res) => console.log(res));
   }, []);
+
+  useEffect(() => {
+    const socket = io(serverApiUrl);
+    socket
+      .off("refetchWaredAndSaderUnreadNumbers")
+      .on("refetchWaredAndSaderUnreadNumbers", () => {
+        window.location.reload();
+      });
+      return () => {
+        socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
+      };
+  }, []);
+ 
   return (
     <>
       <div className="container fs-3 ">
@@ -159,7 +177,7 @@ function MokatbaDetailsPreview() {
             <div className="row align-items-start pt-5">
               <div className="">
                 <a
-                  href={`${serverApiUrl}uploads/${mokatbaData?.attach}`}
+                  href={`./uploads/${mokatbaData?.attach}`}
                   target="blank"
                   className="btn btn-lg btn-primary fs-3"
                 >

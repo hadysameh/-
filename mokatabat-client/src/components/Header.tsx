@@ -68,8 +68,8 @@ function Header() {
         let numOfFetchedUnreadWared: any = await getNumberOfUnreadWared();
         let numOfFetchedUnreadSader: any = await getNumberOfUnreadSader();
         if (
-          numOfFetchedUnreadWared > numOfUnreadWared ||
-          numOfFetchedUnreadSader > numOfUnreadSader
+          numOfFetchedUnreadWared >= numOfUnreadWared ||
+          numOfFetchedUnreadSader >= numOfUnreadSader
         ) {
           audioRef.current.play();
         }

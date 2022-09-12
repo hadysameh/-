@@ -10,7 +10,7 @@ function CreateSader() {
   };
   const submitNewSader = useCallback((formData: FormData) => {
     axios
-      .post("http://localhost:3125/api/saderbox/store", formData)
+      .post(serverApiUrl+"api/saderbox/store", formData)
       .then((res) => {
         console.log(res);
         console.log("will navigate");

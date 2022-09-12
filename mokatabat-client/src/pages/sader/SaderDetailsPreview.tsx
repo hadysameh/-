@@ -6,6 +6,7 @@ import CircleSpinner from "../../components/CircleSpinner";
 import { serverApiUrl } from "../../config";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
 import * as premissions from "../../utils/premissions";
+import { io } from "socket.io-client";
 
 function SaderDetailsPreview() {
   let navigate = useNavigate();
@@ -20,19 +21,35 @@ function SaderDetailsPreview() {
         navigate("/saderbox");
       });
   }, []);
+
+  const getAndSetSaderData =()=>{
+    axios
+    .get(serverApiUrl + "api/onesader", { params: { id: saderId } })
+    .then((res) => {
+      // console.log({ data: res.data });
+      setSaderData(res.data);
+    });
+  }
   useEffect(() => {
     axios
       .post(serverApiUrl + "api/sadertrackingofficers/", {
         saderId,
       })
       .then((res) => console.log(res));
-    axios
-      .get(serverApiUrl + "api/onesader", { params: { id: saderId } })
-      .then((res) => {
-        // console.log({ data: res.data });
-        setSaderData(res.data);
+   
+      getAndSetSaderData()
+  }, []);
+
+  useEffect(() => {
+    const socket = io(serverApiUrl);
+    socket
+      .off("refetchWaredAndSaderUnreadNumbers")
+      .on("refetchWaredAndSaderUnreadNumbers", () => {
+        window.location.reload();
       });
-    
+      return () => {
+        socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
+      };
   }, []);
   return (
     <>
@@ -134,7 +151,7 @@ function SaderDetailsPreview() {
             <div className="row align-items-start pt-5">
               <div className="">
                 <a
-                  href={`http://localhost:3125/uploads/${saderData.attach}`}
+                  href={`./uploads/${saderData?.attach}`}
                   target="blank"
                   className="btn btn-lg btn-primary fs-3"
                 >

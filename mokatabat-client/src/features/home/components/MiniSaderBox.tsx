@@ -9,7 +9,6 @@ function MiniWaredBox() {
   const [pageNum, setPageNum] = useState<any>(1);
 
   const fetchWaredRows = () => {
-    // axios.get("http://localhost:3125/api/waredbox/search", {});
     setIsShowSpinner(true);
     setSaderBoxRecords([]);
 

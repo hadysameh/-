@@ -31,7 +31,7 @@ function SaderBox() {
     setSaderBoxRecords([]);
     setPageNum(1);
     axios
-      .get("http://localhost:3125/api/saderbox/search", {
+      .get(serverApiUrl+"api/saderbox/search", {
         params: {
           docNum,
           gehaaId,
@@ -60,14 +60,13 @@ function SaderBox() {
   };
 
   const fetchRowsWithParams = () => {
-    // axios.get("http://localhost:3125/api/saderbox/search", {});
     // window.scroll(0, 450);
 
     setIsShowSpinner(true);
     setSaderBoxRecords([]);
 
     axios
-      .get("http://localhost:3125/api/saderbox/search", {
+      .get(serverApiUrl+"api/saderbox/search", {
         params: {
           docNum,
           gehaaId,
@@ -102,7 +101,7 @@ function SaderBox() {
     // setIsShowSpinner(true);
     // window.scroll(0, 450);
     axios
-      .get("http://localhost:3125/api/saderbox/search", {
+      .get(serverApiUrl+"api/saderbox/search", {
         params: {
           withinExcutionTimeType: "0",
           pageNum: 0,

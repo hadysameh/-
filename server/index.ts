@@ -10,12 +10,12 @@ import cookieParser from "cookie-parser";
 import { router, adminJs } from "./AdminJs";
 import { Server } from "socket.io";
 require("dotenv").config();
-seqeulize
-  .sync()
-  .then(() => {
-    console.log("seqeulize is in sync with db");
-  })
-  .catch((err) => console.log({ err }));
+// seqeulize
+//     .sync()
+//     .then(() => {
+//      console.log("seqeulize is in sync with db");
+//    })
+//     .catch((err) => console.log({ err }));
 
 const app: Express = express();
 const server = require("http").createServer(app);
@@ -48,12 +48,14 @@ routesAssigner(app);
 // app.get("/", (req: Request, res: Response) => {
 //   res.json("hello from TS");
 // });
-app.use(express.static("../mokatabat-client/build"));
-app.get("/*", (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "../mokatabat-client/build/index.html"));
-  // res.sendFile('../mokatabat-client/build/index.html')
-  // res.json("hello from TS");
-});
+const nodeEnviromment = process.env.NODE_ENV as string;
+if (nodeEnviromment == "production") {
+  app.use(express.static("../mokatabat-client/build"));
+  app.get("/*", (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, "../mokatabat-client/build/index.html"));
+  });
+}
+
 let port: string = process.env.PORT as string;
 server.listen(port, () => {
   console.log("app runs on " + port);

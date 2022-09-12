@@ -85,6 +85,8 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
         );
       });
   }, []);
+
+ 
   return (
     <div className="container">
       <div className="border-start border-end p-4">
@@ -368,7 +370,7 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
                     <p>Size in bytes: {selectedFile?.size}</p>
                     <p>
                       lastModifiedDate:{" "}
-                      {selectedFile?.lastModifiedDate.toLocaleDateString()}
+                      {selectedFile?.lastModifiedDate?.toLocaleDateString()}
                     </p>
                   </div>
                 ) : (

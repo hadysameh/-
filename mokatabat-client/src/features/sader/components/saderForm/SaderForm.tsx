@@ -53,7 +53,7 @@ function SaderForm({
   useEffect(() => {
     if (saderIdToEdit) {
       axios
-        .get("http://localhost:3125/api/onesader", {
+        .get(serverApiUrl+"api/onesader", {
           params: { id: saderIdToEdit },
         })
         .then((res) => {
@@ -323,7 +323,7 @@ function SaderForm({
                     <p>Size in bytes: {selectedFile?.size}</p>
                     <p>
                       lastModifiedDate:{" "}
-                      {selectedFile?.lastModifiedDate.toLocaleDateString()}
+                      {selectedFile?.lastModifiedDate?.toLocaleDateString()}
                     </p>
                   </div>
                 ) : (

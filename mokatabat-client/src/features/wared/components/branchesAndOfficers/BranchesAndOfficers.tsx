@@ -5,6 +5,8 @@ import { serverApiUrl } from "../../../../config";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import * as premisions from "../../../../utils/premissions";
+import { io } from "socket.io-client";
+
 interface IProps {
   selectedOfficers: any;
   selectedBranches: any;
@@ -13,17 +15,17 @@ interface IProps {
 
 function BranchesAndOfficers(props: IProps) {
   let navigate = useNavigate();
-  console.log({
-    hasAccessToEditWaredBranchs: premisions.hasAccessToEditWaredBranchs(),
-    hasAccessToEditWaredOfficers: premisions.hasAccessToEditWaredOfficers(),
-  });
+  // console.log({
+  //   hasAccessToEditWaredBranchs: premisions.hasAccessToEditWaredBranchs(),
+  //   hasAccessToEditWaredOfficers: premisions.hasAccessToEditWaredOfficers(),
+  // });
   const [selectedEditedBranches, setSelectedEditedBranches] = useState<any>([]);
   const [selectedEditedOfficers, setselectedEditedOfficers] = useState<any>([]);
 
   const [branchesChoises, setBranchesChoices] = useState([]);
   const [officersChoices, setOfficersChoices] = useState([]);
 
-  useEffect(() => {
+  const getAndSetWaredOptions = ()=>{
     axios.get(serverApiUrl + "api/waredoptions").then((res) => {
       const branches = res.data.branches;
       const officers = res.data.officers;
@@ -44,8 +46,24 @@ function BranchesAndOfficers(props: IProps) {
       setselectedEditedOfficers([...selectedOfficers]);
       setSelectedEditedBranches([...selectedBranches]);
     });
+  }
+  useEffect(() => {
+    getAndSetWaredOptions()
   }, []);
 
+  useEffect(() => {
+    const socket = io(serverApiUrl);
+    socket
+      .off("refetchWaredAndSaderUnreadNumbers")
+      .on("refetchWaredAndSaderUnreadNumbers", () => {
+        console.log("refetchWaredAndSaderUnreadNumbers")
+        getAndSetWaredOptions()
+      });
+      return () => {
+        socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
+      };
+  }, []);
+  
   const submitModifiedWared = (ModifiedWaredData: any) => {
     axios
       .put(
@@ -62,7 +80,7 @@ function BranchesAndOfficers(props: IProps) {
   };
   return (
     <>
-      <div
+      <div key={JSON.stringify(props.mokatbaData)}
         style={{
           display: "flex",
           flexDirection: "column",

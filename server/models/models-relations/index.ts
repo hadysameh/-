@@ -23,19 +23,23 @@ import Config from "../ConfigModel";
 // wared relations
 Wared.belongsTo(Gehaa, {
   foreignKey: "gehaa_id",
+  constraints: false,
 });
 Wared.belongsTo(Sader, {
   foreignKey: "lastSader_id",
+  constraints: false,
 });
 Wared.belongsTo(Sader, {
   foreignKey: "closedSader_id",
   onDelete: "CASCADE",
+  constraints: false,
 });
 Wared.belongsToMany(Branches, {
   through: Wared_Branches,
   foreignKey: "wared_id", // replaces `productId`
   otherKey: "branches_id",
   onDelete: "CASCADE",
+  constraints: false,
 });
 // Branches.belongsToMany(Wared, { through: Wared_Branches });
 Wared.belongsToMany(Officers, {
@@ -44,6 +48,7 @@ Wared.belongsToMany(Officers, {
   foreignKey: "wared_id", // replaces `productId`
   otherKey: "officers_id",
   onDelete: "CASCADE",
+  constraints: false,
 });
 
 Wared.belongsToMany(Officers, {
@@ -52,6 +57,7 @@ Wared.belongsToMany(Officers, {
   foreignKey: "wared_id", // replaces `productId`
   otherKey: "officer_id",
   onDelete: "CASCADE",
+  constraints: false,
 });
 
 // WaredTrackingOfficers.belongsTo(Wared, {
@@ -70,10 +76,12 @@ Wared.belongsToMany(Officers, {
 
 Sader.belongsTo(Wared, {
   foreignKey: "lastWared_id",
+  constraints: false,
 });
 Sader.belongsTo(Officers, {
   foreignKey: "officer_id",
   as: "SaderOfficer",
+  constraints: false,
 });
 Sader.belongsTo(Branches, {
   foreignKey: "branch_id",
@@ -84,6 +92,7 @@ Sader.belongsToMany(Officers, {
 
   foreignKey: "sader_id",
   otherKey: "officer_id",
+  constraints: false,
 });
 Sader.belongsToMany(Gehaa, {
   through: Sader_Gehaa,
@@ -124,12 +133,15 @@ UserType.belongsToMany(Premission, {
 
 Officers.belongsTo(Branches, {
   foreignKey: "branches_id",
+  constraints: false,
 });
 
 Officers.belongsTo(Arms, {
   foreignKey: "arms_id",
+  constraints: false,
 });
 
 Officers.belongsTo(Ranks, {
   foreignKey: "Ranks_id",
+  constraints: false,
 });

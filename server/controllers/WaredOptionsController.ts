@@ -20,7 +20,7 @@ export default class WaredOptionsController {
           .includes(premissions.hasAccessToAllBranches) ||
         req.user.usertype.type === "admin";
 
-      console.log({ user: JSON.stringify(req.user), hasAccessToAllBranches });
+      // console.log({ user: JSON.stringify(req.user), hasAccessToAllBranches });
       if (hasAccessToAllBranches) {
         branches = await Branches.findAll();
       } else {

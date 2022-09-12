@@ -19,7 +19,7 @@ function OfficersSelect({
   // const [selectedEditedOfficers, setselectedEditedOfficers] = useState([]);
   return (
     <>
-      <div className="row ">
+      <div className="row " key={selectedEditedOfficers}>
         <div className="col-4">
           <div className="  ">
             <div className="">
@@ -39,7 +39,7 @@ function OfficersSelect({
         {!isArrEmpty(officersChoices)&&<div className="col-6">
           <label className="form-label">تعديل الضباط المختصين</label>
           {!isArrEmpty(officersChoices) && (
-            <MultiSelect
+            <MultiSelect  key={selectedEditedOfficers}
               options={officersChoices.map((officer: any) => {
                 return { label: officer.name, value: officer.id };
               })}

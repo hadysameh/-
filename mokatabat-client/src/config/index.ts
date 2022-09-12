@@ -1,1 +1,1 @@
-export const serverApiUrl = `http://localhost:3125/`
+export const serverApiUrl = `/`

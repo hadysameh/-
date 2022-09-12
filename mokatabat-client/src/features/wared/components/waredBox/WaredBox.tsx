@@ -80,7 +80,6 @@ function WaredBox(props: IProps) {
       });
   };
   const fetchRowsWithParams = () => {
-    // axios.get("http://localhost:3125/api/waredbox/search", {});
     setIsShowSpinner(true);
     setWaredBoxRecords([]);
 
