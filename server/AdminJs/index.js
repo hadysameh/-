@@ -181,7 +181,7 @@ const router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
     });
     // console.log({user})
     if (user) {
-      if (user.userType.type == "admin") {
+      if (user.usertype.type == "admin") {
         const matched = await bcrypt.compare(password, user.password);
 
         if (matched) {
