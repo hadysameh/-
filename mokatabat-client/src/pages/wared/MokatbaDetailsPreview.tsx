@@ -3,7 +3,6 @@ import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
-import { serverApiUrl } from "../../config";
 import BranchesAndOfficers from "../../features/wared/components/branchesAndOfficers";
 import * as premissions from "../../utils/premissions";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
@@ -17,7 +16,7 @@ function MokatbaDetailsPreview() {
   const [isConfirmDeleteShown, setIsConfirmDeleteShown] = useState(false);
   const deleteWared = useCallback(() => {
     axios
-      .delete(serverApiUrl + "api/waredbox/deletewared", {
+      .delete("/api/waredbox/deletewared", {
         data: { waredId: mokatbaId },
       })
       .then((res) => {
@@ -26,7 +25,7 @@ function MokatbaDetailsPreview() {
   }, []);
   const getAndSetMokatbaData=()=>{
     axios
-    .get(serverApiUrl + "api/wared/", { params: { id: mokatbaId } })
+    .get("/api/wared/", { params: { id: mokatbaId } })
     .then((res) => {
       setMokatbaData(res.data);
     });
@@ -35,14 +34,14 @@ function MokatbaDetailsPreview() {
   useEffect(() => {
     getAndSetMokatbaData()
     axios
-      .post(serverApiUrl + "api/waredtrackingofficers/", {
+      .post("/api/waredtrackingofficers/", {
         waredId: mokatbaId,
       })
       .then((res) => console.log(res));
   }, []);
 
   useEffect(() => {
-    const socket = io(serverApiUrl);
+    const socket = io('/');
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "../../../components/HorizontalSpinner";
-import { serverApiUrl } from "../../../config";
 function MiniWaredBox() {
   const [isShowSpinner, setIsShowSpinner] = useState(true);
   const [waredBoxRecords, setWaredBoxRecords] = useState([]);
@@ -13,7 +12,7 @@ function MiniWaredBox() {
     setWaredBoxRecords([]);
 
     axios
-      .get(serverApiUrl + "api/waredbox/search", {
+      .get("/api/waredbox/search", {
         params: {
           withinExcutionTimeType: "0",
           pageNum: pageNum - 1,
@@ -62,7 +61,7 @@ function MiniWaredBox() {
           <tbody>
             {waredBoxRecords.map((waredBoxRecord: any, index: number) => {
               return (
-                <tr key={index+waredBoxRecord.id}>
+                <tr key={index + waredBoxRecord.id}>
                   <th>
                     <a
                       href={`/wared/${waredBoxRecord.id}`}

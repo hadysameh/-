@@ -1,9 +1,8 @@
 import axios from "axios";
-import { serverApiUrl } from "../../../config";
 export function postloginData(loginData: any) {
   return new Promise((resolve: any, reject: any) => {
     axios
-      .post(serverApiUrl + "api/login", loginData)
+      .post("/api/login", loginData)
       .then((res) => {
         resolve(res);
       })
@@ -15,7 +14,7 @@ export function postloginData(loginData: any) {
 export function postRegisterData(regData: any) {
   return new Promise((resolve: any, reject: any) => {
     axios
-      .post(serverApiUrl + "api/register", regData)
+      .post("/api/register", regData)
       .then((res) => {
         resolve(res);
       })

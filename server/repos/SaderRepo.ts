@@ -118,7 +118,6 @@ export default class SaderRepo {
             branches: values[1],
             officers: values[2],
           };
-          // console.log(values);
           resolve(result);
         })
         .catch((err) => {
@@ -257,17 +256,6 @@ export default class SaderRepo {
           attach: fileLocationPath,
         });
 
-        // await Sadertrackingofficers.bulkCreate([
-        //   {
-        //     officer_id: assistantBranchId,
-        //     sader_id: storedSader.getDataValue("id"),
-        //   },
-        //   {
-        //     officer_id: reqBodyData.officer_id,
-        //     sader_id: storedSader.getDataValue("id"),
-        //   },
-        // ]);
-
         let gehaatIdsObjs: { id: any }[] = selectedGehaat.map((branch: any) => {
           return { id: branch.value };
         });
@@ -277,7 +265,6 @@ export default class SaderRepo {
             gehaa_id: gehaaIdObj.id,
           };
         });
-        // console.log({ Sader_GehaaRows });
 
         await Sader_Gehaa.bulkCreate(Sader_GehaaRows);
 

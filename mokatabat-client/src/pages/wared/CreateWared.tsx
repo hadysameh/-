@@ -2,7 +2,6 @@ import { WaredForm } from "../../features/wared/components/waredForm";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { serverApiUrl } from "../../config";
 
 function CreateWared() {
   let navigate = useNavigate();
@@ -12,7 +11,7 @@ function CreateWared() {
   };
   const submitNewWared = useCallback((formData: FormData) => {
     axios
-      .post(serverApiUrl + "api/waredbox/store", formData)
+      .post("/api/waredbox/store", formData)
       .then((res) => {
         console.log(res);
         // console.log("will navigate");

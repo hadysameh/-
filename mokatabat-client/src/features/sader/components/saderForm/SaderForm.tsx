@@ -4,7 +4,6 @@ import isObjEmpty from "../../../../utils/isObjEmpty";
 import isArrEmpty from "../../../../utils/isArrEmpty";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { serverApiUrl } from "../../../../config";
 import Select from "react-select";
 
 interface IProps {
@@ -43,7 +42,7 @@ function SaderForm({
   const [isFilePicked, setIsFilePicked] = useState(false);
 
   useEffect(() => {
-    axios.get(serverApiUrl + "api/saderoptions").then((res) => {
+    axios.get("/api/saderoptions").then((res) => {
       setGehaat(res.data.gehaat);
       setBranchs(res.data.branches);
       setOfficers(res.data.officers);
@@ -53,7 +52,7 @@ function SaderForm({
   useEffect(() => {
     if (saderIdToEdit) {
       axios
-        .get(serverApiUrl+"api/onesader", {
+        .get("/api/onesader", {
           params: { id: saderIdToEdit },
         })
         .then((res) => {
@@ -387,19 +386,6 @@ function SaderForm({
                 formData.append("officer_id", selectedOfficer.id);
                 formData.append("mokatbaPdf", selectedFile);
 
-                // axios
-                //   .post(serverApiUrl + "api/saderbox/store", formData)
-                //   .then((res) => {
-                //     console.log(res);
-                //     console.log("will navigate");
-                //     navigate("/saderbox");
-                //   })
-                //   .catch((err) => {
-                //     alert(
-                //       "فشل في تسجيل المكاتبة الرجاء التحقق من البيانات المدخلة"
-                //     );
-                //     console.log({ err, msg: "error" });
-                //   });
                 submitFormData(formData);
               } else {
                 alert("من فضلك قم بملأ الخانات المطلوبة");

@@ -2,7 +2,6 @@ import { WaredForm } from "../../features/wared/components/waredForm";
 import axios from "axios";
 import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { serverApiUrl } from "../../config";
 function EditWared() {
   let navigate = useNavigate();
   let { mokatbaId } = useParams();
@@ -11,7 +10,7 @@ function EditWared() {
   };
   const submitEditWared = useCallback((formData: FormData) => {
     axios
-      .put(serverApiUrl + "api/waredbox/edit", formData)
+      .put("/api/waredbox/edit", formData)
       .then((res) => {
         console.log(res);
         console.log("will navigate");

@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { serverApiUrl } from "../../../../config";
 import { waredBoxType } from "../../../../types";
 import isArrEmpty from "../../../../utils/isArrEmpty";
 import Select from "react-select";
@@ -75,7 +74,7 @@ function SearchBox(props: SearchFormProps) {
   };
 
   useEffect(() => {
-    axios.get(serverApiUrl + "api/waredoptions").then((res) => {
+    axios.get("/api/waredoptions").then((res) => {
       // console.log({ res });
       setGehaatOptions(res.data.gehaat);
       setBranchsOptions(res.data.branches);

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { OfficersSelect } from "./components/officersSelect";
 import { BranchesSelect } from "./components/branchesSelect";
-import { serverApiUrl } from "../../../../config";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import * as premisions from "../../../../utils/premissions";
@@ -25,8 +24,8 @@ function BranchesAndOfficers(props: IProps) {
   const [branchesChoises, setBranchesChoices] = useState([]);
   const [officersChoices, setOfficersChoices] = useState([]);
 
-  const getAndSetWaredOptions = ()=>{
-    axios.get(serverApiUrl + "api/waredoptions").then((res) => {
+  const getAndSetWaredOptions = () => {
+    axios.get("/api/waredoptions").then((res) => {
       const branches = res.data.branches;
       const officers = res.data.officers;
       setBranchesChoices(branches);
@@ -46,28 +45,28 @@ function BranchesAndOfficers(props: IProps) {
       setselectedEditedOfficers([...selectedOfficers]);
       setSelectedEditedBranches([...selectedBranches]);
     });
-  }
+  };
   useEffect(() => {
-    getAndSetWaredOptions()
+    getAndSetWaredOptions();
   }, []);
 
   useEffect(() => {
-    const socket = io(serverApiUrl);
+    const socket = io('/');
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {
-        console.log("refetchWaredAndSaderUnreadNumbers")
-        getAndSetWaredOptions()
+        console.log("refetchWaredAndSaderUnreadNumbers");
+        getAndSetWaredOptions();
       });
-      return () => {
-        socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
-      };
+    return () => {
+      socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
+    };
   }, []);
-  
+
   const submitModifiedWared = (ModifiedWaredData: any) => {
     axios
       .put(
-        serverApiUrl + "api/waredbox/updateOfficersAndBranches",
+        "/api/waredbox/updateOfficersAndBranches",
         ModifiedWaredData
       )
       .then((res) => {
@@ -80,7 +79,8 @@ function BranchesAndOfficers(props: IProps) {
   };
   return (
     <>
-      <div key={JSON.stringify(props.mokatbaData)}
+      <div
+        key={JSON.stringify(props.mokatbaData)}
         style={{
           display: "flex",
           flexDirection: "column",

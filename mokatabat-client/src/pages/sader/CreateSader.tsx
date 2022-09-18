@@ -2,7 +2,6 @@ import { SaderForm } from "../../features/sader/components/saderForm";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { serverApiUrl } from "../../config";
 function CreateSader() {
   let navigate = useNavigate();
   const requiredFileds = {
@@ -10,7 +9,7 @@ function CreateSader() {
   };
   const submitNewSader = useCallback((formData: FormData) => {
     axios
-      .post(serverApiUrl+"api/saderbox/store", formData)
+      .post("/api/saderbox/store", formData)
       .then((res) => {
         console.log(res);
         console.log("will navigate");

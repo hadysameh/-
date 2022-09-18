@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "../../../components/HorizontalSpinner";
-import { serverApiUrl } from "../../../config";
 
 function MiniWaredBox() {
   const [isShowSpinner, setIsShowSpinner] = useState(true);
@@ -13,24 +12,24 @@ function MiniWaredBox() {
     setSaderBoxRecords([]);
 
     axios
-    .get(serverApiUrl+"api/saderbox/search", {
-      params: {
-        withinExcutionTimeType: "0",
-        pageNum:  pageNum - 1,
-        numOfRecords:10,
-      },
-    })
-    .then((res) => {
-      if (res.data) {
-        let {data}=res
-        // console.log({data})
-        setSaderBoxRecords(res.data);
-        // setIsShowSpinner(false);
-        // window.scrollTo(0, 500);
-        setIsShowSpinner(false);
-      }
-    })
-    .catch((err) => console.log({ err }));
+      .get("/api/saderbox/search", {
+        params: {
+          withinExcutionTimeType: "0",
+          pageNum: pageNum - 1,
+          numOfRecords: 10,
+        },
+      })
+      .then((res) => {
+        if (res.data) {
+          let { data } = res;
+          // console.log({data})
+          setSaderBoxRecords(res.data);
+          // setIsShowSpinner(false);
+          // window.scrollTo(0, 500);
+          setIsShowSpinner(false);
+        }
+      })
+      .catch((err) => console.log({ err }));
   };
   useEffect(() => {
     fetchWaredRows();

@@ -7,6 +7,7 @@ import "./models/models-relations/index";
 import bodyParser from "body-parser";
 import path from "path";
 import cookieParser from "cookie-parser";
+//@ts-ignore
 import { router, adminJs } from "./AdminJs";
 import { Server } from "socket.io";
 require("dotenv").config();
@@ -34,6 +35,7 @@ global.io = io;
  * adminjs routes and bodyParser mus be first
  *
  */
+//@ts-ignore
 app.use(adminJs.options.rootPath, router);
 app.use(bodyParser());
 app.use(bodyParser.json());

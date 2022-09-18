@@ -20,12 +20,22 @@ import Arms from "../models/ArmsModel";
 import Ranks from "../models/RanksMode";
 import sequelize from "../db/seqeulize";
 import bcrypt from "bcrypt";
+
+let router, adminJs;
+
+/**
+ * this will return array of { label:  string, value: string},
+ * the value is the row id
+ * CAUTION it will fetch all records from the database
+ * @param {Modle} model
+ */
+
 AdminJS.registerAdapter(AdminJSSequelize);
 const userParent = {
   name: "User Controlls",
   icon: "Accessibility",
 };
-const adminJs = new AdminJS({
+adminJs = new AdminJS({
   databases: [sequelize],
   rootPath: "/admin",
   resources: [
@@ -37,10 +47,7 @@ const adminJs = new AdminJS({
         properties: {
           userName: {
             isTitle: true,
-          },
-          password: {
-            // isVisible: false,
-          },
+          }, 
         },
       },
       // actions: {
@@ -169,7 +176,7 @@ const adminJs = new AdminJS({
   ],
 });
 
-const router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
+router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
   authenticate: async (email, password) => {
     const user = await User.findOne({
       where: [
@@ -194,5 +201,4 @@ const router = AdminJSExpress.buildAuthenticatedRouter(adminJs, {
   },
   cookiePassword: "some-secret-password-used-to-secure-cookie",
 });
-
 export { router, adminJs };

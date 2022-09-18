@@ -5,7 +5,6 @@ import isObjEmpty from "../../../../utils/isObjEmpty";
 import isArrEmpty from "../../../../utils/isArrEmpty";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { serverApiUrl } from "../../../../config";
 
 interface IProps {
   submitFormData: Function;
@@ -42,7 +41,7 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
   const [isFilePicked, setIsFilePicked] = useState(false);
 
   useEffect(() => {
-    axios.get(serverApiUrl + "api/waredoptions").then((res) => {
+    axios.get("/api/waredoptions").then((res) => {
       setGehaat(res.data.gehaat);
       setBranchs(res.data.branches);
       setOfficers(res.data.officers);
@@ -50,43 +49,44 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
   }, []);
   useEffect(() => {
     // console.log("will fetch");
-    axios
-      .get(serverApiUrl + "api/wared/", {
-        params: { id: waredIdToEdit },
-      })
-      .then((res) => {
-        let { data } = res;
-        // console.log(res.data);
-        setDocNum(data.doc_num);
-        setDocDepNum(data.doc_dept_num);
-        setMokatbaDate(data.doc_date);
-        setMokatbaDeliveryDate(data.deliver_date);
-        setSubject(data.subject);
-        setDeadLineDate(data.docDeadline);
-        setLastWaredNum(data.lastWared_id);
-        setType(data.type);
-        setSelectedGehaa(data.gehaa);
-        if (data.deadline) {
-          setDeadLineDate(data.deadline);
-          setHasDeadline(true);
-        }
-        let { branches } = data;
-        setSelectedBranchs(
-          branches.map((branch: any) => {
-            return { label: branch.name, value: branch.id };
-          })
-        );
-        let { Wared_Officers } = data;
+    if (waredIdToEdit) {
+      axios
+        .get("/api/wared/", {
+          params: { id: waredIdToEdit },
+        })
+        .then((res) => {
+          let { data } = res;
+          // console.log(res.data);
+          setDocNum(data.doc_num);
+          setDocDepNum(data.doc_dept_num);
+          setMokatbaDate(data.doc_date);
+          setMokatbaDeliveryDate(data.deliver_date);
+          setSubject(data.subject);
+          setDeadLineDate(data.docDeadline);
+          setLastWaredNum(data.lastWared_id);
+          setType(data.type);
+          setSelectedGehaa(data.gehaa);
+          if (data.deadline) {
+            setDeadLineDate(data.deadline);
+            setHasDeadline(true);
+          }
+          let { branches } = data;
+          setSelectedBranchs(
+            branches.map((branch: any) => {
+              return { label: branch.name, value: branch.id };
+            })
+          );
+          let { Wared_Officers } = data;
 
-        setSelectedOfficers(
-          Wared_Officers.map((officer: any) => {
-            return { label: officer.name, value: officer.id };
-          })
-        );
-      });
+          setSelectedOfficers(
+            Wared_Officers.map((officer: any) => {
+              return { label: officer.name, value: officer.id };
+            })
+          );
+        });
+    }
   }, []);
 
- 
   return (
     <div className="container">
       <div className="border-start border-end p-4">

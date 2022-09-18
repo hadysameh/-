@@ -3,7 +3,6 @@ import Circle from "./components/Circle";
 import MiniSaderBox from "./components/MiniSaderBox";
 import MiniWaredBox from "./components/MiniWaredBox";
 import { useEffect, useState } from "react";
-import { serverApiUrl } from "../../config";
 
 import axios from "axios";
 function Home() {
@@ -13,7 +12,7 @@ function Home() {
   const [greenCircleCount, setGreenCircleCount] = useState(0);
 
   useEffect(() => {
-    axios.get(serverApiUrl + "api/home").then((res) => {
+    axios.get("/api/home").then((res) => {
       let { data } = res;
       // console.log({ data });
       setWaredCount(Number(data.waredCount));
@@ -118,4 +117,4 @@ function Home() {
     </div>
   );
 }
-export {  Home };
+export { Home };

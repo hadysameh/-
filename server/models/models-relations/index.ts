@@ -23,23 +23,23 @@ import Config from "../ConfigModel";
 // wared relations
 Wared.belongsTo(Gehaa, {
   foreignKey: "gehaa_id",
-  constraints: false,
+  //constraints: false,
 });
 Wared.belongsTo(Sader, {
   foreignKey: "lastSader_id",
-  constraints: false,
+  //constraints: false,
 });
 Wared.belongsTo(Sader, {
   foreignKey: "closedSader_id",
   onDelete: "CASCADE",
-  constraints: false,
+  //constraints: false,
 });
 Wared.belongsToMany(Branches, {
   through: Wared_Branches,
   foreignKey: "wared_id", // replaces `productId`
   otherKey: "branches_id",
   onDelete: "CASCADE",
-  constraints: false,
+  //constraints: false,
 });
 // Branches.belongsToMany(Wared, { through: Wared_Branches });
 Wared.belongsToMany(Officers, {
@@ -48,7 +48,7 @@ Wared.belongsToMany(Officers, {
   foreignKey: "wared_id", // replaces `productId`
   otherKey: "officers_id",
   onDelete: "CASCADE",
-  constraints: false,
+  //constraints: false,
 });
 
 Wared.belongsToMany(Officers, {
@@ -57,7 +57,7 @@ Wared.belongsToMany(Officers, {
   foreignKey: "wared_id", // replaces `productId`
   otherKey: "officer_id",
   onDelete: "CASCADE",
-  constraints: false,
+  //constraints: false,
 });
 
 // WaredTrackingOfficers.belongsTo(Wared, {
@@ -76,12 +76,12 @@ Wared.belongsToMany(Officers, {
 
 Sader.belongsTo(Wared, {
   foreignKey: "lastWared_id",
-  constraints: false,
+  //constraints: false,
 });
 Sader.belongsTo(Officers, {
   foreignKey: "officer_id",
   as: "SaderOfficer",
-  constraints: false,
+  //constraints: false,
 });
 Sader.belongsTo(Branches, {
   foreignKey: "branch_id",
@@ -92,12 +92,16 @@ Sader.belongsToMany(Officers, {
 
   foreignKey: "sader_id",
   otherKey: "officer_id",
-  constraints: false,
+  onDelete: "CASCADE",
+
+  //constraints: false,
 });
 Sader.belongsToMany(Gehaa, {
   through: Sader_Gehaa,
   foreignKey: "sader_id",
   otherKey: "gehaa_id",
+  // onDelete: "CASCADE",
+
   constraints: false,
 });
 
@@ -114,34 +118,34 @@ Sader.belongsToMany(Gehaa, {
 
 User.belongsTo(UserType, {
   foreignKey: "userTypeId",
-  constraints: false,
+  //constraints: false,
 });
 
 User.belongsTo(Officers, {
   foreignKey: "officerId",
-  constraints: false,
+  //constraints: false,
 });
 
 UserType.belongsToMany(Premission, {
   through: UserType_premission,
   foreignKey: "userTypeId",
   otherKey: "premissionId",
-  constraints: false,
+  //constraints: false,
 });
 
 //------------------------------------------------------------
 
 Officers.belongsTo(Branches, {
   foreignKey: "branches_id",
-  constraints: false,
+  //constraints: false,
 });
 
 Officers.belongsTo(Arms, {
   foreignKey: "arms_id",
-  constraints: false,
+  //constraints: false,
 });
 
 Officers.belongsTo(Ranks, {
   foreignKey: "Ranks_id",
-  constraints: false,
+  //constraints: false,
 });

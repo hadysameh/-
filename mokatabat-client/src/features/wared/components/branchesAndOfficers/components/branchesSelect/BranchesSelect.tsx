@@ -2,7 +2,6 @@ import { MultiSelect } from "react-multi-select-component";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import isArrEmpty from "../../../../../../utils/isArrEmpty";
-import { serverApiUrl } from "../../../../../../config";
 
 interface IProps {
   selectedBranches: any;

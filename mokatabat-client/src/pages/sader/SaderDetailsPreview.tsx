@@ -3,7 +3,6 @@ import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
-import { serverApiUrl } from "../../config";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
 import * as premissions from "../../utils/premissions";
 import { io } from "socket.io-client";
@@ -16,7 +15,7 @@ function SaderDetailsPreview() {
   const [isConfirmDeleteShown, setIsConfirmDeleteShown] = useState(false);
   const deleteSader = useCallback(() => {
     axios
-      .delete(serverApiUrl + "api/saderbox/deletesader", { data: { saderId } })
+      .delete("/api/saderbox/deletesader", { data: { saderId } })
       .then((res) => {
         navigate("/saderbox");
       });
@@ -24,7 +23,7 @@ function SaderDetailsPreview() {
 
   const getAndSetSaderData =()=>{
     axios
-    .get(serverApiUrl + "api/onesader", { params: { id: saderId } })
+    .get("/api/onesader", { params: { id: saderId } })
     .then((res) => {
       // console.log({ data: res.data });
       setSaderData(res.data);
@@ -32,7 +31,7 @@ function SaderDetailsPreview() {
   }
   useEffect(() => {
     axios
-      .post(serverApiUrl + "api/sadertrackingofficers/", {
+      .post("/api/sadertrackingofficers/", {
         saderId,
       })
       .then((res) => console.log(res));
@@ -41,7 +40,7 @@ function SaderDetailsPreview() {
   }, []);
 
   useEffect(() => {
-    const socket = io(serverApiUrl);
+    const socket = io('/');
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {

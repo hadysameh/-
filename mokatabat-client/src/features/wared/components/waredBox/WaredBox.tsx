@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import HorizontalSpinner from "../../../../components/HorizontalSpinner";
 import axios from "axios";
 import { useState } from "react";
-import { serverApiUrl } from "../../../../config";
 import { waredBoxType } from "../../../../types";
 import { io } from "socket.io-client";
 
@@ -52,7 +51,7 @@ function WaredBox(props: IProps) {
     setWaredBoxRecords([]);
     setPageNum(1);
     axios
-      .get(serverApiUrl + "api/waredbox/search", {
+      .get("/api/waredbox/search", {
         params: {
           docNum,
           docDeptNum,
@@ -84,7 +83,7 @@ function WaredBox(props: IProps) {
     setWaredBoxRecords([]);
 
     axios
-      .get(serverApiUrl + "api/waredbox/search", {
+      .get("/api/waredbox/search", {
         params: {
           docNum,
           docDeptNum,
@@ -124,7 +123,7 @@ function WaredBox(props: IProps) {
         : {};
     // console.log({ excutionTimeParams });
     axios
-      .get(serverApiUrl + "api/waredbox/search", {
+      .get("/api/waredbox/search", {
         params: {
           withinExcutionTimeType: "0",
           pageNum: 0,
@@ -160,13 +159,13 @@ function WaredBox(props: IProps) {
   }, [pageNum, numOfRecords]);
 
   useEffect(() => {
-    const socket = io(serverApiUrl);
+    const socket = io('/');
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {
         fetchRowsWithParams();
       });
-      socket
+    socket
       .off("refetchWaredAndSaderUnreadNumbersNoSound")
       .on("refetchWaredAndSaderUnreadNumbersNoSound", () => {
         fetchRowsWithParams();

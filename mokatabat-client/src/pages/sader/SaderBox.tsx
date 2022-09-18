@@ -4,7 +4,6 @@ import { SearchBox } from "../../features/sader/components/searchBox";
 import axios from "axios";
 import Spinner from "../../components/HorizontalSpinner";
 import { io } from "socket.io-client";
-import { serverApiUrl } from "../../config";
 
 function SaderBox() {
   const [saderBoxRecords, setSaderBoxRecords] = useState<any[]>([]);
@@ -31,7 +30,7 @@ function SaderBox() {
     setSaderBoxRecords([]);
     setPageNum(1);
     axios
-      .get(serverApiUrl+"api/saderbox/search", {
+      .get("/api/saderbox/search", {
         params: {
           docNum,
           gehaaId,
@@ -66,7 +65,7 @@ function SaderBox() {
     setSaderBoxRecords([]);
 
     axios
-      .get(serverApiUrl+"api/saderbox/search", {
+      .get("/api/saderbox/search", {
         params: {
           docNum,
           gehaaId,
@@ -101,7 +100,7 @@ function SaderBox() {
     // setIsShowSpinner(true);
     // window.scroll(0, 450);
     axios
-      .get(serverApiUrl+"api/saderbox/search", {
+      .get("/api/saderbox/search", {
         params: {
           withinExcutionTimeType: "0",
           pageNum: 0,
@@ -121,9 +120,9 @@ function SaderBox() {
   useEffect(() => {
     fetchRowsWithParams();
   }, [pageNum, numOfRecords]);
-  
+
   useEffect(() => {
-    const socket = io(serverApiUrl);
+    const socket = io('/');
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {

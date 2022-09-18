@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.ts",
-    "build": "del-cli --force ../serverBuildWithNoModules && prettier --write ./ && tsc",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "production": "nodemon ../serverBuild/index.js"
   },
@@ -40,6 +40,7 @@
     "mysql2": "^2.3.3",
     "prettier": "^2.7.1",
     "react-router-dom": "^6.3.0",
+    "react-select": "^5.4.0",
     "sequelize": "^6.21.2",
     "socket.io": "^4.5.1",
     "tslib": "^2.4.0"

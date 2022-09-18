@@ -8,7 +8,6 @@ import {
   selectRank,
   selectPremissions,
 } from "../features/user/stores/userSlice";
-import { serverApiUrl } from "../config";
 import { io } from "socket.io-client";
 
 import axios from "axios";
@@ -26,7 +25,7 @@ function Header() {
   const getNumberOfUnreadWared = () => {
     return new Promise((resolve, reject) => {
       axios
-        .get(serverApiUrl + "api/waredbox/getNumberOfUnreadWared")
+        .get("/api/waredbox/getNumberOfUnreadWared")
         .then((res) => {
           let { data } = res;
           resolve(data);
@@ -40,7 +39,7 @@ function Header() {
   const getNumberOfUnreadSader = () => {
     return new Promise((resolve, reject) => {
       axios
-        .get(serverApiUrl + "api/saderbox/getNumberOfUnreadSader")
+        .get("/api/saderbox/getNumberOfUnreadSader")
         .then((res) => {
           let { data } = res;
           resolve(data);
@@ -51,16 +50,16 @@ function Header() {
     });
   };
   useEffect(() => {
-    getNumberOfUnreadWared().then((num:any)=>{
+    getNumberOfUnreadWared().then((num: any) => {
       setnumOfUnreadWared(num);
     });
-    getNumberOfUnreadSader().then((num:any)=>{
+    getNumberOfUnreadSader().then((num: any) => {
       setnumOfUnreadSader(num);
     });
   }, [token]);
 
   useEffect(() => {
-    const socket = io(serverApiUrl);
+    const socket = io("/");
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", async () => {

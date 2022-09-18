@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { serverApiUrl } from "../../../../config";
 import isArrEmpty from "../../../../utils/isArrEmpty";
 import isObjEmpty from "../../../../utils/isObjEmpty";
 import Select from "react-select";
@@ -47,7 +46,7 @@ function SearchBox(props: SearchFormProps) {
     setIsSearched(false);
   };
   useEffect(() => {
-    axios.get(serverApiUrl + "api/saderoptions").then((res) => {
+    axios.get("/api/saderoptions").then((res) => {
       setGehaatOptions(res.data.gehaat);
       setBranchsOptions(res.data.branches);
       setOfficersOptions(res.data.officers);
