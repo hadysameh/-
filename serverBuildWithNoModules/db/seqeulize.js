@@ -4,8 +4,8 @@ const sequelize_1 = require("sequelize");
 const sequelize = new sequelize_1.Sequelize({
     dialect: "mysql",
     host: "localhost",
-    password: "Test@123",
-    // password: "",
+    // password: "Test@123",
+    password: "",
     database: "trc3",
     username: "root",
     logging: false,

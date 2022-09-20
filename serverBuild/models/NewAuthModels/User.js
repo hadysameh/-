@@ -17,7 +17,7 @@ const sequelize_1 = require("sequelize");
 const bcrypt_1 = require("../../utils/bcrypt");
 const User = seqeulize_1.default.define(
 //tabel will be named users in the database
-"User", {
+"users", {
     id: {
         type: sequelize_1.DataTypes.INTEGER,
         autoIncrement: true,
@@ -69,5 +69,6 @@ const User = seqeulize_1.default.define(
             user.set("password", hashedPassword);
         }),
     },
+    freezeTableName: true,
 });
 exports.default = User;

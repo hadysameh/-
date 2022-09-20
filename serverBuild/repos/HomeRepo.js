@@ -24,10 +24,10 @@ class HomeRepo {
     static index(req) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                const hasAccessToAllWared = req.user.userType.premissions.find((premission) => {
+                const hasAccessToAllWared = req.user.usertype.premissions.find((premission) => {
                     return premission.premission === "has access to all wared";
-                }) || req.user.userType.type === "admin";
-                const hasAccessToBranchWared = req.user.userType.premissions.find((premission) => {
+                }) || req.user.usertype.type === "admin";
+                const hasAccessToBranchWared = req.user.usertype.premissions.find((premission) => {
                     return premission.premission === "has access to branch wared";
                 });
                 let waredIncludeParams = [];

@@ -35,12 +35,21 @@ const ArmsModel_1 = __importDefault(require("../models/ArmsModel"));
 const RanksMode_1 = __importDefault(require("../models/RanksMode"));
 const seqeulize_1 = __importDefault(require("../db/seqeulize"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+let router, adminJs;
+exports.router = router;
+exports.adminJs = adminJs;
+/**
+ * this will return array of { label:  string, value: string},
+ * the value is the row id
+ * CAUTION it will fetch all records from the database
+ * @param {Modle} model
+ */
 adminjs_1.default.registerAdapter(sequelize_1.default);
 const userParent = {
     name: "User Controlls",
     icon: "Accessibility",
 };
-const adminJs = new adminjs_1.default({
+exports.adminJs = adminJs = new adminjs_1.default({
     databases: [seqeulize_1.default],
     rootPath: "/admin",
     resources: [
@@ -51,9 +60,6 @@ const adminJs = new adminjs_1.default({
                 properties: {
                     userName: {
                         isTitle: true,
-                    },
-                    password: {
-                    // isVisible: false,
                     },
                 },
             },
@@ -181,8 +187,7 @@ const adminJs = new adminjs_1.default({
         },
     ],
 });
-exports.adminJs = adminJs;
-const router = express_1.default.buildAuthenticatedRouter(adminJs, {
+exports.router = router = express_1.default.buildAuthenticatedRouter(adminJs, {
     authenticate: (email, password) => __awaiter(void 0, void 0, void 0, function* () {
         const user = yield User_1.default.findOne({
             where: [
@@ -194,7 +199,7 @@ const router = express_1.default.buildAuthenticatedRouter(adminJs, {
         });
         // console.log({user})
         if (user) {
-            if (user.userType.type == "admin") {
+            if (user.usertype.type == "admin") {
                 const matched = yield bcrypt_1.default.compare(password, user.password);
                 if (matched) {
                     return user;
@@ -205,4 +210,3 @@ const router = express_1.default.buildAuthenticatedRouter(adminJs, {
     }),
     cookiePassword: "some-secret-password-used-to-secure-cookie",
 });
-exports.router = router;

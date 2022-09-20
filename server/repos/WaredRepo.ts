@@ -10,6 +10,10 @@ import sequelize from "../db/seqeulize";
 import Config from "../models/ConfigModel";
 import { Op } from "sequelize";
 import { premissions } from "../types";
+import {
+  isHasAccessToAllWared,
+  isHasAccessToBranchWared,
+} from "./helpers/premissionsHelpers";
 // import dateFormat from 'date-format'
 
 class WaredRepo {
@@ -21,16 +25,9 @@ class WaredRepo {
         id: 1,
       },
     });
-    const hasAccessToAllWared =
-      req.user.usertype.premissions.find((premission: any) => {
-        return premission.premission === premissions.hasAccessToAllWared;
-      }) || req.user.usertype.type === "admin";
+    const hasAccessToAllWared = isHasAccessToAllWared(req);
 
-    const hasAccessToBranchWared = req.user.usertype.premissions.find(
-      (premission: any) => {
-        return premission.premission === premissions.hasAccessToBranchWared;
-      }
-    );
+    const hasAccessToBranchWared = isHasAccessToBranchWared(req);
 
     if (!hasAccessToAllWared) {
       if (hasAccessToBranchWared) {
@@ -131,16 +128,11 @@ class WaredRepo {
     searchParams: any,
     req: Request
   ): Promise<any> {
-    const hasAccessToAllWared =
-      req.user.usertype.premissions.find((premission: any) => {
-        return premission.premission === premissions.hasAccessToAllWared;
-      }) || req.user.usertype.type === "admin";
+    let durationName = "get wared with params";
+    console.time(durationName);
+    const hasAccessToAllWared = isHasAccessToAllWared(req) 
 
-    const hasAccessToBranchWared = req.user.usertype.premissions.find(
-      (premission: any) => {
-        return premission.premission === premissions.hasAccessToBranchWared;
-      }
-    );
+    const hasAccessToBranchWared = isHasAccessToBranchWared(req);
 
     const todaysDate = new Date().toISOString().slice(0, 19).replace(/T.*/, "");
     const addDaysToDate = (date: string, numOfDays: any) => {
@@ -252,6 +244,8 @@ class WaredRepo {
       order: orderByArr.length == 0 ? [["id", "DESC"]] : orderByArr,
       offset: Number(searchParams.numOfRecords) * Number(searchParams.pageNum),
     });
+    console.timeEnd(durationName);
+
     return wareds;
   }
 
@@ -334,36 +328,6 @@ class WaredRepo {
             },
           },
         });
-        /*
-        //this should be consists of the officers ids and branches managers ids
-
-        //pt1 for the branches managers
-        let waredTrackingOfficersRowsPt1 = selectedBranchesManagers.map(
-          (selectedBranchesManagers) => {
-            return {
-              wared_id: storedWared.getDataValue("id"),
-              officer_id: selectedBranchesManagers.getDataValue("manager_id"),
-            };
-          }
-        );
-
-        //pt2 for the officers
-        let waredTrackingOfficersRowsPt2 = officersIdsObjs.map(
-          (officerIdObj) => {
-            return {
-              wared_id: Number(storedWared.getDataValue("id")),
-              officer_id: officerIdObj.id,
-            };
-          }
-        );
-        let waredtrackingOfficersRows = [
-          ...waredTrackingOfficersRowsPt1,
-          ...waredTrackingOfficersRowsPt2,
-        ];
-        // console.log({stored_wared_officers});
-        let storedWaredTrackingOfficers = await WaredTrackingOfficers.bulkCreate(
-          waredtrackingOfficersRows
-        );*/
 
         await t.commit();
         resolve();
@@ -471,32 +435,7 @@ class WaredRepo {
               [Op.in]: branchesIdsArr,
             },
           },
-        });
-        //this should be consists of the officers ids and branches managers ids
-
-        //pt1 for the branches managers
-        // let waredTrackingOfficersRowsPt1 = selectedBranchesManagers.map(
-        //   (selectedBranchesManagers) => {
-        //     return {
-        //       wared_id: reqBodyData["waredId"],
-        //       officer_id: selectedBranchesManagers.getDataValue("manager_id"),
-        //     };
-        //   }
-        // );
-
-        // //pt2 for the officers
-        // let waredTrackingOfficersRowsPt2 = officersIdsObjs.map(
-        //   (officerIdObj) => {
-        //     return {
-        //       wared_id: Number(reqBodyData["waredId"]),
-        //       officer_id: officerIdObj.id,
-        //     };
-        //   }
-        // );
-        // let waredtrackingOfficersRows = [
-        //   ...waredTrackingOfficersRowsPt1,
-        //   ...waredTrackingOfficersRowsPt2,
-        // ];
+        }); 
 
         await WaredTrackingOfficers.destroy({
           where: {

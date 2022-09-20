@@ -25,10 +25,10 @@ class WaredOptionsController {
             });
             const getBranches = () => __awaiter(this, void 0, void 0, function* () {
                 let branches;
-                const hasAccessToAllBranches = req.user.userType.premissions
+                const hasAccessToAllBranches = req.user.usertype.premissions
                     .map((premission) => premission.premission)
                     .includes(types_1.premissions.hasAccessToAllBranches) ||
-                    req.user.userType.type === "admin";
+                    req.user.usertype.type === "admin";
                 if (hasAccessToAllBranches) {
                     branches = yield BranchesModel_1.default.findAll();
                 }
@@ -39,10 +39,10 @@ class WaredOptionsController {
             });
             const getOfficers = () => __awaiter(this, void 0, void 0, function* () {
                 let officers;
-                const hasAccessToAllOfficers = req.user.userType.premissions.find((premission) => {
+                const hasAccessToAllOfficers = req.user.usertype.premissions.find((premission) => {
                     return premission.premission === types_1.premissions.hasAccessToAllOfficers;
-                }) || req.user.userType.type === "admin";
-                const hasAccessToBranchOfficers = req.user.userType.premissions.find((premission) => {
+                }) || req.user.usertype.type === "admin";
+                const hasAccessToBranchOfficers = req.user.usertype.premissions.find((premission) => {
                     return (premission.premission === types_1.premissions.hasAccessToBranchOfficers);
                 });
                 if (hasAccessToAllOfficers) {

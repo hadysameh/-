@@ -29,10 +29,10 @@ class SaderRepo {
         return __awaiter(this, void 0, void 0, function* () {
             let saderIncludeParams = [];
             let config = yield ConfigModel_1.default.findOne();
-            const hasAccessToAllWared = req.user.userType.premissions.find((premission) => {
+            const hasAccessToAllWared = req.user.usertype.premissions.find((premission) => {
                 return premission.premission === types_1.premissions.hasAccessToAllSader;
-            }) || req.user.userType.type === "admin";
-            const hasAccessToBranchWared = req.user.userType.premissions.find((premission) => {
+            }) || req.user.usertype.type === "admin";
+            const hasAccessToBranchWared = req.user.usertype.premissions.find((premission) => {
                 return premission.premission === types_1.premissions.hasAccessToBranchSader;
             });
             if (!hasAccessToAllWared) {
@@ -119,7 +119,6 @@ class SaderRepo {
                         branches: values[1],
                         officers: values[2],
                     };
-                    // console.log(values);
                     resolve(result);
                 })
                     .catch((err) => {
@@ -130,10 +129,10 @@ class SaderRepo {
     }
     static getWithParams(searchParams, req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const hasAccessToAllSader = req.user.userType.premissions.find((premission) => {
+            const hasAccessToAllSader = req.user.usertype.premissions.find((premission) => {
                 return premission.premission === types_1.premissions.hasAccessToAllSader;
-            }) || req.user.userType.type === "admin";
-            const hasAccessToBranchSader = req.user.userType.premissions.find((premission) => {
+            }) || req.user.usertype.type === "admin";
+            const hasAccessToBranchSader = req.user.usertype.premissions.find((premission) => {
                 return premission.premission === types_1.premissions.hasAccessToBranchSader;
             });
             const todaysDate = (0, getTodaysDate_1.default)();
@@ -247,16 +246,6 @@ class SaderRepo {
                         register_user: "1",
                         attach: fileLocationPath,
                     });
-                    // await Sadertrackingofficers.bulkCreate([
-                    //   {
-                    //     officer_id: assistantBranchId,
-                    //     sader_id: storedSader.getDataValue("id"),
-                    //   },
-                    //   {
-                    //     officer_id: reqBodyData.officer_id,
-                    //     sader_id: storedSader.getDataValue("id"),
-                    //   },
-                    // ]);
                     let gehaatIdsObjs = selectedGehaat.map((branch) => {
                         return { id: branch.value };
                     });
@@ -266,7 +255,6 @@ class SaderRepo {
                             gehaa_id: gehaaIdObj.id,
                         };
                     });
-                    // console.log({ Sader_GehaaRows });
                     yield Sader_GehaaModel_1.default.bulkCreate(Sader_GehaaRows);
                     t.commit();
                     resolve();

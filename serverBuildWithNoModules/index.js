@@ -7,19 +7,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const index_1 = require("./routes/index");
+const seqeulize_1 = __importDefault(require("./db/seqeulize"));
 require("./models/models-relations/index");
 const body_parser_1 = __importDefault(require("body-parser"));
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+//@ts-ignore
 const AdminJs_1 = require("./AdminJs");
 const socket_io_1 = require("socket.io");
 require("dotenv").config();
-// seqeulize
+// sequelize
 //     .sync()
 //     .then(() => {
-//      console.log("seqeulize is in sync with db");
+//      console.log("sequelize is in sync with db");
 //    })
 //     .catch((err) => console.log({ err }));
+seqeulize_1.default
+    .authenticate()
+    .then(() => {
+    console.log("sequelize is authenticated with db");
+})
+    .catch((err) => console.log({ err }));
 const app = (0, express_1.default)();
 const server = require("http").createServer(app);
 const io = new socket_io_1.Server(server, {
@@ -33,6 +41,7 @@ global.io = io;
  * adminjs routes and bodyParser mus be first
  *
  */
+//@ts-ignore
 app.use(AdminJs_1.adminJs.options.rootPath, AdminJs_1.router);
 app.use((0, body_parser_1.default)());
 app.use(body_parser_1.default.json());

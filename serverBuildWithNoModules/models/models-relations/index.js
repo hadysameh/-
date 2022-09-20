@@ -22,23 +22,23 @@ const UserType_premissionModel_1 = __importDefault(require("../UserType_premissi
 // wared relations
 WaredModel_1.default.belongsTo(GehaaModel_1.default, {
     foreignKey: "gehaa_id",
-    constraints: false,
+    //constraints: false,
 });
 WaredModel_1.default.belongsTo(SaderModel_1.default, {
     foreignKey: "lastSader_id",
-    constraints: false,
+    //constraints: false,
 });
 WaredModel_1.default.belongsTo(SaderModel_1.default, {
     foreignKey: "closedSader_id",
     onDelete: "CASCADE",
-    constraints: false,
+    //constraints: false,
 });
 WaredModel_1.default.belongsToMany(BranchesModel_1.default, {
     through: Wared_BranchesModel_1.default,
     foreignKey: "wared_id",
     otherKey: "branches_id",
     onDelete: "CASCADE",
-    constraints: false,
+    //constraints: false,
 });
 // Branches.belongsToMany(Wared, { through: Wared_Branches });
 WaredModel_1.default.belongsToMany(OfficersModel_1.default, {
@@ -47,7 +47,7 @@ WaredModel_1.default.belongsToMany(OfficersModel_1.default, {
     foreignKey: "wared_id",
     otherKey: "officers_id",
     onDelete: "CASCADE",
-    constraints: false,
+    //constraints: false,
 });
 WaredModel_1.default.belongsToMany(OfficersModel_1.default, {
     through: WaredTrackingOfficersModel_1.default,
@@ -55,7 +55,7 @@ WaredModel_1.default.belongsToMany(OfficersModel_1.default, {
     foreignKey: "wared_id",
     otherKey: "officer_id",
     onDelete: "CASCADE",
-    constraints: false,
+    //constraints: false,
 });
 // WaredTrackingOfficers.belongsTo(Wared, {
 //   foreignKey: "wared_id",
@@ -70,12 +70,12 @@ WaredModel_1.default.belongsToMany(OfficersModel_1.default, {
 //------------------------------------------------------------
 SaderModel_1.default.belongsTo(WaredModel_1.default, {
     foreignKey: "lastWared_id",
-    constraints: false,
+    //constraints: false,
 });
 SaderModel_1.default.belongsTo(OfficersModel_1.default, {
     foreignKey: "officer_id",
     as: "SaderOfficer",
-    constraints: false,
+    //constraints: false,
 });
 SaderModel_1.default.belongsTo(BranchesModel_1.default, {
     foreignKey: "branch_id",
@@ -85,12 +85,14 @@ SaderModel_1.default.belongsToMany(OfficersModel_1.default, {
     as: "Sadertrackingofficers",
     foreignKey: "sader_id",
     otherKey: "officer_id",
-    constraints: false,
+    onDelete: "CASCADE",
+    //constraints: false,
 });
 SaderModel_1.default.belongsToMany(GehaaModel_1.default, {
     through: Sader_GehaaModel_1.default,
     foreignKey: "sader_id",
     otherKey: "gehaa_id",
+    // onDelete: "CASCADE",
     constraints: false,
 });
 // Sadertrackingofficers.belongsTo(Sader, {
@@ -104,28 +106,28 @@ SaderModel_1.default.belongsToMany(GehaaModel_1.default, {
 //------------------------------------------------------------
 User_1.default.belongsTo(UserTypes_1.default, {
     foreignKey: "userTypeId",
-    constraints: false,
+    //constraints: false,
 });
 User_1.default.belongsTo(OfficersModel_1.default, {
     foreignKey: "officerId",
-    constraints: false,
+    //constraints: false,
 });
 UserTypes_1.default.belongsToMany(Premissions_1.default, {
     through: UserType_premissionModel_1.default,
     foreignKey: "userTypeId",
     otherKey: "premissionId",
-    constraints: false,
+    //constraints: false,
 });
 //------------------------------------------------------------
 OfficersModel_1.default.belongsTo(BranchesModel_1.default, {
     foreignKey: "branches_id",
-    constraints: false,
+    //constraints: false,
 });
 OfficersModel_1.default.belongsTo(ArmsModel_1.default, {
     foreignKey: "arms_id",
-    constraints: false,
+    //constraints: false,
 });
 OfficersModel_1.default.belongsTo(RanksMode_1.default, {
     foreignKey: "Ranks_id",
-    constraints: false,
+    //constraints: false,
 });

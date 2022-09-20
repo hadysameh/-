@@ -2,7 +2,7 @@
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import { routesAssigner } from "./routes/index";
-import seqeulize from "./db/seqeulize";
+import sequelize from "./db/seqeulize";
 import "./models/models-relations/index";
 import bodyParser from "body-parser";
 import path from "path";
@@ -11,13 +11,18 @@ import cookieParser from "cookie-parser";
 import { router, adminJs } from "./AdminJs";
 import { Server } from "socket.io";
 require("dotenv").config();
-// seqeulize
+// sequelize
 //     .sync()
 //     .then(() => {
-//      console.log("seqeulize is in sync with db");
+//      console.log("sequelize is in sync with db");
 //    })
 //     .catch((err) => console.log({ err }));
-
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("sequelize is authenticated with db");
+  })
+  .catch((err) => console.log({ err }));
 const app: Express = express();
 const server = require("http").createServer(app);
 const io = new Server(server, {

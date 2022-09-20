@@ -17,23 +17,17 @@ import { premissions } from "../types";
 
 import Sadertrackingofficers from "../models/SadertrackingofficersModel";
 import Sader_Gehaa from "../models/Sader_GehaaModel";
+import { isHasAccessToAllSader, isHasAccessToBranchSader, isHasAccessToBranchWared } from "./helpers/premissionsHelpers";
 export default class SaderRepo {
   public static async getNumberOfUnreadSader(req: Request) {
     let saderIncludeParams = [];
 
     let config = await Config.findOne();
-    const hasAccessToAllWared =
-      req.user.usertype.premissions.find((premission: any) => {
-        return premission.premission === premissions.hasAccessToAllSader;
-      }) || req.user.usertype.type === "admin";
+    const hasAccessToAllSader = isHasAccessToAllSader(req) 
 
-    const hasAccessToBranchWared = req.user.usertype.premissions.find(
-      (premission: any) => {
-        return premission.premission === premissions.hasAccessToBranchSader;
-      }
-    );
+    const hasAccessToBranchWared =isHasAccessToBranchWared(req) 
 
-    if (!hasAccessToAllWared) {
+    if (!hasAccessToAllSader) {
       if (hasAccessToBranchWared) {
         saderIncludeParams.push({
           model: Branches,
@@ -67,14 +61,7 @@ export default class SaderRepo {
           as: "Sadertrackingofficers",
         },
       ],
-    });
-
-    // console.log({
-    //   numberOfSaderAfterLaunchForOfficer,
-    //   numberOfUnreadSader:
-    //     numberOfSaderAfterLaunchForOfficer - numberOfreadSader,
-    //   officerId: req.user.officerId,
-    // });
+    }); 
     return numberOfSaderAfterLaunchForOfficer - numberOfreadSader;
   }
 
@@ -129,17 +116,11 @@ export default class SaderRepo {
     searchParams: any,
     req: Request
   ): Promise<any> {
-    const hasAccessToAllSader =
-      req.user.usertype.premissions.find((premission: any) => {
-        return premission.premission === premissions.hasAccessToAllSader;
-      }) || req.user.usertype.type === "admin";
+    let durationName = 'get sader with params'
+    console.time(durationName)
+    const hasAccessToAllSader = isHasAccessToAllSader(req) 
 
-    const hasAccessToBranchSader = req.user.usertype.premissions.find(
-      (premission: any) => {
-        return premission.premission === premissions.hasAccessToBranchSader;
-      }
-    );
-
+    const hasAccessToBranchSader =isHasAccessToBranchSader(req)
     const todaysDate = getTodaysDate();
     let whereParams: any = {};
     let includeParams: any = [];
@@ -213,6 +194,8 @@ export default class SaderRepo {
       order: orderByArr.length == 0 ? [["id", "DESC"]] : orderByArr,
       offset: Number(searchParams.numOfRecords) * Number(searchParams.pageNum),
     });
+    console.timeEnd(durationName)
+
     return saders;
   }
 
@@ -324,17 +307,7 @@ export default class SaderRepo {
           where: {
             sader_id: reqBodyData["saderId"],
           },
-        });
-        // await Sadertrackingofficers.bulkCreate([
-        //   {
-        //     officer_id: assistantBranchId,
-        //     sader_id: reqBodyData["saderId"],
-        //   },
-        //   {
-        //     officer_id: reqBodyData.officer_id,
-        //     sader_id: reqBodyData["saderId"],
-        //   },
-        // ]);
+        }); 
         let gehaatIdsObjs: { id: any }[] = selectedGehaat.map((branch: any) => {
           return { id: branch.value };
         });

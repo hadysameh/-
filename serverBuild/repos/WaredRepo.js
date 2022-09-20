@@ -33,10 +33,10 @@ class WaredRepo {
                     id: 1,
                 },
             });
-            const hasAccessToAllWared = req.user.userType.premissions.find((premission) => {
+            const hasAccessToAllWared = req.user.usertype.premissions.find((premission) => {
                 return premission.premission === types_1.premissions.hasAccessToAllWared;
-            }) || req.user.userType.type === "admin";
-            const hasAccessToBranchWared = req.user.userType.premissions.find((premission) => {
+            }) || req.user.usertype.type === "admin";
+            const hasAccessToBranchWared = req.user.usertype.premissions.find((premission) => {
                 return premission.premission === types_1.premissions.hasAccessToBranchWared;
             });
             if (!hasAccessToAllWared) {
@@ -135,10 +135,10 @@ class WaredRepo {
     }
     static getWithParams(searchParams, req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const hasAccessToAllWared = req.user.userType.premissions.find((premission) => {
+            const hasAccessToAllWared = req.user.usertype.premissions.find((premission) => {
                 return premission.premission === types_1.premissions.hasAccessToAllWared;
-            }) || req.user.userType.type === "admin";
-            const hasAccessToBranchWared = req.user.userType.premissions.find((premission) => {
+            }) || req.user.usertype.type === "admin";
+            const hasAccessToBranchWared = req.user.usertype.premissions.find((premission) => {
                 return premission.premission === types_1.premissions.hasAccessToBranchWared;
             });
             const todaysDate = new Date().toISOString().slice(0, 19).replace(/T.*/, "");

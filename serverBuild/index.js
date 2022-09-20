@@ -12,13 +12,20 @@ require("./models/models-relations/index");
 const body_parser_1 = __importDefault(require("body-parser"));
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+//@ts-ignore
 const AdminJs_1 = require("./AdminJs");
 const socket_io_1 = require("socket.io");
 require("dotenv").config();
+// sequelize
+//     .sync()
+//     .then(() => {
+//      console.log("sequelize is in sync with db");
+//    })
+//     .catch((err) => console.log({ err }));
 seqeulize_1.default
-    .sync()
+    .authenticate()
     .then(() => {
-    console.log("seqeulize is in sync with db");
+    console.log("sequelize is authenticated with db");
 })
     .catch((err) => console.log({ err }));
 const app = (0, express_1.default)();
@@ -34,6 +41,7 @@ global.io = io;
  * adminjs routes and bodyParser mus be first
  *
  */
+//@ts-ignore
 app.use(AdminJs_1.adminJs.options.rootPath, AdminJs_1.router);
 app.use((0, body_parser_1.default)());
 app.use(body_parser_1.default.json());
@@ -47,12 +55,13 @@ app.use((0, cookie_parser_1.default)());
 // app.get("/", (req: Request, res: Response) => {
 //   res.json("hello from TS");
 // });
-app.use(express_1.default.static("../mokatabat-client/build"));
-app.get("/*", (req, res) => {
-    res.sendFile(path_1.default.join(__dirname, "../mokatabat-client/build/index.html"));
-    // res.sendFile('../mokatabat-client/build/index.html')
-    // res.json("hello from TS");
-});
+const nodeEnviromment = process.env.NODE_ENV;
+if (nodeEnviromment == "production") {
+    app.use(express_1.default.static("../mokatabat-client/build"));
+    app.get("/*", (req, res) => {
+        res.sendFile(path_1.default.join(__dirname, "../mokatabat-client/build/index.html"));
+    });
+}
 let port = process.env.PORT;
 server.listen(port, () => {
     console.log("app runs on " + port);
