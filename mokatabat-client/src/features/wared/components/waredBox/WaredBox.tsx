@@ -81,7 +81,7 @@ function WaredBox(props: IProps) {
   const fetchRowsWithParams = () => {
     setIsShowSpinner(true);
     setWaredBoxRecords([]);
-
+    // console.log('waredbox/search')
     axios
       .get("/api/waredbox/search", {
         params: {
@@ -159,7 +159,7 @@ function WaredBox(props: IProps) {
   }, [pageNum, numOfRecords]);
 
   useEffect(() => {
-    const socket = io('/');
+    const socket = io("/");
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {
@@ -212,6 +212,8 @@ function WaredBox(props: IProps) {
           waredBoxType={props.waredBoxType}
         />
         <span className="fs-3">رقم الصفحة :{pageNum}</span>
+        
+
         <div className="fs-4">
           <label htmlFor="">عدد المكاتبات للصفحة : </label>
           <select
@@ -225,6 +227,14 @@ function WaredBox(props: IProps) {
             <option value="50">50</option>
             <option value="100">100</option>
           </select>
+        </div>
+        <div className="d-flex my-2">
+          <div className="fs-4">مكاتبات تمت قرائتها</div>
+
+          <div
+            className="bg-secondary mx-2"
+            style={{ width: "30px" }}
+          >.</div>
         </div>
         {isShowSpinner ? (
           <HorizontalSpinner />

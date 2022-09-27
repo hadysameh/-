@@ -206,34 +206,26 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
           <div className="mb-3">
             <div className="col-10">
               <label className="form-label">جهة الوارد</label>
-
+              
               {!isArrEmpty(gehaat) && (
-                <>
-                  <input
-                    required
-                    className="form-control fs-3"
-                    list="gehaatOptions"
-                    id="exampleDataList"
-                    placeholder="Type to search..."
-                    value={selectedGehaa ? selectedGehaa.name : ""}
-                    onChange={(e) => {
-                      let choosedGehaahName = e.target.value;
-                      let choosedGehaa: any = gehaat.find((gehaa: any) => {
-                        return gehaa.name == choosedGehaahName;
-                      });
-                      setSelectedGehaa(choosedGehaa);
-                    }}
-                  ></input>
-                  <datalist id="gehaatOptions">
-                    {gehaat.map((gehaa: any) => {
-                      return (
-                        <option key={gehaa.id + gehaa.name}>
-                          {gehaa.name}
-                        </option>
-                      );
-                    })}
-                  </datalist>
-                </>
+                 <Select
+                 value={{
+                   value: selectedGehaa?.id,
+                   label: selectedGehaa?.name,
+                 }}
+                 onChange={(gehaaOption: any) => {
+                   let choosedGehaa: any = gehaat.find((gehaa: any) => {
+                     return gehaa.name == gehaaOption.label;
+                   });
+                   setSelectedGehaa(choosedGehaa);
+                 }}
+                 options={gehaat.map((gehaa: any) => {
+                   return {
+                     label: gehaa.name,
+                     value: gehaa.id,
+                   };
+                 })}
+               />
               )}
             </div>
           </div>

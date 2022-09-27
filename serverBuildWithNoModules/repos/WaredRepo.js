@@ -22,7 +22,7 @@ const WaredTrackingOfficersModel_1 = __importDefault(require("../models/WaredTra
 const seqeulize_1 = __importDefault(require("../db/seqeulize"));
 const ConfigModel_1 = __importDefault(require("../models/ConfigModel"));
 const sequelize_1 = require("sequelize");
-const types_1 = require("../types");
+const premissionsHelpers_1 = require("./helpers/premissionsHelpers");
 // import dateFormat from 'date-format'
 class WaredRepo {
     static getNumberOfUnreadWared(req) {
@@ -33,12 +33,8 @@ class WaredRepo {
                     id: 1,
                 },
             });
-            const hasAccessToAllWared = req.user.usertype.premissions.find((premission) => {
-                return premission.premission === types_1.premissions.hasAccessToAllWared;
-            }) || req.user.usertype.type === "admin";
-            const hasAccessToBranchWared = req.user.usertype.premissions.find((premission) => {
-                return premission.premission === types_1.premissions.hasAccessToBranchWared;
-            });
+            const hasAccessToAllWared = (0, premissionsHelpers_1.isHasAccessToAllWared)(req);
+            const hasAccessToBranchWared = (0, premissionsHelpers_1.isHasAccessToBranchWared)(req);
             if (!hasAccessToAllWared) {
                 if (hasAccessToBranchWared) {
                     waredIncludeParams.push({
@@ -135,12 +131,10 @@ class WaredRepo {
     }
     static getWithParams(searchParams, req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const hasAccessToAllWared = req.user.usertype.premissions.find((premission) => {
-                return premission.premission === types_1.premissions.hasAccessToAllWared;
-            }) || req.user.usertype.type === "admin";
-            const hasAccessToBranchWared = req.user.usertype.premissions.find((premission) => {
-                return premission.premission === types_1.premissions.hasAccessToBranchWared;
-            });
+            let durationName = "get wared with params";
+            console.time(durationName);
+            const hasAccessToAllWared = (0, premissionsHelpers_1.isHasAccessToAllWared)(req);
+            const hasAccessToBranchWared = (0, premissionsHelpers_1.isHasAccessToBranchWared)(req);
             const todaysDate = new Date().toISOString().slice(0, 19).replace(/T.*/, "");
             const addDaysToDate = (date, numOfDays) => {
                 let tempDate = new Date(date);
@@ -244,6 +238,7 @@ class WaredRepo {
                 order: orderByArr.length == 0 ? [["id", "DESC"]] : orderByArr,
                 offset: Number(searchParams.numOfRecords) * Number(searchParams.pageNum),
             });
+            console.timeEnd(durationName);
             return wareds;
         });
     }
@@ -309,36 +304,6 @@ class WaredRepo {
                             },
                         },
                     });
-                    /*
-                    //this should be consists of the officers ids and branches managers ids
-            
-                    //pt1 for the branches managers
-                    let waredTrackingOfficersRowsPt1 = selectedBranchesManagers.map(
-                      (selectedBranchesManagers) => {
-                        return {
-                          wared_id: storedWared.getDataValue("id"),
-                          officer_id: selectedBranchesManagers.getDataValue("manager_id"),
-                        };
-                      }
-                    );
-            
-                    //pt2 for the officers
-                    let waredTrackingOfficersRowsPt2 = officersIdsObjs.map(
-                      (officerIdObj) => {
-                        return {
-                          wared_id: Number(storedWared.getDataValue("id")),
-                          officer_id: officerIdObj.id,
-                        };
-                      }
-                    );
-                    let waredtrackingOfficersRows = [
-                      ...waredTrackingOfficersRowsPt1,
-                      ...waredTrackingOfficersRowsPt2,
-                    ];
-                    // console.log({stored_wared_officers});
-                    let storedWaredTrackingOfficers = await WaredTrackingOfficers.bulkCreate(
-                      waredtrackingOfficersRows
-                    );*/
                     yield t.commit();
                     resolve();
                 }
@@ -432,29 +397,6 @@ class WaredRepo {
                             },
                         },
                     });
-                    //this should be consists of the officers ids and branches managers ids
-                    //pt1 for the branches managers
-                    // let waredTrackingOfficersRowsPt1 = selectedBranchesManagers.map(
-                    //   (selectedBranchesManagers) => {
-                    //     return {
-                    //       wared_id: reqBodyData["waredId"],
-                    //       officer_id: selectedBranchesManagers.getDataValue("manager_id"),
-                    //     };
-                    //   }
-                    // );
-                    // //pt2 for the officers
-                    // let waredTrackingOfficersRowsPt2 = officersIdsObjs.map(
-                    //   (officerIdObj) => {
-                    //     return {
-                    //       wared_id: Number(reqBodyData["waredId"]),
-                    //       officer_id: officerIdObj.id,
-                    //     };
-                    //   }
-                    // );
-                    // let waredtrackingOfficersRows = [
-                    //   ...waredTrackingOfficersRowsPt1,
-                    //   ...waredTrackingOfficersRowsPt2,
-                    // ];
                     yield WaredTrackingOfficersModel_1.default.destroy({
                         where: {
                             wared_id: reqBodyData["waredId"],

@@ -21,21 +21,17 @@ const seqeulize_1 = __importDefault(require("../db/seqeulize"));
 const getTodaysDate_1 = __importDefault(require("../utils/getTodaysDate"));
 const sequelize_1 = require("sequelize");
 const ConfigModel_1 = __importDefault(require("../models/ConfigModel"));
-const types_1 = require("../types");
 const SadertrackingofficersModel_1 = __importDefault(require("../models/SadertrackingofficersModel"));
 const Sader_GehaaModel_1 = __importDefault(require("../models/Sader_GehaaModel"));
+const premissionsHelpers_1 = require("./helpers/premissionsHelpers");
 class SaderRepo {
     static getNumberOfUnreadSader(req) {
         return __awaiter(this, void 0, void 0, function* () {
             let saderIncludeParams = [];
             let config = yield ConfigModel_1.default.findOne();
-            const hasAccessToAllWared = req.user.usertype.premissions.find((premission) => {
-                return premission.premission === types_1.premissions.hasAccessToAllSader;
-            }) || req.user.usertype.type === "admin";
-            const hasAccessToBranchWared = req.user.usertype.premissions.find((premission) => {
-                return premission.premission === types_1.premissions.hasAccessToBranchSader;
-            });
-            if (!hasAccessToAllWared) {
+            const hasAccessToAllSader = (0, premissionsHelpers_1.isHasAccessToAllSader)(req);
+            const hasAccessToBranchWared = (0, premissionsHelpers_1.isHasAccessToBranchWared)(req);
+            if (!hasAccessToAllSader) {
                 if (hasAccessToBranchWared) {
                     saderIncludeParams.push({
                         model: BranchesModel_1.default,
@@ -69,12 +65,6 @@ class SaderRepo {
                     },
                 ],
             });
-            // console.log({
-            //   numberOfSaderAfterLaunchForOfficer,
-            //   numberOfUnreadSader:
-            //     numberOfSaderAfterLaunchForOfficer - numberOfreadSader,
-            //   officerId: req.user.officerId,
-            // });
             return numberOfSaderAfterLaunchForOfficer - numberOfreadSader;
         });
     }
@@ -129,12 +119,10 @@ class SaderRepo {
     }
     static getWithParams(searchParams, req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const hasAccessToAllSader = req.user.usertype.premissions.find((premission) => {
-                return premission.premission === types_1.premissions.hasAccessToAllSader;
-            }) || req.user.usertype.type === "admin";
-            const hasAccessToBranchSader = req.user.usertype.premissions.find((premission) => {
-                return premission.premission === types_1.premissions.hasAccessToBranchSader;
-            });
+            let durationName = 'get sader with params';
+            console.time(durationName);
+            const hasAccessToAllSader = (0, premissionsHelpers_1.isHasAccessToAllSader)(req);
+            const hasAccessToBranchSader = (0, premissionsHelpers_1.isHasAccessToBranchSader)(req);
             const todaysDate = (0, getTodaysDate_1.default)();
             let whereParams = {};
             let includeParams = [];
@@ -206,6 +194,7 @@ class SaderRepo {
                 order: orderByArr.length == 0 ? [["id", "DESC"]] : orderByArr,
                 offset: Number(searchParams.numOfRecords) * Number(searchParams.pageNum),
             });
+            console.timeEnd(durationName);
             return saders;
         });
     }
@@ -312,16 +301,6 @@ class SaderRepo {
                             sader_id: reqBodyData["saderId"],
                         },
                     });
-                    // await Sadertrackingofficers.bulkCreate([
-                    //   {
-                    //     officer_id: assistantBranchId,
-                    //     sader_id: reqBodyData["saderId"],
-                    //   },
-                    //   {
-                    //     officer_id: reqBodyData.officer_id,
-                    //     sader_id: reqBodyData["saderId"],
-                    //   },
-                    // ]);
                     let gehaatIdsObjs = selectedGehaat.map((branch) => {
                         return { id: branch.value };
                     });
