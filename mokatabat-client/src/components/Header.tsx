@@ -106,7 +106,7 @@ function Header() {
       </div>
 
       <audio src="./notificationSound.mkv" ref={audioRef}></audio>
-      <nav className="navbar navbar-expand-lg navbar-light bg-primary mt-3">
+      <nav className="navbar navbar-expand-lg navbar-light bg-primary mt-3" style={{marginBottom:'0'}}>
         <div className="collapse navbar-collapse container fs-3" id="navbarNav">
           <ul className="navbar-nav ">
             {token && (

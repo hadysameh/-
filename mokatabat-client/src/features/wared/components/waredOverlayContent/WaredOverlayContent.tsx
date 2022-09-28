@@ -47,7 +47,7 @@ export default function WaredOverlayContent(props: IProps) {
         <hr />
 
         <div>
-          <iframe src={`./diveintopython.pdf`} style={iframeWaredStyle}></iframe>
+          <iframe src={`./uploads/${props.mokatbaData?.attach}`} style={iframeWaredStyle}></iframe>
         </div>
       </div>
     </>

@@ -58,7 +58,7 @@ export default function SaderOverlayContent(props: IProps) {
 
         <div>
           <iframe
-            src={`./diveintopython.pdf`}
+            src={`./uploads/${props.mokatbaData?.attach}`}
             style={iframeWaredStyle}
           ></iframe>
         </div>

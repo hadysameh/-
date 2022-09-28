@@ -13,7 +13,7 @@ export default function Card(props: IProps) {
       className="card card-stats mb-4 mb-xl-0 py-3 "
       style={{
         background: props.backgroundColor ? props.backgroundColor : "",
-        color: props.textColor,
+        color: props.textColor?props.textColor:'#000',
       }}
     >
       <Link to={props.link } className="nav-link">
