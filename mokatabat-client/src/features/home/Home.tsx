@@ -3,7 +3,7 @@ import Circle from "./components/Circle";
 import MiniSaderBox from "./components/MiniSaderBox";
 import MiniWaredBox from "./components/MiniWaredBox";
 import { useEffect, useState } from "react";
-
+import Card from "./components/Card";
 import axios from "axios";
 function Home() {
   const [waredCount, setWaredCount] = useState(0);
@@ -39,15 +39,44 @@ function Home() {
     width: "50%",
   };
   return (
-    <div className="container" dir="ltr">
-      <div
+    <div className="container" dir="rtl">
+      <div className="row my-3 mt-3">
+        <div className="col-xl-3 col-lg-6">
+          <Card
+            cardTitle="مكاتبات الصادر"
+            count={String(saderCount)}
+            link="/saderbox"
+          />
+        </div>
+        <div className="col-xl-3 col-lg-6">
+          <Card cardTitle="مكاتبات الوارد" count={String(waredCount)} link="/waredbox" />
+        </div>
+        <div className="col-xl-3 col-lg-6">
+          <Card
+            cardTitle="مكاتبات قريبة او تجاوزت الحد الاقصى للتنفذ"
+            count={String(redCircleCount)}
+            link="/redcirclewaredbox" 
+            backgroundColor="red"
+            textColor="white"
+          />
+        </div>
+        <div className="col-xl-3 col-lg-6">
+          <Card
+            cardTitle="مكاتبات بعيدة عن الحد الاقصى للتنفذ"
+            count={String(greenCircleCount)}
+            backgroundColor="green"
+            link="/greencirclewaredbox"
+            textColor="white"
+          />
+        </div>
+      </div>
+      {/* <div
         className="fs-3"
         style={{
           display: "flex",
           justifyContent: "space-evenly",
         }}
       >
-        {/* red and green circles div */}
         <div className="cared" style={{ ...circleBoxStyle, width: "40%" }}>
           <Circle
             backGroundColor="rgb(28 187 55 / 78%)"
@@ -88,7 +117,7 @@ function Home() {
             textInCirlceColor="black"
           />
         </div>
-      </div>
+      </div> */}
       {/* <div className="fs-3 text-right m-4">اخر المكاتبات</div> */}
       <div
         style={{
@@ -103,12 +132,12 @@ function Home() {
           }}
         >
           <div style={mokatbaBoxStyle} className="fs-3 m-4">
-            <div className="fs-3 text-right my-3">اخر المكاتبات الصادر</div>
+            <div className="fs-3 text-right my-3">اخر مكاتبات الصادر</div>
 
             <MiniSaderBox />
           </div>
           <div style={mokatbaBoxStyle} className="fs-3 m-4">
-            <div className="fs-3 text-right my-3">اخر المكاتبات الوارد</div>
+            <div className="fs-3 text-right my-3">اخر مكاتبات الوارد</div>
 
             <MiniWaredBox />
           </div>

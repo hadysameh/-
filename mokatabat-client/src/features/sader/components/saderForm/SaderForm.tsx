@@ -360,15 +360,7 @@ function SaderForm({
                 ) {
                   return true;
                 }
-                // console.log({
-                //   docNum,
-                //   mokatbaDate,
-                //   subject,
-                //   lastWaredNum,
-                //   selectedGehaat,
-                //   selectedBranch,
-                //   selectedFile,
-                // });
+                 
                 return false;
               };
               if (isReqFieldsFilled()) {

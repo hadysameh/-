@@ -19,7 +19,10 @@ function CreateWared() {
         navigate("/waredbox");
       })
       .catch((err) => {
-        alert(" ,فشل في تسجيل المكاتبة الرجاء التحقق من البيانات المدخلة");
+        alert(
+          " ,فشل في تسجيل المكاتبة الرجاء التحقق من البيانات المدخلة\n" +
+            String(err)
+        );
         console.log({ err, msg: "error" });
       });
   }, []);

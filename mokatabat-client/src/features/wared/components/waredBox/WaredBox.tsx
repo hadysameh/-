@@ -8,8 +8,8 @@ import { waredBoxType } from "../../../../types";
 import { io } from "socket.io-client";
 
 interface IProps {
-  /**
-   *
+  /** 
+   * 
    */
   waredBoxType: string;
 }
@@ -229,18 +229,19 @@ function WaredBox(props: IProps) {
           </select>
         </div>
         <div className="d-flex my-2">
-          <div className="fs-4">مكاتبات تمت قرائتها</div>
-
+          <label className="fs-4">مكاتبات تمت قرائتها</label>
           <div
             className="bg-secondary mx-2"
-            style={{ width: "30px" }}
+            style={{ width: "20px",borderRadius:'5px' }}
           >.</div>
         </div>
+        <hr />
+
         {isShowSpinner ? (
           <HorizontalSpinner />
         ) : (
           <table className="table table-hover fs-4">
-            <thead className={"table-dark"}>
+            <thead className={""}>
               <tr>
                 <th scope="col">رقم الوارد</th>
                 <th scope="col">رقم الادارة</th>
@@ -256,8 +257,8 @@ function WaredBox(props: IProps) {
                 <th scope="col" style={{ width: "15%" }}>
                   الافرع المختصة
                 </th>
-                <th scope="col">جهة الوارد</th>
-                <th scope="col">الحد الأقصى للتنفيذ</th>
+                <th scope="col"style={{ width: "25%" }}>جهة الوارد</th>
+                <th scope="col" style={{ width: "10%" }}>تاريخ التنفيذ</th>
               </tr>
             </thead>
             <tbody>

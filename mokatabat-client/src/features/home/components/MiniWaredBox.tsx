@@ -44,7 +44,7 @@ function MiniWaredBox() {
         <Spinner />
       ) : (
         <table className="table fs-4">
-          <thead className="table-dark">
+          <thead className="">
             <tr>
               <th scope="col" style={{ width: "17%" }}>
                 رقم الوارد
@@ -115,7 +115,7 @@ function MiniWaredBox() {
             {pageNum > 1 && (
               <li className="page-item">
                 <button
-                  className="page-link"
+                  className="page-link fs-3"
                   onClick={() => {
                     setPageNum(pageNum - 1);
                   }}

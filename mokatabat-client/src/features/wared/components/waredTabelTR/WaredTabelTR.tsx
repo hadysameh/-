@@ -1,12 +1,19 @@
 import { useSelector } from "react-redux";
-
+import { useState } from "react";
 import { selectUser, selectOfficer } from "../../../user/stores/userSlice";
+
+// import SingleWaredOverlay from "../waredOverlay/WaredOverlay";
 let aStyle = {
   textDecoration: "none",
   color: "#000",
 };
+// import BranchesAndOfficers from "../branchesAndOfficers";
 function WaredTabelTR({ row }: { row: any }) {
   // console.log(row);
+  const [
+    isSingleWaredOverlayVisible,
+    setIsSingleWaredOverlayVisible,
+  ] = useState(false);
 
   const officer = useSelector(selectOfficer);
   // console.log({ user });
@@ -20,11 +27,17 @@ function WaredTabelTR({ row }: { row: any }) {
   );
   return (
     <tr style={{ background: hasOfficerSeenWared ? "rgb(182 182 182)" : "" }}>
+      {/* <SingleWaredOverlay
+        waredId={`${row.id}`}
+        isSingleWaredOverlayVisible={isSingleWaredOverlayVisible}
+        setIsSingleWaredOverlayVisible={setIsSingleWaredOverlayVisible}
+      /> */}
       <td>
         <a
           href={`/wared/${row.id}`}
           style={aStyle}
           target={"_blank"}
+          onClick={()=>{setIsSingleWaredOverlayVisible(true)}}
           rel="noreferrer"
         >
           {row.doc_num}
@@ -33,6 +46,7 @@ function WaredTabelTR({ row }: { row: any }) {
       <td>
         <a
           href={`/wared/${row.id}`}
+          onClick={()=>{setIsSingleWaredOverlayVisible(true)}}
           style={aStyle}
           target={"_blank"}
           rel="noreferrer"
@@ -43,6 +57,7 @@ function WaredTabelTR({ row }: { row: any }) {
       <td>
         <a
           href={`/wared/${row.id}`}
+          onClick={()=>{setIsSingleWaredOverlayVisible(true)}}
           style={aStyle}
           target={"_blank"}
           rel="noreferrer"
@@ -52,6 +67,7 @@ function WaredTabelTR({ row }: { row: any }) {
       </td>
       <td>
         <a
+          onClick={()=>{setIsSingleWaredOverlayVisible(true)}}
           href={`/wared/${row.id}`}
           style={aStyle}
           target={"_blank"}
@@ -62,6 +78,7 @@ function WaredTabelTR({ row }: { row: any }) {
       </td>
       <td>
         <a
+          onClick={()=>{setIsSingleWaredOverlayVisible(true)}}
           href={`/wared/${row.id}`}
           style={aStyle}
           target={"_blank"}
@@ -79,6 +96,7 @@ function WaredTabelTR({ row }: { row: any }) {
       </td>
       <td>
         <a
+          onClick={()=>{setIsSingleWaredOverlayVisible(true)}}
           href={`/wared/${row.id}`}
           style={aStyle}
           target={"_blank"}
@@ -97,6 +115,7 @@ function WaredTabelTR({ row }: { row: any }) {
 
       <td>
         <a
+          onClick={()=>{setIsSingleWaredOverlayVisible(true)}}
           href={`/wared/${row.id}`}
           style={aStyle}
           target={"_blank"}
@@ -107,6 +126,7 @@ function WaredTabelTR({ row }: { row: any }) {
       </td>
       <td>
         <a
+          onClick={()=>{setIsSingleWaredOverlayVisible(true)}}
           href={`/wared/${row.id}`}
           style={aStyle}
           target={"_blank"}

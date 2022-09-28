@@ -397,7 +397,7 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
                   subject &&
                   !isObjEmpty(selectedGehaa) &&
                   !isArrEmpty(selectedBranchs) &&
-                  !isArrEmpty(selectedOfficers) &&
+                  // !isArrEmpty(selectedOfficers) &&
                   isFieldValid(selectedFile, requiredFields.selectedFile)
                 ) {
                   return true;
@@ -427,8 +427,8 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
                 formData.append("subject", subject);
                 formData.append("hasDeadLine", `${hasDeadline}`);
                 formData.append("docDeadline", deadLineDate);
-                formData.append("lastWaredNum", lastWaredNum);
-                formData.append("gehaa_id", selectedGehaa.id);
+                formData.append("lastWaredNum", lastWaredNum); 
+                formData.append("gehaa_id", selectedGehaa.id); 
                 formData.append(
                   "selectedBranchs",
                   JSON.stringify(selectedBranchs)
