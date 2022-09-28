@@ -3,7 +3,7 @@ import { SaderTabelTR } from "../../features/sader/components/saderTabelTr";
 import { SearchBox } from "../../features/sader/components/searchBox";
 import axios from "axios";
 import Spinner from "../../components/HorizontalSpinner";
-import { io } from "socket.io-client";
+import socket from "../../services/socket-io";
 
 function SaderBox() {
   const [saderBoxRecords, setSaderBoxRecords] = useState<any[]>([]);
@@ -122,7 +122,13 @@ function SaderBox() {
   }, [pageNum, numOfRecords]);
 
   useEffect(() => {
-    const socket = io('/');
+    const controller = new AbortController();
+    return () => {
+      controller.abort();
+    };
+    // cancel the request
+  }, []);
+  useEffect(() => {
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {
@@ -175,27 +181,33 @@ function SaderBox() {
         </select>
       </div>
       <div className="d-flex my-2">
-          <label className="fs-4">مكاتبات تمت قرائتها</label>
-          <div
-            className="bg-secondary mx-2"
-            style={{ width: "20px",borderRadius:'5px' }}
-          >.</div>
+        <label className="fs-4">مكاتبات تمت قرائتها</label>
+        <div
+          className="bg-secondary mx-2"
+          style={{ width: "20px", borderRadius: "5px" }}
+        >
+          .
         </div>
-        <hr />
+      </div>
+      <hr />
       {isShowSpinner ? (
         <Spinner />
       ) : (
         <table className="table table-hover fs-4">
           <thead className={""}>
             <tr>
-              <th scope="col" style={{ width: "10%" }}>رقم الصادر</th>
-              <th scope="col"  style={{ width: "10%" }}>
+              <th scope="col" style={{ width: "10%" }}>
+                رقم الصادر
+              </th>
+              <th scope="col" style={{ width: "10%" }}>
                 تاريخ الصادر
               </th>
               <th scope="col" style={{ width: "25%" }}>
                 موضوع الصادر
               </th>
-              <th scope="col" style={{ width: "20%" }}>جهة الصادر</th>
+              <th scope="col" style={{ width: "20%" }}>
+                جهة الصادر
+              </th>
 
               <th scope="col" style={{ width: "12%" }}>
                 الضابط المختص
@@ -206,7 +218,9 @@ function SaderBox() {
 
               {/* <th scope="col">الإتجاه المختص</th> */}
               {/* <th scope="col">الضابط المختص</th> */}
-              <th scope="col" style={{ width: "15%" }}>متصلة بوارد</th>
+              <th scope="col" style={{ width: "15%" }}>
+                متصلة بوارد
+              </th>
               {/* <th scope="col">متصلة بوارد</th> */}
             </tr>
           </thead>

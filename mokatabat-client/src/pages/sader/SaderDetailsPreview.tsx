@@ -50,6 +50,14 @@ function SaderDetailsPreview() {
         socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
       };
   }, []);
+  
+useEffect(() => {
+  const controller = new AbortController();
+  return () => {
+    controller.abort();
+  };
+  // cancel the request
+}, []);
   return (
     <>
       <div className="container fs-3 ">

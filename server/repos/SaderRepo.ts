@@ -117,7 +117,7 @@ export default class SaderRepo {
     req: Request
   ): Promise<any> {
     let durationName = 'get sader with params'
-    console.time(durationName)
+    // console.time(durationName)
     const hasAccessToAllSader = isHasAccessToAllSader(req) 
 
     const hasAccessToBranchSader =isHasAccessToBranchSader(req)
@@ -194,7 +194,7 @@ export default class SaderRepo {
       order: orderByArr.length == 0 ? [["id", "DESC"]] : orderByArr,
       offset: Number(searchParams.numOfRecords) * Number(searchParams.pageNum),
     });
-    console.timeEnd(durationName)
+    // console.timeEnd(durationName)
 
     return saders;
   }

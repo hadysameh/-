@@ -4,11 +4,8 @@ import { BranchesSelect } from "./components/branchesSelect";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import * as premisions from "../../../../utils/premissions";
-import { io } from "socket.io-client";
-
+import socket from "../../../../services/socket-io";
 interface IProps {
-  selectedOfficers: any;
-  selectedBranches: any;
   mokatbaData: any;
 }
 
@@ -51,7 +48,6 @@ function BranchesAndOfficers(props: IProps) {
   }, []);
 
   useEffect(() => {
-    const socket = io('/');
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {
@@ -65,10 +61,7 @@ function BranchesAndOfficers(props: IProps) {
 
   const submitModifiedWared = (ModifiedWaredData: any) => {
     axios
-      .put(
-        "/api/waredbox/updateOfficersAndBranches",
-        ModifiedWaredData
-      )
+      .put("/api/waredbox/updateOfficersAndBranches", ModifiedWaredData)
       .then((res) => {
         window.location.reload();
       })

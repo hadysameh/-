@@ -1,11 +1,21 @@
-import NormalWaredBox from "../pages/wared/NormalWaredBox";
-import RedCircleWaredBox from "../pages/wared/RedCircleWaredBox";
-import GreenCircleWaredBox from "../pages/wared/GreenCircleWaredBox"; 
+import React, { Suspense, lazy } from "react";
+// import RedCircleWaredBox from "../pages/wared/RedCircleWaredBox";
+// import GreenCircleWaredBox from "../pages/wared/GreenCircleWaredBox";
+// import CreateWared from "../pages/wared/CreateWared";
 import RedirectIfNotAuth from "../middlewares/routesMiddlewares/RedirectIfNotAuth";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import CreateWared from "../pages/wared/CreateWared";
 import EditWared from "../pages/wared/EditWared";
 import MokatbaDetailsPreview from "../pages/wared/MokatbaDetailsPreview";
+
+const NormalWaredBox = lazy(() => import("../pages/wared/NormalWaredBox"));
+const GreenCircleWaredBox = lazy(() =>
+  import("../pages/wared/GreenCircleWaredBox")
+);
+const RedCircleWaredBox = lazy(() =>
+  import("../pages/wared/RedCircleWaredBox")
+);
+const CreateWared = lazy(() => import("../pages/wared/CreateWared"));
+
 //this should be exported to app.js file
 let waredRoutes = (
   <>

@@ -2,10 +2,19 @@ import { SaderForm } from "../../features/sader/components/saderForm";
 import axios from "axios";
 import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+
 function EditSader() {
   let navigate = useNavigate();
   let { saderId } = useParams();
 
+  useEffect(() => {
+    const controller = new AbortController();
+    return () => {
+      controller.abort();
+    };
+    // cancel the request
+  }, []);
   const submitEditWared = useCallback((formData: FormData) => {
     axios
       .put("/api/saderbox/edit", formData)

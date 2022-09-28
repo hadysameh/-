@@ -21,6 +21,14 @@ function Home() {
       setGreenCircleCount(Number(data.greenCircleCount));
     });
   }, []);
+  
+useEffect(() => {
+  const controller = new AbortController();
+  return () => {
+    controller.abort();
+  };
+  // cancel the request
+}, []);
   const circleBoxStyle = {
     // width: "40%",
     display: "flex",

@@ -3,6 +3,13 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 function CreateSader() {
+  useEffect(() => {
+    const controller = new AbortController();
+    return () => {
+      controller.abort();
+    };
+    // cancel the request
+  }, []);
   let navigate = useNavigate();
   const requiredFileds = {
     selectedFile: true,
@@ -22,7 +29,10 @@ function CreateSader() {
   }, []);
   return (
     <>
-      <SaderForm submitFormDataMethod={submitNewSader} requiredFields={requiredFileds} />
+      <SaderForm
+        submitFormDataMethod={submitNewSader}
+        requiredFields={requiredFileds}
+      />
     </>
   );
 }

@@ -9,7 +9,7 @@ function getUserType() {
 function hasPremission(premissionName: string): boolean {
   let userType = getUserType();
   let premissions = getUserPremissions();
-  console.log({ premissions });
+  // console.log({ premissions });
   if (premissions?.length) {
     for (let index = 0; index < premissions.length; index++) {
       const premission = premissions[index];

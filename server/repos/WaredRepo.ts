@@ -129,7 +129,7 @@ class WaredRepo {
     req: Request
   ): Promise<any> {
     let durationName = "get wared with params";
-    console.time(durationName);
+    // console.time(durationName);
     const hasAccessToAllWared = isHasAccessToAllWared(req) 
 
     const hasAccessToBranchWared = isHasAccessToBranchWared(req);
@@ -244,7 +244,7 @@ class WaredRepo {
       order: orderByArr.length == 0 ? [["id", "DESC"]] : orderByArr,
       offset: Number(searchParams.numOfRecords) * Number(searchParams.pageNum),
     });
-    console.timeEnd(durationName);
+    // console.timeEnd(durationName);
 
     return wareds;
   }

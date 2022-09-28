@@ -8,7 +8,7 @@ import {
   selectRank,
   selectPremissions,
 } from "../features/user/stores/userSlice";
-import { io } from "socket.io-client";
+import socket from '../services/socket-io'
 
 import axios from "axios";
 import * as premissions from "../utils/premissions";
@@ -59,7 +59,7 @@ function Header() {
   }, [token]);
 
   useEffect(() => {
-    const socket = io("/");
+    
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", async () => {

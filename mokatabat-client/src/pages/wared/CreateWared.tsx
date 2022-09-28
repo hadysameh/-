@@ -5,7 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 function CreateWared() {
   let navigate = useNavigate();
-
+  useEffect(() => {
+    const controller = new AbortController();
+    return () => {
+      controller.abort();
+    };
+    // cancel the request
+  }, []);
   const requiredFileds = {
     selectedFile: true,
   };

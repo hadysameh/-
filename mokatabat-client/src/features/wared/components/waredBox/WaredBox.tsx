@@ -5,7 +5,7 @@ import HorizontalSpinner from "../../../../components/HorizontalSpinner";
 import axios from "axios";
 import { useState } from "react";
 import { waredBoxType } from "../../../../types";
-import { io } from "socket.io-client";
+import socket from '../../../../services/socket-io'
 
 interface IProps {
   /** 
@@ -155,11 +155,14 @@ function WaredBox(props: IProps) {
     }
   }, []);
   useEffect(() => {
-    fetchRowsWithParams();
+    if(waredBoxRecords.length==0){
+
+      fetchRowsWithParams();
+    }
   }, [pageNum, numOfRecords]);
 
   useEffect(() => {
-    const socket = io("/");
+    // const socket = io("/");
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {

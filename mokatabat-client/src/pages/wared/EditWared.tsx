@@ -1,10 +1,17 @@
 import { WaredForm } from "../../features/wared/components/waredForm";
 import axios from "axios";
-import { useCallback } from "react";
+import { useCallback ,useEffect} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 function EditWared() {
   let navigate = useNavigate();
   let { mokatbaId } = useParams();
+  useEffect(() => {
+    const controller = new AbortController();
+    return () => {
+      controller.abort();
+    };
+    // cancel the request
+  }, []);
   const requiredFileds = {
     selectedFile: false,
   };

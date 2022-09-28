@@ -6,11 +6,25 @@ import CircleSpinner from "../../components/CircleSpinner";
 import BranchesAndOfficers from "../../features/wared/components/branchesAndOfficers";
 import * as premissions from "../../utils/premissions";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
-import { io } from "socket.io-client";
+import socket from '../../services/socket-io'
 
 function MokatbaDetailsPreview() {
+  
+useEffect(() => {
+  const controller = new AbortController();
+  return () => {
+    controller.abort();
+  };
+  // cancel the request
+}, []);
   let navigate = useNavigate();
-
+  useEffect(() => {
+    const controller = new AbortController();
+    return () => {
+      controller.abort();
+    };
+    // cancel the request
+  }, []);
   let { mokatbaId } = useParams();
   const [mokatbaData, setMokatbaData] = useState<any>({});
   const [isConfirmDeleteShown, setIsConfirmDeleteShown] = useState(false);
@@ -41,7 +55,7 @@ function MokatbaDetailsPreview() {
   }, []);
 
   useEffect(() => {
-    const socket = io('/');
+    
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {
@@ -126,8 +140,6 @@ function MokatbaDetailsPreview() {
             {mokatbaData?.branches && mokatbaData.Wared_Officers && (
               <BranchesAndOfficers
                 mokatbaData={mokatbaData}
-                selectedBranches={mokatbaData?.branches}
-                selectedOfficers={mokatbaData?.Wared_Officers}
               />
             )}
 
