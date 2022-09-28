@@ -63,7 +63,7 @@ function BranchesAndOfficers(props: IProps) {
     axios
       .put("/api/waredbox/updateOfficersAndBranches", ModifiedWaredData)
       .then((res) => {
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((err) => {
         alert("فشل في تعديل المكاتبة");

@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
 import * as premissions from "../../utils/premissions";
-import { io } from "socket.io-client";
+import socket from '../../services/socket-io'
 
 function SaderDetailsPreview() {
   let navigate = useNavigate();
@@ -40,7 +40,7 @@ function SaderDetailsPreview() {
   }, []);
 
   useEffect(() => {
-    const socket = io('/');
+    
     socket
       .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {

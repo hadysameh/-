@@ -1,10 +1,9 @@
-import BranchesAndOfficers from "../branchesAndOfficers";
 import { useEffect, useState } from "react";
 import axios from "axios";
 interface IProps {
   mokatbaData: any;
 }
-export default function WaredOverlayContent(props: IProps) {
+export default function SaderOverlayContent(props: IProps) {
   const [mokatbaData, setMokatbaData] = useState<any>();
   let aStyle = {
     // textDecoration: "none",
@@ -32,12 +31,23 @@ export default function WaredOverlayContent(props: IProps) {
       >
         <br />
         <h1>ملخص المكاتبة</h1>
-        <BranchesAndOfficers
-          mokatbaData={props.mokatbaData}
-        ></BranchesAndOfficers>
+        <div className="row align-items-start pt-5 mx-3">
+          <div className="text-right container">
+            <div>
+              الضابط المختص:
+              <ul>{props.mokatbaData.SaderOfficer?.name}</ul>
+            </div>
+          </div>
+        </div>
+        <div className="row align-items-start pt-5 mx-3">
+          <div className="text-right container">
+            الفرع المختص
+            <ul>{props.mokatbaData.branch?.name}</ul>
+          </div>
+        </div>
         <div className="text-rigth w-100">
           <a
-            href={`/wared/${props.mokatbaData.id}`}
+            href={`/sader/${props.mokatbaData.id}`}
             target={"_blank"}
             style={aStyle}
           >
@@ -47,7 +57,10 @@ export default function WaredOverlayContent(props: IProps) {
         <hr />
 
         <div>
-          <iframe src={`./diveintopython.pdf`} style={iframeWaredStyle}></iframe>
+          <iframe
+            src={`./diveintopython.pdf`}
+            style={iframeWaredStyle}
+          ></iframe>
         </div>
       </div>
     </>

@@ -51,7 +51,7 @@ function WaredTabelTR({ row }: { row: any }) {
         <td>
           <a
             //href={`/wared/${row.id}`}
-            onClick={() => {
+             onClick={() => {
               setIsWaredOverlayOpen(true);
             }}
             style={aStyle}
@@ -64,7 +64,7 @@ function WaredTabelTR({ row }: { row: any }) {
         <td>
           <a
             //href={`/wared/${row.id}`}
-            onClick={() => {
+             onClick={() => {
               setIsWaredOverlayOpen(true);
             }}
             style={aStyle}
@@ -76,7 +76,7 @@ function WaredTabelTR({ row }: { row: any }) {
         </td>
         <td>
           <a
-            onClick={() => {
+             onClick={() => {
               setIsWaredOverlayOpen(true);
             }}
             //href={`/wared/${row.id}`}
@@ -89,7 +89,7 @@ function WaredTabelTR({ row }: { row: any }) {
         </td>
         <td>
           <a
-            onClick={() => {
+             onClick={() => {
               setIsWaredOverlayOpen(true);
             }}
             //href={`/wared/${row.id}`}
@@ -109,7 +109,7 @@ function WaredTabelTR({ row }: { row: any }) {
         </td>
         <td>
           <a
-            onClick={() => {
+             onClick={() => {
               setIsWaredOverlayOpen(true);
             }}
             //href={`/wared/${row.id}`}
@@ -130,7 +130,7 @@ function WaredTabelTR({ row }: { row: any }) {
 
         <td>
           <a
-            onClick={() => {
+             onClick={() => {
               setIsWaredOverlayOpen(true);
             }}
             //href={`/wared/${row.id}`}
@@ -143,7 +143,7 @@ function WaredTabelTR({ row }: { row: any }) {
         </td>
         <td>
           <a
-            onClick={() => {
+             onClick={() => {
               setIsWaredOverlayOpen(true);
             }}
             //href={`/wared/${row.id}`}

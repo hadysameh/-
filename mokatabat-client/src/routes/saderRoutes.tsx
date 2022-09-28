@@ -1,10 +1,14 @@
 import RedirectIfNotAuth from "../middlewares/routesMiddlewares/RedirectIfNotAuth";
 import { Route } from "react-router-dom";
-import CreateSader from "../pages/sader/CreateSader";
-import SaderBox from "../pages/sader/SaderBox";
-import SaderDetailsPreview from "../pages/sader/SaderDetailsPreview";
-import EditSader from "../pages/sader/EditSader";
-//this should be exported to app.js file
+import React, { Suspense, lazy } from "react";
+
+const CreateSader = lazy(() => import("../pages/sader/CreateSader"));
+const SaderBox = lazy(() => import("../pages/sader/SaderBox"));
+const SaderDetailsPreview = lazy(() =>
+  import("../pages/sader/SaderDetailsPreview")
+);
+const EditSader = lazy(() => import("../pages/sader/EditSader"));
+
 let saderRoutes = (
   <>
     <Route
