@@ -130,7 +130,7 @@ UserType.belongsToMany(Premission, {
   through: UserType_premission,
   foreignKey: "userTypeId",
   otherKey: "premissionId",
-  //constraints: false,
+  constraints: false,
 });
 
 //------------------------------------------------------------

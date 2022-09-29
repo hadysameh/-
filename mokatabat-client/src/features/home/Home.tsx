@@ -47,7 +47,7 @@ function Home() {
     width: "50%",
   };
   return (
-    <div className="bg-primary" style={{ height: "80vh" }}>
+    <div className="" style={{ height: "80vh" }}>
       <div className="container" dir="rtl">
         <div className="row py-3 pt-3">
           <div className="col-xl-3 col-lg-6">
@@ -85,7 +85,7 @@ function Home() {
         </div>
       </div>
 
-      <div className="d-flex align-items-center flex-column mt-4">
+      <div className="d-flex align-items-center flex-column mt-4" style={{marginTop:'100px'}}>
         <img src="./edaraLogo.png" style={{ width: "25vw" }} />
         <div className="text-center fs-1">
           ادارة البحوث الفنية والتطوير

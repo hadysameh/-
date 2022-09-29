@@ -28,7 +28,12 @@ function SaderTabelTR({ row }: { row: any }) {
       >
         <SaderOverlayContent mokatbaData={row} />
       </Overlay>
-      <tr style={{ background: hasOfficerSeenSader ? "rgb(182 182 182)" : "" }}>
+      <tr
+        style={{ background: hasOfficerSeenSader ? "rgb(182 182 182)" : "" }}
+        onClick={() => {
+          setIsWaredOverlayOpen(true);
+        }}
+      >
         <td>
           <a
             //href={`/sader/${row.id}`}

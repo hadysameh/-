@@ -155,10 +155,10 @@ function WaredBox(props: IProps) {
     }
   }, []);
   useEffect(() => {
-    if(waredBoxRecords.length==0){
+    // if(waredBoxRecords.length==0){
 
-      fetchRowsWithParams();
-    }
+    // }
+    fetchRowsWithParams();
   }, [pageNum, numOfRecords]);
 
   useEffect(() => {

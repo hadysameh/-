@@ -61,9 +61,8 @@ function Header() {
   useEffect(() => {
     
     socket
-      .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", async () => {
-        // console.log("socket event recieved in header");
+        console.log("socket event recieved in header");
         let numOfFetchedUnreadWared: any = await getNumberOfUnreadWared();
         let numOfFetchedUnreadSader: any = await getNumberOfUnreadSader();
         if (
@@ -77,7 +76,6 @@ function Header() {
       });
 
     socket
-      .off("refetchWaredAndSaderUnreadNumbersNoSound")
       .on("refetchWaredAndSaderUnreadNumbersNoSound", async () => {
         // console.log("socket event recieved in header");
         let numOfFetchedUnreadWared: any = await getNumberOfUnreadWared();

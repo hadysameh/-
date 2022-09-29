@@ -11,7 +11,6 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
 import {hasAddWaredPremission} from './utils/premissions'
 
-console.log(hasAddWaredPremission())
 const bc = new BroadcastChannel("test_channel");
 //@ts-ignore
 window.bc = bc;
