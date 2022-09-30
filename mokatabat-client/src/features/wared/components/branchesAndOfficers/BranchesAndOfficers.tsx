@@ -5,11 +5,15 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import * as premisions from "../../../../utils/premissions";
 import socket from "../../../../services/socket-io";
+import {socketIoEvent} from '../../../../types'
+import {selectUser } from '../../../user/stores/userSlice'
+import {useSelector} from 'react-redux'
 interface IProps {
   mokatbaData: any;
 }
 
 function BranchesAndOfficers(props: IProps) {
+  const user = useSelector(selectUser)
   let navigate = useNavigate();
   // console.log({
   //   hasAccessToEditWaredBranchs: premisions.hasAccessToEditWaredBranchs(),
@@ -48,11 +52,17 @@ function BranchesAndOfficers(props: IProps) {
   }, []);
 
   useEffect(() => {
-    socket
-      .on("refetchWaredAndSaderUnreadNumbers", () => {
-        console.log("refetchWaredAndSaderUnreadNumbers");
-        getAndSetWaredOptions();
-      });
+    // socket
+    // .on(socketIoEvent.refetchSader, () => {
+      
+    //     getAndSetWaredOptions();
+
+    // });
+    // socket
+    // .on(socketIoEvent.refetchWared+user.id, () => {
+      
+    //     getAndSetWaredOptions();
+    // });
     return () => {
       // socket.off("refetchWaredAndSaderUnreadNumbers");
     };

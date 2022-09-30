@@ -6,9 +6,13 @@ import CircleSpinner from "../../components/CircleSpinner";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
 import * as premissions from "../../utils/premissions";
 import socket from '../../services/socket-io'
+import {socketIoEvent} from '../../types'
+import {selectUser } from '../../features/user/stores/userSlice'
+import {useSelector} from 'react-redux'
 
 function SaderDetailsPreview() {
   let navigate = useNavigate();
+  const user = useSelector(selectUser)
 
   let { saderId } = useParams();
   const [saderData, setSaderData] = useState<any>({});
@@ -40,11 +44,18 @@ function SaderDetailsPreview() {
   }, []);
 
   useEffect(() => {
-    
     socket
-      .on("refetchWaredAndSaderUnreadNumbers", () => {
-        window.location.reload();
-      });
+    .on(socketIoEvent.refetchSader, () => {
+       
+      window.location.reload();
+
+    });
+    socket
+    .on(socketIoEvent.refetchWared+user.id, () => {
+      window.location.reload();
+       
+    });
+     
       return () => {
       };
   }, []);

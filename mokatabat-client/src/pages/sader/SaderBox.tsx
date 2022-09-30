@@ -4,8 +4,13 @@ import { SearchBox } from "../../features/sader/components/searchBox";
 import axios from "axios";
 import Spinner from "../../components/HorizontalSpinner";
 import socket from "../../services/socket-io";
+import { selectUser } from "../../features/user/stores/userSlice";
+import { useSelector } from "react-redux";
+import { socketIoEvent } from "../../types";
 
 function SaderBox() {
+  const user = useSelector(selectUser);
+
   const [saderBoxRecords, setSaderBoxRecords] = useState<any[]>([]);
   const [numOfRecords, setNumOfRecords] = useState<any>(20);
   const [pageNum, setPageNum] = useState<any>(1);
@@ -129,12 +134,13 @@ function SaderBox() {
     // cancel the request
   }, []);
   useEffect(() => {
-    socket.on("refetchWaredAndSaderUnreadNumbers", () => {
+    socket.on(socketIoEvent.refetchSader, () => {
       fetchRowsWithParams();
     });
-    socket.on("refetchWaredAndSaderUnreadNumbersNoSound", () => {
+    socket.on(socketIoEvent.refetchWared + user.id, () => {
       fetchRowsWithParams();
     });
+
     return () => {};
   }, []);
   return (

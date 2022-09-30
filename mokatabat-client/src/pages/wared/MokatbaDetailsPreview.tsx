@@ -6,17 +6,20 @@ import CircleSpinner from "../../components/CircleSpinner";
 import BranchesAndOfficers from "../../features/wared/components/branchesAndOfficers";
 import * as premissions from "../../utils/premissions";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
-import socket from '../../services/socket-io'
-
+import socket from "../../services/socket-io";
+import { socketIoEvent } from "../../types";
+import { selectUser } from "../../features/user/stores/userSlice";
+import { useSelector } from "react-redux";
 function MokatbaDetailsPreview() {
-  
-useEffect(() => {
-  const controller = new AbortController();
-  return () => {
-    controller.abort();
-  };
-  // cancel the request
-}, []);
+  const user = useSelector(selectUser);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    return () => {
+      controller.abort();
+    };
+    // cancel the request
+  }, []);
   let navigate = useNavigate();
   useEffect(() => {
     const controller = new AbortController();
@@ -37,16 +40,13 @@ useEffect(() => {
         navigate("/waredbox");
       });
   }, []);
-  const getAndSetMokatbaData=()=>{
-    axios
-    .get("/api/wared/", { params: { id: mokatbaId } })
-    .then((res) => {
+  const getAndSetMokatbaData = () => {
+    axios.get("/api/wared/", { params: { id: mokatbaId } }).then((res) => {
       setMokatbaData(res.data);
     });
-
-  }
+  };
   useEffect(() => {
-    getAndSetMokatbaData()
+    getAndSetMokatbaData();
     axios
       .post("/api/waredtrackingofficers/", {
         waredId: mokatbaId,
@@ -55,15 +55,16 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    
-    socket
-      .on("refetchWaredAndSaderUnreadNumbers", () => {
-        window.location.reload();
-      });
-      return () => {
-      };
+    socket.on(socketIoEvent.refetchSader, () => {
+      window.location.reload();
+    });
+    socket.on(socketIoEvent.refetchWared + user.id, () => {
+      window.location.reload();
+    });
+
+    return () => {};
   }, []);
- 
+
   return (
     <>
       <div className="container fs-3 ">
@@ -136,9 +137,7 @@ useEffect(() => {
             </div>
 
             {mokatbaData?.branches && mokatbaData.Wared_Officers && (
-              <BranchesAndOfficers
-                mokatbaData={mokatbaData}
-              />
+              <BranchesAndOfficers mokatbaData={mokatbaData} />
             )}
 
             <div className="row align-items-start pt-5">
@@ -216,10 +215,9 @@ useEffect(() => {
                 <div className="row align-items-start pt-5">
                   <div className="">
                     <a
-                                            href='#'
-
+                      href="#"
                       onClick={(e) => {
-                        e.preventDefault()
+                        e.preventDefault();
                         setIsConfirmDeleteShown(true);
                       }}
                       target="blank"
@@ -235,10 +233,10 @@ useEffect(() => {
                     <div className="d">
                       <a
                         onClick={(e) => {
-                          e.preventDefault()
+                          e.preventDefault();
                           deleteWared();
                         }}
-                        href='#'
+                        href="#"
                         target="blank"
                         className="btn btn-lg btn-danger fs-3 ml-3"
                       >
@@ -246,9 +244,9 @@ useEffect(() => {
                       </a>
 
                       <a
-                        href='#'
+                        href="#"
                         onClick={(e) => {
-                          e.preventDefault()
+                          e.preventDefault();
                           setIsConfirmDeleteShown(false);
                         }}
                         target="blank"
