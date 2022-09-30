@@ -137,7 +137,7 @@ function SaderBox() {
     socket.on(socketIoEvent.refetchSader, () => {
       fetchRowsWithParams();
     });
-    socket.on(socketIoEvent.refetchWared + user.id, () => {
+    socket.on(socketIoEvent.refetchSader + user.id, () => {
       fetchRowsWithParams();
     });
 

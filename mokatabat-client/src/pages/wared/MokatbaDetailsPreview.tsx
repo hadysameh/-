@@ -55,7 +55,7 @@ function MokatbaDetailsPreview() {
   }, []);
 
   useEffect(() => {
-    socket.on(socketIoEvent.refetchSader, () => {
+    socket.on(socketIoEvent.refetchWared, () => {
       window.location.reload();
     });
     socket.on(socketIoEvent.refetchWared + user.id, () => {

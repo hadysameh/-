@@ -51,7 +51,7 @@ function SaderDetailsPreview() {
 
     });
     socket
-    .on(socketIoEvent.refetchWared+user.id, () => {
+    .on(socketIoEvent.refetchSader+user.id, () => {
       window.location.reload();
        
     });
