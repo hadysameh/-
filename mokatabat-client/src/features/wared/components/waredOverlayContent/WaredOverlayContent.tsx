@@ -31,10 +31,8 @@ export default function WaredOverlayContent(props: IProps) {
         }}
       >
         <br />
-        <h1>ملخص المكاتبة</h1>
-        <BranchesAndOfficers
-          mokatbaData={props.mokatbaData}
-        ></BranchesAndOfficers>
+        <h1>نظرة سريعة</h1>
+         
         <div className="text-rigth w-100">
           <a
             href={`/wared/${props.mokatbaData.id}`}

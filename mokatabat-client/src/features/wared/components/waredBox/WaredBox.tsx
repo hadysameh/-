@@ -4,8 +4,10 @@ import { useEffect } from "react";
 import HorizontalSpinner from "../../../../components/HorizontalSpinner";
 import axios from "axios";
 import { useState } from "react";
-import { waredBoxType } from "../../../../types";
+import { waredBoxType,socketIoEvent } from "../../../../types";
 import socket from '../../../../services/socket-io'
+import {selectUser} from '../../../user/stores/userSlice'
+import { useSelector } from "react-redux";
 
 interface IProps {
   /** 
@@ -14,6 +16,8 @@ interface IProps {
   waredBoxType: string;
 }
 function WaredBox(props: IProps) {
+  const user = useSelector(selectUser);
+
   const [waredBoxTypeTitle, setWaredBoxTypeTitle] = useState<string>("");
   const [waredBoxTypeTitleColor, setWaredBoxTypeTitleColor] = useState<string>(
     ""
@@ -155,27 +159,22 @@ function WaredBox(props: IProps) {
     }
   }, []);
   useEffect(() => {
-    // if(waredBoxRecords.length==0){
-
-    // }
     fetchRowsWithParams();
   }, [pageNum, numOfRecords]);
 
   useEffect(() => {
-    // const socket = io("/");
     socket
-      .off("refetchWaredAndSaderUnreadNumbers")
-      .on("refetchWaredAndSaderUnreadNumbers", () => {
+      .on(socketIoEvent.refetchWared, () => {
+        console.log('msg from refetchWaredAndSaderUnreadNumbers')
+
         fetchRowsWithParams();
       });
     socket
-      .off("refetchWaredAndSaderUnreadNumbersNoSound")
-      .on("refetchWaredAndSaderUnreadNumbersNoSound", () => {
+      .on(socketIoEvent.refetchWared+user.id, () => {
+        console.log('msg from refetchWaredAndSaderUnreadNumbersNoSound')
         fetchRowsWithParams();
       });
     return () => {
-      socket.off("refetchWaredAndSaderUnreadNumbers");
-      socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
     };
   }, []);
 
@@ -232,7 +231,7 @@ function WaredBox(props: IProps) {
           </select>
         </div>
         <div className="d-flex my-2">
-          <label className="fs-4">مكاتبات تمت قرائتها</label>
+          <label className="fs-4">مكاتبات تم الإطلاع عليها بالكامل</label>
           <div
             className="bg-secondary mx-2"
             style={{ width: "20px",borderRadius:'5px' }}

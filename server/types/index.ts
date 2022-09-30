@@ -5,7 +5,10 @@ export interface IUserInfo {
   lastName: string;
   email?: string | null;
 }
-
+export enum socketIoEvent {
+  refetchWared = "refetchWared",
+  refetchSader = "refetchSader",
+}
 export enum premissions {
   addSader = "add sader",
   addWared = "add wared",

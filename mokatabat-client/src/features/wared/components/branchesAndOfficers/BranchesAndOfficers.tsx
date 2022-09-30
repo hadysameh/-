@@ -49,13 +49,12 @@ function BranchesAndOfficers(props: IProps) {
 
   useEffect(() => {
     socket
-      .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {
         console.log("refetchWaredAndSaderUnreadNumbers");
         getAndSetWaredOptions();
       });
     return () => {
-      socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
+      // socket.off("refetchWaredAndSaderUnreadNumbers");
     };
   }, []);
 

@@ -42,12 +42,10 @@ function SaderDetailsPreview() {
   useEffect(() => {
     
     socket
-      .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {
         window.location.reload();
       });
       return () => {
-        socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
       };
   }, []);
   
@@ -191,7 +189,8 @@ useEffect(() => {
                   <div className="">
                     <a
                       href="#"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault()
                         setIsConfirmDeleteShown(true);
                       }}
                       target="blank"
@@ -207,7 +206,8 @@ useEffect(() => {
                     <div className="d">
                       <a
                         href="#"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault()
                           deleteSader();
                         }}
                         target="blank"
@@ -218,7 +218,8 @@ useEffect(() => {
 
                       <a
                         href="#"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault()
                           setIsConfirmDeleteShown(false);
                         }}
                         target="blank"

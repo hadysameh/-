@@ -57,12 +57,10 @@ useEffect(() => {
   useEffect(() => {
     
     socket
-      .off("refetchWaredAndSaderUnreadNumbers")
       .on("refetchWaredAndSaderUnreadNumbers", () => {
         window.location.reload();
       });
       return () => {
-        socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
       };
   }, []);
  
@@ -218,7 +216,10 @@ useEffect(() => {
                 <div className="row align-items-start pt-5">
                   <div className="">
                     <a
-                      onClick={() => {
+                                            href='#'
+
+                      onClick={(e) => {
+                        e.preventDefault()
                         setIsConfirmDeleteShown(true);
                       }}
                       target="blank"
@@ -233,9 +234,11 @@ useEffect(() => {
                   <div className="row align-items-start pt-5">
                     <div className="d">
                       <a
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault()
                           deleteWared();
                         }}
+                        href='#'
                         target="blank"
                         className="btn btn-lg btn-danger fs-3 ml-3"
                       >
@@ -243,7 +246,9 @@ useEffect(() => {
                       </a>
 
                       <a
-                        onClick={() => {
+                        href='#'
+                        onClick={(e) => {
+                          e.preventDefault()
                           setIsConfirmDeleteShown(false);
                         }}
                         target="blank"

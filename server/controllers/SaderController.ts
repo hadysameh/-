@@ -1,5 +1,7 @@
 import emitSocketEvent from "../helpers/socketIo";
 import { Request, Response } from "express";
+import { socketIoEvent } from "../types";
+
 import SaderRepo from "../repos/SaderRepo";
 class SaderController {
   public static async getNumberOfUnreadSader(
@@ -53,7 +55,7 @@ class SaderController {
       : "";
     try {
       await SaderRepo.store(req.body, filePathToStore);
-      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+      emitSocketEvent(socketIoEvent.refetchSader);
 
       res.status(200).json({ msg: "ok" });
     } catch (error) {
@@ -67,7 +69,7 @@ class SaderController {
     try {
       await SaderRepo.delete(req)
         .then((msg) => {
-          emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+          emitSocketEvent(socketIoEvent.refetchSader);
 
           res.status(200).json(msg);
         })
@@ -90,7 +92,7 @@ class SaderController {
     // console.log(req.body);
     try {
       await SaderRepo.update(req.body, filePathToStore);
-      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+      emitSocketEvent(socketIoEvent.refetchSader);
 
       res.status(200).json({ msg: "ok" });
     } catch (error) {

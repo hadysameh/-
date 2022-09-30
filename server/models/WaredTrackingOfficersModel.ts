@@ -37,14 +37,11 @@ const WaredTrackingOfficers = seqeulize.define(
   }
 );
 WaredTrackingOfficers.afterCreate(() => {
-  emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
 });
 WaredTrackingOfficers.afterUpdate(() => {
-  emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
 });
 
 WaredTrackingOfficers.afterDestroy(() => {
-  emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
 });
 
 export default WaredTrackingOfficers;

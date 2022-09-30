@@ -129,20 +129,13 @@ function SaderBox() {
     // cancel the request
   }, []);
   useEffect(() => {
-    socket
-      .off("refetchWaredAndSaderUnreadNumbers")
-      .on("refetchWaredAndSaderUnreadNumbers", () => {
-        fetchRowsWithParams();
-      });
-    socket
-      .off("refetchWaredAndSaderUnreadNumbersNoSound")
-      .on("refetchWaredAndSaderUnreadNumbersNoSound", () => {
-        fetchRowsWithParams();
-      });
-    return () => {
-      socket.off("refetchWaredAndSaderUnreadNumbers");
-      socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
-    };
+    socket.on("refetchWaredAndSaderUnreadNumbers", () => {
+      fetchRowsWithParams();
+    });
+    socket.on("refetchWaredAndSaderUnreadNumbersNoSound", () => {
+      fetchRowsWithParams();
+    });
+    return () => {};
   }, []);
   return (
     <div className={"container"} style={{ minHeight: "1000" }}>
@@ -181,7 +174,8 @@ function SaderBox() {
         </select>
       </div>
       <div className="d-flex my-2">
-        <label className="fs-4">مكاتبات تمت قرائتها</label>
+        <label className="fs-4">مكاتبات تم الإطلاع عليها بالكامل</label>
+
         <div
           className="bg-secondary mx-2"
           style={{ width: "20px", borderRadius: "5px" }}

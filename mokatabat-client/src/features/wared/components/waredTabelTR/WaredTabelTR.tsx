@@ -25,12 +25,14 @@ function WaredTabelTR({ row }: { row: any }) {
   );
   return (
     <>
-      <Overlay
-        isOpen={isWaredOverlayOpen}
-        setIsWaredOverlayOpen={setIsWaredOverlayOpen}
-      >
-        <WaredOverlayContent mokatbaData={row} />
-      </Overlay>
+      {isWaredOverlayOpen && (
+        <Overlay
+          isOpen={isWaredOverlayOpen}
+          setIsWaredOverlayOpen={setIsWaredOverlayOpen}
+        >
+          <WaredOverlayContent mokatbaData={row} />
+        </Overlay>
+      )}
       <tr
         style={{ background: hasOfficerSeenWared ? "rgb(182 182 182)" : "" }}
         onClick={() => {

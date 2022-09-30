@@ -20,3 +20,8 @@ export enum premissions{
   hasAccessToBranchSader='has access to branch sader',
   hasAccessToBranchWared='has access to branch wared',
 }
+
+export enum socketIoEvent {
+  refetchWared = "refetchWared",
+  refetchSader = "refetchSader",
+}

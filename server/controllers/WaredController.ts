@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import WaredRepo from "../repos/WaredRepo";
 import emitSocketEvent from "../helpers/socketIo";
-
+import {socketIoEvent} from '../types'
 class WaredController {
   public static async getNumberOfUnreadWared(
     req: Request,
@@ -73,7 +73,7 @@ class WaredController {
       : "";
     try {
       await WaredRepo.store(req.body, filePathToStore);
-      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+      emitSocketEvent(socketIoEvent.refetchWared);
 
       res.status(200).json({ msg: "ok" });
     } catch (error) {
@@ -101,7 +101,7 @@ class WaredController {
       // console.log({ filePath: req.file?.path });
 
       await WaredRepo.update(req.body, filePathToStore);
-      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+      emitSocketEvent(socketIoEvent.refetchWared);
 
       res.status(200).json({ msg: "ok" });
     } catch (error) {
@@ -115,7 +115,7 @@ class WaredController {
     try {
       await WaredRepo.deleteWared(req)
         .then((msg) => {
-          emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+          emitSocketEvent(socketIoEvent.refetchWared);
 
           res.status(200).json(msg);
         })
@@ -134,7 +134,7 @@ class WaredController {
       // console.log({ filePath: req.file?.path });
 
       await WaredRepo.updateOfficersAndBranches(req);
-      emitSocketEvent("refetchWaredAndSaderUnreadNumbers");
+      emitSocketEvent(socketIoEvent.refetchWared);
 
       res.status(200).json({ msg: "ok" });
     } catch (error) {

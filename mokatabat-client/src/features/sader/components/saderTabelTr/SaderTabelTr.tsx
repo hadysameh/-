@@ -22,12 +22,14 @@ function SaderTabelTR({ row }: { row: any }) {
 
   return (
     <>
-      <Overlay
-        isOpen={isWaredOverlayOpen}
-        setIsWaredOverlayOpen={setIsWaredOverlayOpen}
-      >
-        <SaderOverlayContent mokatbaData={row} />
-      </Overlay>
+      {isWaredOverlayOpen && (
+        <Overlay
+          isOpen={isWaredOverlayOpen}
+          setIsWaredOverlayOpen={setIsWaredOverlayOpen}
+        >
+          <SaderOverlayContent mokatbaData={row} />
+        </Overlay>
+      )}
       <tr
         style={{ background: hasOfficerSeenSader ? "rgb(182 182 182)" : "" }}
         onClick={() => {

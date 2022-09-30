@@ -283,6 +283,7 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
                 onChange={() => {
                   setHasDeadline(!hasDeadline);
                 }}
+                checked={hasDeadline}
               />
               <label className="form-check-label">مكاتبة ذات حد اقصى</label>
             </div>
@@ -300,7 +301,7 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
                       </label>
                       <input
                         type="date"
-                        className="form-control"
+                        className="form-control fs-3"
                         id="exampleInputEmail1"
                         onChange={(e) => {
                           setDeadLineDate(e.target.value);

@@ -2,14 +2,15 @@ import { Link } from "react-router-dom";
 import HasAccessToShowComponent from "../middlewares/componentsGaurds/HasAccessToShowComponent";
 import { useSelector } from "react-redux";
 import {
+  selectUser,
   selectUserType,
   selectOfficer,
   selectToken,
   selectRank,
   selectPremissions,
 } from "../features/user/stores/userSlice";
-import socket from '../services/socket-io'
-
+import socket from "../services/socket-io";
+import {socketIoEvent} from '../types'
 import axios from "axios";
 import * as premissions from "../utils/premissions";
 import { useEffect, useState, useRef } from "react";
@@ -18,6 +19,7 @@ function Header() {
   const officer = useSelector(selectOfficer);
   const userType = useSelector(selectUserType);
   const rank = useSelector(selectRank);
+  const user = useSelector(selectUser);
   const [numOfUnreadWared, setnumOfUnreadWared] = useState("0");
   const [numOfUnreadSader, setnumOfUnreadSader] = useState("0");
   const audioRef = useRef<any>();
@@ -59,33 +61,34 @@ function Header() {
   }, [token]);
 
   useEffect(() => {
-    
     socket
-      .on("refetchWaredAndSaderUnreadNumbers", async () => {
-        console.log("socket event recieved in header");
-        let numOfFetchedUnreadWared: any = await getNumberOfUnreadWared();
-        let numOfFetchedUnreadSader: any = await getNumberOfUnreadSader();
-        if (
-          numOfFetchedUnreadWared >= numOfUnreadWared ||
-          numOfFetchedUnreadSader >= numOfUnreadSader
-        ) {
-          audioRef.current.play();
-        }
-        setnumOfUnreadWared(numOfFetchedUnreadWared);
-        setnumOfUnreadSader(numOfFetchedUnreadSader);
+    .on(socketIoEvent.refetchWared, () => {
+      getNumberOfUnreadWared().then((num: any) => {
+        setnumOfUnreadWared(num);
+        audioRef.current.play()
       });
 
+    });
     socket
-      .on("refetchWaredAndSaderUnreadNumbersNoSound", async () => {
-        // console.log("socket event recieved in header");
-        let numOfFetchedUnreadWared: any = await getNumberOfUnreadWared();
-        let numOfFetchedUnreadSader: any = await getNumberOfUnreadSader();
-        setnumOfUnreadWared(numOfFetchedUnreadWared);
-        setnumOfUnreadSader(numOfFetchedUnreadSader);
+    .on(socketIoEvent.refetchSader, () => {
+      getNumberOfUnreadSader().then((num: any) => {
+        setnumOfUnreadSader(num);
+        audioRef.current.play()
       });
-    return () => {
-      socket.off("refetchWaredAndSaderUnreadNumbersNoSound");
-    };
+
+    });
+    socket
+    .on(socketIoEvent.refetchWared+user.id, () => {
+      getNumberOfUnreadWared().then((num: any) => {
+        setnumOfUnreadWared(num);
+      });
+    });
+    socket
+    .on(socketIoEvent.refetchSader+user.id, () => {
+      getNumberOfUnreadSader().then((num: any) => {
+        setnumOfUnreadSader(num);
+      });
+    });
   }, []);
 
   return (
@@ -104,7 +107,10 @@ function Header() {
       </div>
 
       <audio src="./notificationSound.mkv" ref={audioRef}></audio>
-      <nav className="navbar navbar-expand-lg navbar-light bg-primary mt-3" style={{marginBottom:'0'}}>
+      <nav
+        className="navbar navbar-expand-lg navbar-light bg-primary mt-3"
+        style={{ marginBottom: "0" }}
+      >
         <div className="collapse navbar-collapse container fs-3" id="navbarNav">
           <ul className="navbar-nav ">
             {token && (

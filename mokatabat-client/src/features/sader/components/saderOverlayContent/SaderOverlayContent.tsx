@@ -30,21 +30,8 @@ export default function SaderOverlayContent(props: IProps) {
         }}
       >
         <br />
-        <h1>ملخص المكاتبة</h1>
-        <div className="row align-items-start pt-5 mx-3">
-          <div className="text-right container">
-            <div>
-              الضابط المختص:
-              <ul>{props.mokatbaData.SaderOfficer?.name}</ul>
-            </div>
-          </div>
-        </div>
-        <div className="row align-items-start pt-5 mx-3">
-          <div className="text-right container">
-            الفرع المختص
-            <ul>{props.mokatbaData.branch?.name}</ul>
-          </div>
-        </div>
+        <h1>نظرة سريعة</h1>
+        
         <div className="text-rigth w-100">
           <a
             href={`/sader/${props.mokatbaData.id}`}
