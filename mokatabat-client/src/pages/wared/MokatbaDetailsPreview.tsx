@@ -42,6 +42,7 @@ function MokatbaDetailsPreview() {
   }, []);
   const getAndSetMokatbaData = () => {
     axios.get("/api/wared/", { params: { id: mokatbaId } }).then((res) => {
+      console.log({mokatbadata:res})
       setMokatbaData(res.data);
     });
   };
@@ -58,9 +59,9 @@ function MokatbaDetailsPreview() {
     socket.on(socketIoEvent.refetchWared, () => {
       window.location.reload();
     });
-    socket.on(socketIoEvent.refetchWared + user.id, () => {
-      window.location.reload();
-    });
+    // socket.on(socketIoEvent.refetchWared + user.id, () => {
+    //   window.location.reload();
+    // });
 
     return () => {};
   }, []);

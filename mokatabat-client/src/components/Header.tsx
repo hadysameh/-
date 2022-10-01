@@ -10,7 +10,7 @@ import {
   selectPremissions,
 } from "../features/user/stores/userSlice";
 import socket from "../services/socket-io";
-import {socketIoEvent} from '../types'
+import { socketIoEvent } from "../types";
 import axios from "axios";
 import * as premissions from "../utils/premissions";
 import { useEffect, useState, useRef } from "react";
@@ -61,35 +61,31 @@ function Header() {
   }, [token]);
 
   useEffect(() => {
-    socket
-    .on(socketIoEvent.refetchWared, () => {
-      getNumberOfUnreadWared().then((num: any) => {
-        setnumOfUnreadWared(num);
-        audioRef.current.play()
+    if (user) {
+      socket.on(socketIoEvent.refetchWared, () => {
+        getNumberOfUnreadWared().then((num: any) => {
+          setnumOfUnreadWared(num);
+          audioRef.current.play();
+        });
       });
-
-    });
-    socket
-    .on(socketIoEvent.refetchSader, () => {
-      getNumberOfUnreadSader().then((num: any) => {
-        setnumOfUnreadSader(num);
-        audioRef.current.play()
+      socket.on(socketIoEvent.refetchSader, () => {
+        getNumberOfUnreadSader().then((num: any) => {
+          setnumOfUnreadSader(num);
+          audioRef.current.play();
+        });
       });
-
-    });
-    socket
-    .on(socketIoEvent.refetchWared+user.id, () => {
-      getNumberOfUnreadWared().then((num: any) => {
-        setnumOfUnreadWared(num);
+      socket.on(socketIoEvent.refetchWared + user.id, () => {
+        getNumberOfUnreadWared().then((num: any) => {
+          setnumOfUnreadWared(num);
+        });
       });
-    });
-    socket
-    .on(socketIoEvent.refetchSader+user.id, () => {
-      getNumberOfUnreadSader().then((num: any) => {
-        setnumOfUnreadSader(num);
+      socket.on(socketIoEvent.refetchSader + user.id, () => {
+        getNumberOfUnreadSader().then((num: any) => {
+          setnumOfUnreadSader(num);
+        });
       });
-    });
-  }, []);
+    }
+  }, [user]);
 
   return (
     <div className=" " key={token}>

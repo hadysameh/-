@@ -50,11 +50,11 @@ function SaderDetailsPreview() {
       window.location.reload();
 
     });
-    socket
-    .on(socketIoEvent.refetchSader+user.id, () => {
-      window.location.reload();
+    // socket
+    // .on(socketIoEvent.refetchSader+user.id, () => {
+    //   window.location.reload();
        
-    });
+    // });
      
       return () => {
       };

@@ -11,7 +11,7 @@ export default function SaderOverlayContent(props: IProps) {
     // fontSize: "30px",
   };
   let iframeWaredStyle = {
-    width: "70vw",
+    width: "90%",
     height: "100vh",
   };
   useEffect(() => {
