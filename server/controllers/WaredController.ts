@@ -7,9 +7,21 @@ class WaredController {
     req: Request,
     res: Response
   ): Promise<any> {
-    let id = req.query.id;
     try {
       let result = await WaredRepo.getNumberOfUnreadWared(req);
+      res.json(result);
+    } catch (error) {
+      console.log({ error });
+    }
+  }
+
+  public static async getAllWaredWithDeadLine(
+    req: Request,
+    res: Response
+  ): Promise<any> {
+    let id = req.query.id;
+    try {
+      let result = await WaredRepo.getAllWaredWithDeadLine(req);
       res.json(result);
     } catch (error) {
       console.log({ error });

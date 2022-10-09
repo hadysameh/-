@@ -17,6 +17,18 @@ import {
 // import dateFormat from 'date-format'
 
 class WaredRepo {
+  public static async getAllWaredWithDeadLine(req: Request) {
+    let whereParams: any = {};
+    let orderByArr: any = [];
+    whereParams["closedSader_id"] = null;
+    whereParams["known"] = 0;
+    let wareds = await Wared.findAll({
+      where: whereParams,
+      order: [["id", "DESC"]],
+    });
+    return wareds;
+  }
+
   public static async getNumberOfUnreadWared(req: Request) {
     let waredIncludeParams = [];
 
@@ -130,7 +142,7 @@ class WaredRepo {
   ): Promise<any> {
     let durationName = "get wared with params";
     // console.time(durationName);
-    const hasAccessToAllWared = isHasAccessToAllWared(req) 
+    const hasAccessToAllWared = isHasAccessToAllWared(req);
 
     const hasAccessToBranchWared = isHasAccessToBranchWared(req);
 
@@ -435,7 +447,7 @@ class WaredRepo {
               [Op.in]: branchesIdsArr,
             },
           },
-        }); 
+        });
 
         await WaredTrackingOfficers.destroy({
           where: {

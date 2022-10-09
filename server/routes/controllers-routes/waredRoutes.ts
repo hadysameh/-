@@ -12,6 +12,7 @@ const waredRouter = express.Router();
 
 // })
 waredRouter.get("/wared", isAuth, WaredController.getOne);
+waredRouter.get("/wared/waredwithdeadline", isAuth, WaredController.getAllWaredWithDeadLine);
 
 waredRouter.get(
   "/waredbox/getNumberOfUnreadWared",

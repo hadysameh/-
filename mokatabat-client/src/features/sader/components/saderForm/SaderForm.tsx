@@ -41,12 +41,29 @@ function SaderForm({
   const [selectedFile, setSelectedFile] = useState<any>();
   const [isFilePicked, setIsFilePicked] = useState(false);
 
+  const [mokatbatWithDeadLine, setMokatbatWithDeadLine] = useState<any>([]);
+  const [
+    selectedMokatbatWithDeadLineForSader,
+    setSelectedMokatbatWithDeadLineForSader,
+  ] = useState<any>([]);
+
+  const [
+    isSaderForMokatabaWithDeadLine,
+    setIsSaderForMokatabaWithDeadLine,
+  ] = useState<any>(false);
+
   useEffect(() => {
+
     axios.get("/api/saderoptions").then((res) => {
       setGehaat(res.data.gehaat);
       setBranchs(res.data.branches);
       setOfficers(res.data.officers);
     });
+
+    axios.get("/api/wared/waredwithdeadline").then((res) => {
+      setMokatbatWithDeadLine(res.data)
+    });
+
   }, []);
 
   useEffect(() => {
@@ -218,32 +235,6 @@ function SaderForm({
                           };
                         })}
                     />
-                    {/* <input
-                      required
-                      className="form-control fs-3"
-                      list="officersOptions"
-                      id="officersDataList"
-                      placeholder="Type to search..."
-                      value={selectedOfficer?.name}
-                      onChange={(e) => {
-                        let choosedOfficerName = e.target.value;
-                        let choosedOfficer: any = officers.find(
-                          (branch: any) => {
-                            return branch.name === choosedOfficerName;
-                          }
-                        );
-                        setSelectedOfficer(choosedOfficer);
-                      }}
-                    ></input>
-                    <datalist id="officersOptions">
-                      {officers.map((officer: any) => {
-                        return (
-                          <option key={officer.id + officer.name}>
-                            {officer.name}
-                          </option>
-                        );
-                      })}
-                    </datalist> */}
                   </>
                 )}
               </div>
@@ -274,7 +265,7 @@ function SaderForm({
               </select>
             </div>
           </div>
-          <div className="row">
+          {/* <div className="row">
             <div className="col-6">
               <div className="col-8">
                 <div className="mb-3">
@@ -293,7 +284,42 @@ function SaderForm({
                 </div>
               </div>
             </div>
+          </div> */}
+          <br />
+          <br />
+
+          <div className="row">
+            <div className="col-10">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="flexCheckDefault"
+                onChange={() => {
+                  setIsSaderForMokatabaWithDeadLine(
+                    !isSaderForMokatabaWithDeadLine
+                  );
+                }}
+                checked={isSaderForMokatabaWithDeadLine}
+              />
+              <label className="form-label">صادر مكاتبة وجوب رد</label>
+
+              {isSaderForMokatabaWithDeadLine && (
+                <MultiSelect
+                  options={mokatbatWithDeadLine.map((mokatba: any) => {
+                    return {
+                      label: mokatba.doc_num + "" + mokatba.subject,
+                      value: mokatba.id,
+                    };
+                  })}
+                  value={selectedMokatbatWithDeadLineForSader}
+                  onChange={setSelectedMokatbatWithDeadLineForSader}
+                  labelledBy="officers-select-label"
+                />
+              )}
+            </div>
           </div>
+          <br />
+          <br />
           <div className="row">
             <div className="col-10">
               <div>
@@ -360,7 +386,7 @@ function SaderForm({
                 ) {
                   return true;
                 }
-                 
+
                 return false;
               };
               if (isReqFieldsFilled()) {

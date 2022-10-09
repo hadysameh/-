@@ -46,7 +46,7 @@ function SearchBox(props: SearchFormProps) {
     setShowDaysBeforeExecutionFields,
   ] = useState<boolean>(true);
   const [defaultDaysBeforeExecution, setDefaultDaysBeforeExecution] = useState(
-    "7"
+    "0"
   );
 
   const getOptionNameById = useCallback((optionId: string, options: any[]) => {
