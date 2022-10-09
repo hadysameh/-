@@ -43,8 +43,8 @@ function BranchesAndOfficers(props: IProps) {
       let selectedBranches = props.mokatbaData.branches.map((branch: any) => {
         return { label: branch.name, value: branch.id };
       });
-      setSelectedEditedOfficers([...selectedOfficers]);
       setSelectedEditedBranches([...selectedBranches]);
+      setSelectedEditedOfficers([...selectedOfficers]);
     });
   };
   useEffect(() => {

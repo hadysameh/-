@@ -38,7 +38,7 @@ function BranchesSelect({
 
         {!isArrEmpty(branchesChoises) && (
           <div className="col-6">
-            <label className="form-label"> تعديل الأفرع المختصة </label>
+            <label className="form-label" id='branches-select-label' > تعديل الأفرع المختصة </label>
             {!isArrEmpty(branchesChoises) && (
               <MultiSelect
                 options={branchesChoises.map((branch: any) => {
@@ -46,7 +46,7 @@ function BranchesSelect({
                 })}
                 value={selectedEditedBranches}
                 onChange={setSelectedEditedBranches}
-                labelledBy="1"
+                labelledBy="branches-select-label"
               />
             )}
           </div>
