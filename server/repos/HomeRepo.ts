@@ -7,10 +7,17 @@ import addDaysToDate from "../utils/addDaysToDate";
 import { Request } from "express";
 import Branches from "../models/BranchesModel";
 import Officers from "../models/OfficersModel";
-
-const daysBeforeExec = 7;
+import Config from "../models/ConfigModel";
 
 class HomeRepo {
+  private static async getDaysBeforeExec() {
+    let config = await Config.findOne({
+      where: {
+        id: 1,
+      },
+    });
+    return config?.getDataValue("daysBeforeExecution");
+  }
   static async index(req: Request) {
     return new Promise(async (resolve: any, reject: any) => {
       const hasAccessToAllWared =
@@ -52,7 +59,7 @@ class HomeRepo {
       }
       let waredCount = await Wared.count({ include: waredIncludeParams });
       let saderCount = await Sader.count({ include: saderIncludeParams });
-
+      let daysBeforeExec = await this.getDaysBeforeExec();
       let redCircleCount = await Wared.count({
         include: waredIncludeParams,
         where: [

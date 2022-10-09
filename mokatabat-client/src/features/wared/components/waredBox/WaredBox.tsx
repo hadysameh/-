@@ -4,14 +4,14 @@ import { useEffect } from "react";
 import HorizontalSpinner from "../../../../components/HorizontalSpinner";
 import axios from "axios";
 import { useState } from "react";
-import { waredBoxType,socketIoEvent } from "../../../../types";
-import socket from '../../../../services/socket-io'
-import {selectUser} from '../../../user/stores/userSlice'
+import { waredBoxType, socketIoEvent } from "../../../../types";
+import socket from "../../../../services/socket-io";
+import { selectUser } from "../../../user/stores/userSlice";
 import { useSelector } from "react-redux";
 
 interface IProps {
-  /** 
-   * 
+  /**
+   *
    */
   waredBoxType: string;
 }
@@ -32,7 +32,8 @@ function WaredBox(props: IProps) {
   const [branchId, setBranchId] = useState("");
   const [officerId, setOfficerId] = useState<any>("");
   const [mokatbaDate, setMokatbaDate] = useState("");
-  const [DaysBeforeExecution, setDaysBeforeExecution] = useState("7");
+  //TODO this must be fetched from server
+  const [DaysBeforeExecution, setDaysBeforeExecution] = useState("0");
   const [isShowSpinner, setIsShowSpinner] = useState(true);
   /*
   0 : بدون حد ادني او اقصى للتنفيذ
@@ -114,6 +115,12 @@ function WaredBox(props: IProps) {
         }
       });
   };
+  const fetchDaysBeforeExecution = () => {
+    axios.get("/api/waredoptions/getDaysBeforeExecution").then((res: any) => {
+      console.log({ res });
+      setDaysBeforeExecution(res.data);
+    });
+  };
   /**
    *if it's a red circle/green Page default params must have ExcutionTime params
    *
@@ -157,25 +164,25 @@ function WaredBox(props: IProps) {
       setWaredBoxTypeTitleColor("green");
       setWithinExcutionTimeType("2");
     }
+    fetchDaysBeforeExecution();
   }, []);
   useEffect(() => {
-    fetchRowsWithParams();
-  }, [pageNum, numOfRecords]);
+    if (DaysBeforeExecution === "0") {
+      return;
+    } else {
+      fetchRowsWithParams();
+    }
+  }, [pageNum, numOfRecords, DaysBeforeExecution]);
 
   useEffect(() => {
-    socket
-      .on(socketIoEvent.refetchWared, () => {
-        console.log('msg from refetchWaredAndSaderUnreadNumbers')
+    socket.on(socketIoEvent.refetchWared, () => {
 
-        fetchRowsWithParams();
-      });
-    socket
-      .on(socketIoEvent.refetchWared+user.id, () => {
-        console.log('msg from refetchWaredAndSaderUnreadNumbersNoSound')
-        fetchRowsWithParams();
-      });
-    return () => {
-    };
+      fetchRowsWithParams();
+    });
+    socket.on(socketIoEvent.refetchWared + user.id, () => {
+      fetchRowsWithParams();
+    });
+    return () => {};
   }, []);
 
   return (
@@ -214,7 +221,6 @@ function WaredBox(props: IProps) {
           waredBoxType={props.waredBoxType}
         />
         <span className="fs-3">رقم الصفحة :{pageNum}</span>
-        
 
         <div className="fs-4">
           <label htmlFor="">عدد المكاتبات للصفحة : </label>
@@ -234,8 +240,10 @@ function WaredBox(props: IProps) {
           <label className="fs-4">مكاتبات تم الإطلاع عليها بالكامل</label>
           <div
             className="bg-secondary mx-2"
-            style={{ width: "20px",borderRadius:'5px' }}
-          >.</div>
+            style={{ width: "20px", borderRadius: "5px" }}
+          >
+            .
+          </div>
         </div>
         <hr />
 
@@ -259,8 +267,12 @@ function WaredBox(props: IProps) {
                 <th scope="col" style={{ width: "15%" }}>
                   الافرع المختصة
                 </th>
-                <th scope="col"style={{ width: "25%" }}>جهة الوارد</th>
-                <th scope="col" style={{ width: "10%" }}>تاريخ التنفيذ</th>
+                <th scope="col" style={{ width: "25%" }}>
+                  جهة الوارد
+                </th>
+                <th scope="col" style={{ width: "10%" }}>
+                  تاريخ التنفيذ
+                </th>
               </tr>
             </thead>
             <tbody>

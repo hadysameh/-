@@ -6,13 +6,13 @@ import isArrEmpty from "../../../../../../utils/isArrEmpty";
 interface IProps {
   selectedOfficers: any;
   selectedEditedOfficers: any;
-  setselectedEditedOfficers: any;
+  setSelectedEditedOfficers: any;
   officersChoices: any;
 }
 function OfficersSelect({
   selectedOfficers,
   selectedEditedOfficers,
-  setselectedEditedOfficers,
+  setSelectedEditedOfficers,
   officersChoices,
 }: IProps) {
   // const [selectedEditedOfficers, setselectedEditedOfficers] = useState([]);
@@ -40,17 +40,18 @@ function OfficersSelect({
             <label className="form-label">تعديل الضباط المختصين</label>
             {!isArrEmpty(officersChoices) && (
               <MultiSelect
-                key={selectedEditedOfficers}
                 options={officersChoices.map((officer: any) => {
                   return { label: officer.name, value: officer.id };
                 })}
                 value={selectedEditedOfficers}
-                onChange={setselectedEditedOfficers}
-                labelledBy="Select"
+                onChange={setSelectedEditedOfficers}
+                closeOnChangedValue={false}
+                labelledBy="2"
               />
             )}
           </div>
         )}
+
       </div>
     </>
   );

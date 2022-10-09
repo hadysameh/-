@@ -6,7 +6,7 @@ import isArrEmpty from "../../../../../../utils/isArrEmpty";
 interface IProps {
   selectedBranches: any;
   selectedEditedBranches: any;
-  setSelectedEditedBranches:any;
+  setSelectedEditedBranches: any;
   branchesChoises: any;
 }
 function BranchesSelect({
@@ -36,19 +36,21 @@ function BranchesSelect({
           </div>
         </div>
 
-        {!isArrEmpty(branchesChoises)&&<div className="col-6">
-          <label className="form-label"> تعديل الأفرع المختصة </label>
-          {!isArrEmpty(branchesChoises) && (
-            <MultiSelect
-              options={branchesChoises.map((branch: any) => {
-                return { label: branch.name, value: branch.id };
-              })}
-              value={selectedEditedBranches}
-              onChange={setSelectedEditedBranches}
-              labelledBy="Select"
-            />
-          )}
-        </div>}
+        {!isArrEmpty(branchesChoises) && (
+          <div className="col-6">
+            <label className="form-label"> تعديل الأفرع المختصة </label>
+            {!isArrEmpty(branchesChoises) && (
+              <MultiSelect
+                options={branchesChoises.map((branch: any) => {
+                  return { label: branch.name, value: branch.id };
+                })}
+                value={selectedEditedBranches}
+                onChange={setSelectedEditedBranches}
+                labelledBy="1"
+              />
+            )}
+          </div>
+        )}
       </div>
     </>
   );

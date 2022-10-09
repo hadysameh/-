@@ -5,6 +5,20 @@ import Branches from "../models/BranchesModel";
 import Officers from "../models/OfficersModel";
 import { premissions } from "../types";
 export default class WaredOptionsController {
+  static async getDaysBeforeExecution(req: Request, res: Response) {
+    let numOfDaysBeforeExecution = await WaredOptionsController.getNumDaysBeforeExecution();
+    res.json(numOfDaysBeforeExecution);
+  }
+
+  private static async getNumDaysBeforeExecution() {
+    let config = await Config.findOne({
+      where: {
+        id: 1,
+      },
+    });
+    return config?.getDataValue("daysBeforeExecution");
+  }
+
   static async get(req: Request, res: Response) {
     const getGehaat = async () => {
       let gehaat = await Gehaa.findAll();
@@ -64,21 +78,14 @@ export default class WaredOptionsController {
 
       return officers;
     };
-    const getDaysBeforeExecution = async () => {
-      let config = await Config.findOne({
-        where: {
-          id: 1,
-        },
-      });
-      return config?.getDataValue("dateOfLaunch");
-    };
+
     const getAllOptions = (): Promise<any> => {
       return new Promise((resolve: any, reject: any) => {
         Promise.all([
           getGehaat(),
           getBranches(),
           getOfficers(),
-          getDaysBeforeExecution(),
+          WaredOptionsController.getNumDaysBeforeExecution(),
         ])
           .then((values) => {
             let result = {

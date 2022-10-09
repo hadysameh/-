@@ -20,7 +20,7 @@ function BranchesAndOfficers(props: IProps) {
   //   hasAccessToEditWaredOfficers: premisions.hasAccessToEditWaredOfficers(),
   // });
   const [selectedEditedBranches, setSelectedEditedBranches] = useState<any>([]);
-  const [selectedEditedOfficers, setselectedEditedOfficers] = useState<any>([]);
+  const [selectedEditedOfficers, setSelectedEditedOfficers] = useState<any>([]);
 
   const [branchesChoises, setBranchesChoices] = useState([]);
   const [officersChoices, setOfficersChoices] = useState([]);
@@ -43,7 +43,7 @@ function BranchesAndOfficers(props: IProps) {
       let selectedBranches = props.mokatbaData.branches.map((branch: any) => {
         return { label: branch.name, value: branch.id };
       });
-      setselectedEditedOfficers([...selectedOfficers]);
+      setSelectedEditedOfficers([...selectedOfficers]);
       setSelectedEditedBranches([...selectedBranches]);
     });
   };
@@ -52,17 +52,7 @@ function BranchesAndOfficers(props: IProps) {
   }, []);
 
   useEffect(() => {
-    // socket
-    // .on(socketIoEvent.refetchSader, () => {
-      
-    //     getAndSetWaredOptions();
-
-    // });
-    // socket
-    // .on(socketIoEvent.refetchWared+user.id, () => {
-      
-    //     getAndSetWaredOptions();
-    // });
+    
     return () => {
       // socket.off("refetchWaredAndSaderUnreadNumbers");
     };
@@ -106,7 +96,7 @@ function BranchesAndOfficers(props: IProps) {
           })}
           selectedOfficers={props.mokatbaData.Wared_Officers}
           selectedEditedOfficers={selectedEditedOfficers}
-          setselectedEditedOfficers={setselectedEditedOfficers}
+          setSelectedEditedOfficers={setSelectedEditedOfficers}
         />
         {(premisions.hasAccessToEditWaredBranchs() ||
           premisions.hasAccessToEditWaredOfficers()) && (
