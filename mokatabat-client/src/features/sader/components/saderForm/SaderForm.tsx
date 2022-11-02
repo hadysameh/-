@@ -53,7 +53,6 @@ function SaderForm({
   ] = useState<any>(false);
 
   useEffect(() => {
-
     axios.get("/api/saderoptions").then((res) => {
       setGehaat(res.data.gehaat);
       setBranchs(res.data.branches);
@@ -61,9 +60,10 @@ function SaderForm({
     });
 
     axios.get("/api/wared/waredwithdeadline").then((res) => {
-      setMokatbatWithDeadLine(res.data)
-    });
+      // setMokatbatWithDeadLine([...mokatbatWithDeadLine,...res.data]);
 
+      setMokatbatWithDeadLine((mokatbatWithDeadLine:any)=>[...res.data,...mokatbatWithDeadLine]);
+    });
   }, []);
 
   useEffect(() => {
@@ -73,6 +73,7 @@ function SaderForm({
           params: { id: saderIdToEdit },
         })
         .then((res) => {
+
           let { data } = res;
           setDocNum(data.doc_num);
           setMokatbaDate(data.doc_date);
@@ -86,10 +87,22 @@ function SaderForm({
           );
           setSelectedBranch(data.branch);
           setSelectedOfficer(data.SaderOfficer);
+          let mappedClosedWaredBySader = data.waredClosedSader.map(
+            (closedWaredBySader: any) => ({
+              label: closedWaredBySader.subject,
+              value: closedWaredBySader.id,
+            })
+          );
+          setSelectedMokatbatWithDeadLineForSader(mappedClosedWaredBySader);
+          setIsSaderForMokatabaWithDeadLine(!!data.waredClosedSader?.length);
+          setMokatbatWithDeadLine((mokatbatWithDeadLine:any)=>[...data.waredClosedSader,...mokatbatWithDeadLine])
         });
     }
   }, []);
 
+  useEffect(() => {
+    console.log({ selectedMokatbatWithDeadLineForSader });
+  }, [selectedMokatbatWithDeadLineForSader]);
   return (
     <div className="container">
       <div className="border-start border-end p-4">
@@ -265,27 +278,7 @@ function SaderForm({
               </select>
             </div>
           </div>
-          {/* <div className="row">
-            <div className="col-6">
-              <div className="col-8">
-                <div className="mb-3">
-                  <label className="form-label">
-                    متصلة بوراد قم : (اختياري)
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control fs-3"
-                    id="exampleInputEmail1"
-                    onChange={(e) => {
-                      setLastWaredNum(e.target.value);
-                    }}
-                    value={lastWaredNum}
-                  />
-                </div>
-              </div>
-            </div>
-          </div> */}
-          <br />
+
           <br />
 
           <div className="row">
@@ -302,23 +295,41 @@ function SaderForm({
                 checked={isSaderForMokatabaWithDeadLine}
               />
               <label className="form-label">صادر مكاتبة وجوب رد</label>
+              {/* {selectedMokatbatWithDeadLineForSader.map((selectedMokatbaWithDeadLineForSader:any)=>(
 
+              ))} */}
               {isSaderForMokatabaWithDeadLine && (
-                <MultiSelect
-                  options={mokatbatWithDeadLine.map((mokatba: any) => {
-                    return {
-                      label: mokatba.doc_num + "" + mokatba.subject,
-                      value: mokatba.id,
-                    };
-                  })}
-                  value={selectedMokatbatWithDeadLineForSader}
-                  onChange={setSelectedMokatbatWithDeadLineForSader}
-                  labelledBy="officers-select-label"
-                />
+                <>
+                  <ul className="mr-2">
+                    {selectedMokatbatWithDeadLineForSader.map(
+                      (selectedMokatbaWithDeadLineForSader: any) => (
+                        <li key={selectedMokatbaWithDeadLineForSader.value}>
+                          {selectedMokatbaWithDeadLineForSader.label}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                  <MultiSelect
+                    options={mokatbatWithDeadLine.map((mokatba: any) => {
+                      console.log({mokatbatWithDeadLine})
+                      return {
+                        label:
+                          mokatba.doc_num +
+                          "----" +
+                          mokatba.subject +
+                          "----" +
+                          mokatba?.gehaa?.name,
+                        value: mokatba.id,
+                      };
+                    })}
+                    value={selectedMokatbatWithDeadLineForSader}
+                    onChange={setSelectedMokatbatWithDeadLineForSader}
+                    labelledBy="officers-select-label"
+                  />
+                </>
               )}
             </div>
           </div>
-          <br />
           <br />
           <div className="row">
             <div className="col-10">
@@ -332,10 +343,8 @@ function SaderForm({
                   onChange={(e) => {
                     if (e.target.files) {
                       setSelectedFile(e.target.files[0]);
-                      // console.log({ isFilePicked });
                       setIsFilePicked(false);
                       if (e.target.files[0]) {
-                        // console.log({ file: e.target.files[0] });
                         setIsFilePicked(true);
                       }
                     }
@@ -399,6 +408,10 @@ function SaderForm({
                 formData.append("doc_date", mokatbaDate);
                 formData.append("subject", subject);
                 formData.append("lastWaredNum", lastWaredNum);
+                formData.append(
+                  "selectedMokatbatWithDeadLineForSader",
+                  JSON.stringify(selectedMokatbatWithDeadLineForSader)
+                );
                 formData.append("gehaat", JSON.stringify(selectedGehaat));
                 formData.append("branch_id", selectedBranch.id);
                 formData.append("officer_id", selectedOfficer.id);

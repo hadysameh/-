@@ -5,14 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 import CircleSpinner from "../../components/CircleSpinner";
 import HasAccessToShowComponent from "../../middlewares/componentsGaurds/HasAccessToShowComponent";
 import * as premissions from "../../utils/premissions";
-import socket from '../../services/socket-io'
-import {socketIoEvent} from '../../types'
-import {selectUser } from '../../features/user/stores/userSlice'
-import {useSelector} from 'react-redux'
+import socket from "../../services/socket-io";
+import { socketIoEvent } from "../../types";
+import { selectUser } from "../../features/user/stores/userSlice";
+import { useSelector } from "react-redux";
 
 function SaderDetailsPreview() {
   let navigate = useNavigate();
-  const user = useSelector(selectUser)
+  const user = useSelector(selectUser);
 
   let { saderId } = useParams();
   const [saderData, setSaderData] = useState<any>({});
@@ -25,48 +25,42 @@ function SaderDetailsPreview() {
       });
   }, []);
 
-  const getAndSetSaderData =()=>{
-    axios
-    .get("/api/onesader", { params: { id: saderId } })
-    .then((res) => {
-      // console.log({ data: res.data });
+  const getAndSetSaderData = () => {
+    axios.get("/api/onesader", { params: { id: saderId } }).then((res) => {
+      console.log({ data: res.data });
       setSaderData(res.data);
     });
-  }
+  };
   useEffect(() => {
     axios
       .post("/api/sadertrackingofficers/", {
         saderId,
       })
       .then((res) => console.log(res));
-   
-      getAndSetSaderData()
+
+    getAndSetSaderData();
   }, []);
 
   useEffect(() => {
-    socket
-    .on(socketIoEvent.refetchSader, () => {
-       
+    socket.on(socketIoEvent.refetchSader, () => {
       window.location.reload();
-
     });
     // socket
     // .on(socketIoEvent.refetchSader+user.id, () => {
     //   window.location.reload();
-       
+
     // });
-     
-      return () => {
-      };
+
+    return () => {};
   }, []);
-  
-useEffect(() => {
-  const controller = new AbortController();
-  return () => {
-    controller.abort();
-  };
-  // cancel the request
-}, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    return () => {
+      controller.abort();
+    };
+    // cancel the request
+  }, []);
   return (
     <>
       <div className="container fs-3 ">
@@ -154,13 +148,21 @@ useEffect(() => {
               <div className="">
                 متصلة بوراد:
                 <span className="px-3 text-secondary">
-                  {saderData.wared ? (
-                    <a href={`/wared/${saderData?.wared?.id}`} target="blank">
-                      {saderData?.wared?.doc_num}
-                    </a>
-                  ) : (
-                    "لا يوجد"
-                  )}
+                  {saderData.waredClosedSader
+                    ? saderData?.waredClosedSader?.map(
+                        (waredClosedSaderElement: any) => (
+                          <div>
+                            {" "}
+                            <a
+                              href={`/wared/${waredClosedSaderElement?.id}`}
+                              target="blank"
+                            >
+                              {waredClosedSaderElement.doc_num}
+                            </a>
+                          </div>
+                        )
+                      )
+                    : "لا يوجد"}
                 </span>
               </div>
             </div>
@@ -201,7 +203,7 @@ useEffect(() => {
                     <a
                       href="#"
                       onClick={(e) => {
-                        e.preventDefault()
+                        e.preventDefault();
                         setIsConfirmDeleteShown(true);
                       }}
                       target="blank"
@@ -218,7 +220,7 @@ useEffect(() => {
                       <a
                         href="#"
                         onClick={(e) => {
-                          e.preventDefault()
+                          e.preventDefault();
                           deleteSader();
                         }}
                         target="blank"
@@ -230,7 +232,7 @@ useEffect(() => {
                       <a
                         href="#"
                         onClick={(e) => {
-                          e.preventDefault()
+                          e.preventDefault();
                           setIsConfirmDeleteShown(false);
                         }}
                         target="blank"

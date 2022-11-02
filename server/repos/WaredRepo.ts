@@ -25,6 +25,7 @@ class WaredRepo {
     let wareds = await Wared.findAll({
       where: whereParams,
       order: [["id", "DESC"]],
+      include: [Gehaa],
     });
     return wareds;
   }

@@ -17,7 +17,7 @@ function SaderBox() {
   const [searchPageNum, setSearchPageNum] = useState<any>(1);
 
   const [docNum, setDocNum] = useState("");
-  const [lastWaredNum, setLastWaredNum] = useState("");
+  const [closedWaredDocNum, setClosedWaredDocNum] = useState("");
   const [gehaaId, setGehaaId] = useState("");
   const [subject, setsubject] = useState("");
   const [branchId, setBranchId] = useState("");
@@ -39,7 +39,7 @@ function SaderBox() {
         params: {
           docNum,
           gehaaId,
-          lastWaredNum,
+          closedWaredDocNum: closedWaredDocNum,
           subject,
           branchId,
           officerId,
@@ -74,7 +74,7 @@ function SaderBox() {
         params: {
           docNum,
           gehaaId,
-          lastWaredNum,
+          closedWaredDocNum: closedWaredDocNum,
           subject,
           branchId,
           officerId,
@@ -158,8 +158,8 @@ function SaderBox() {
         officerId={officerId}
         setOfficerId={setOfficerId}
         mokatbaDate={mokatbaDate}
-        lastWaredId={lastWaredNum}
-        setLastWaredNum={setLastWaredNum}
+        closedWaredDocNum={closedWaredDocNum}
+        setClosedWaredDocNum={setClosedWaredDocNum}
         setMokatbaDate={setMokatbaDate}
         fetchSearchResults={fetchSearchResults}
         fetchRowsWithNoParams={fetchRowsWithNoParams}

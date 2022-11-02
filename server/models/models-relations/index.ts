@@ -25,15 +25,17 @@ Wared.belongsTo(Gehaa, {
   foreignKey: "gehaa_id",
   //constraints: false,
 });
-Wared.belongsTo(Sader, {
-  foreignKey: "lastSader_id",
-  //constraints: false,
-});
-Wared.belongsTo(Sader, {
-  foreignKey: "closedSader_id",
-  onDelete: "CASCADE",
-  //constraints: false,
-});
+// Wared.belongsTo(Sader, {
+//   as: "wared_lastSader",
+//   foreignKey: "lastSader_id",
+//   //constraints: false,
+// });
+// Wared.belongsTo(Sader, {
+//   as: "waredClosedSader",
+//   foreignKey: "closedSader_id",
+//   onDelete: "CASCADE",
+// });
+
 Wared.belongsToMany(Branches, {
   through: Wared_Branches,
   foreignKey: "wared_id", // replaces `productId`
@@ -76,8 +78,13 @@ Wared.belongsToMany(Officers, {
 
 Sader.belongsTo(Wared, {
   foreignKey: "lastWared_id",
+  as:'lastWared'
   //constraints: false,
 });
+Sader.hasMany(Wared,{
+  foreignKey: "closedSader_id",
+  as:'waredClosedSader'
+})
 Sader.belongsTo(Officers, {
   foreignKey: "officer_id",
   as: "SaderOfficer",

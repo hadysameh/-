@@ -17,15 +17,47 @@ import { premissions } from "../types";
 
 import Sadertrackingofficers from "../models/SadertrackingofficersModel";
 import Sader_Gehaa from "../models/Sader_GehaaModel";
-import { isHasAccessToAllSader, isHasAccessToBranchSader, isHasAccessToBranchWared } from "./helpers/premissionsHelpers";
+import {
+  isHasAccessToAllSader,
+  isHasAccessToBranchSader,
+  isHasAccessToBranchWared,
+} from "./helpers/premissionsHelpers";
+import { json } from "body-parser";
+import { Json } from "sequelize/types/utils";
 export default class SaderRepo {
+  private static async reopenWaredThatWasClosedByTHisSader(saderId: string) {
+    await Wared.update(
+      { known: 0, closedSader_id: null },
+      { where: { known: 1, closedSader_id: saderId } }
+    );
+  }
+  private static async closeOpenedWared(
+    waredsInfo: { value: string; label: string }[],
+    saderId: string
+  ) {
+    if (typeof waredsInfo !== "object") {
+      waredsInfo = JSON.parse(waredsInfo);
+    }
+    // console.log({waredsInfo})
+    for (const key in waredsInfo) {
+      const waredInfo = waredsInfo[key];
+      console.log({ waredInfo, id: waredInfo.value });
+
+      await Wared.update(
+        { known: 1, closedSader_id: saderId },
+        { where: { id: waredInfo.value } }
+      );
+      console.log("finish closeOpenedWared");
+    }
+  }
+
   public static async getNumberOfUnreadSader(req: Request) {
     let saderIncludeParams = [];
 
     let config = await Config.findOne();
-    const hasAccessToAllSader = isHasAccessToAllSader(req) 
+    const hasAccessToAllSader = isHasAccessToAllSader(req);
 
-    const hasAccessToBranchWared =isHasAccessToBranchWared(req) 
+    const hasAccessToBranchWared = isHasAccessToBranchWared(req);
 
     if (!hasAccessToAllSader) {
       if (hasAccessToBranchWared) {
@@ -61,11 +93,12 @@ export default class SaderRepo {
           as: "Sadertrackingofficers",
         },
       ],
-    }); 
+    });
     return numberOfSaderAfterLaunchForOfficer - numberOfreadSader;
   }
 
   public static async getById(id: any): Promise<any> {
+    console.log({ Wared: JSON.stringify(Wared) });
     let mokatba = await Sader.findOne({
       where: {
         id,
@@ -75,13 +108,18 @@ export default class SaderRepo {
           model: Officers,
           as: "SaderOfficer",
         },
-        Wared,
+        {
+          model: Wared,
+          as: "waredClosedSader",
+          // where: { closedSader_id: id },
+        },
         Branches,
         Gehaa,
       ],
     });
     return mokatba;
   }
+
   public static async getSearchOptions(
     searchParams: any | null = null
   ): Promise<any> {
@@ -112,15 +150,16 @@ export default class SaderRepo {
         });
     });
   }
+
   public static async getWithParams(
     searchParams: any,
     req: Request
   ): Promise<any> {
-    let durationName = 'get sader with params'
+    let durationName = "get sader with params";
     // console.time(durationName)
-    const hasAccessToAllSader = isHasAccessToAllSader(req) 
+    const hasAccessToAllSader = isHasAccessToAllSader(req);
 
-    const hasAccessToBranchSader =isHasAccessToBranchSader(req)
+    const hasAccessToBranchSader = isHasAccessToBranchSader(req);
     const todaysDate = getTodaysDate();
     let whereParams: any = {};
     let includeParams: any = [];
@@ -150,10 +189,11 @@ export default class SaderRepo {
     if (searchParams.mokatbaDate) {
       whereParams["doc_date"] = `${searchParams.mokatbaDate}`;
     }
-    if (searchParams.lastWaredNum) {
+    if (searchParams.closedWaredDocNum) {
       includeParams.push({
         model: Wared,
-        where: { doc_num: searchParams.lastWaredNum },
+        as: "lastWared",
+        where: { doc_num: searchParams.closedWaredDocNum },
       });
       // whereParams["branch_id"] = `${searchParams.branchId}`;
     }
@@ -186,7 +226,16 @@ export default class SaderRepo {
           as: "Sadertrackingofficers",
         },
         Branches,
-        Wared,
+        {
+          model: Wared,
+          as: "waredClosedSader",
+          // as: "Wared_lastSader_id",
+          // where: { closedSader_id: req.user.officerId },
+        },
+        // {
+        //   model: Wared,
+        //   as: "Wared_closedSader_id",
+        // },
         Gehaa,
         ...includeParams,
       ],
@@ -195,7 +244,7 @@ export default class SaderRepo {
       offset: Number(searchParams.numOfRecords) * Number(searchParams.pageNum),
     });
     // console.timeEnd(durationName)
-
+    // console.log({ saders });
     return saders;
   }
 
@@ -209,9 +258,12 @@ export default class SaderRepo {
       try {
         // console.log({ selectedGehaat: reqBodyData.gehaat });
         let selectedGehaat = JSON.parse(reqBodyData.gehaat);
+
         let lastWared = await Wared.findOne({
           where: {
-            doc_num: reqBodyData.lastWaredNum ? reqBodyData.lastWaredNum : "f",
+            doc_num: reqBodyData.closedWaredDocNum
+              ? reqBodyData.closedWaredDocNum
+              : "f",
           },
         }).catch((err) => {
           return null;
@@ -238,7 +290,12 @@ export default class SaderRepo {
           register_user: "1",
           attach: fileLocationPath,
         });
-
+        if (reqBodyData["selectedMokatbatWithDeadLineForSader"]) {
+          await this.closeOpenedWared(
+            reqBodyData["selectedMokatbatWithDeadLineForSader"],
+            storedSader.getDataValue("id")
+          );
+        }
         let gehaatIdsObjs: { id: any }[] = selectedGehaat.map((branch: any) => {
           return { id: branch.value };
         });
@@ -269,22 +326,23 @@ export default class SaderRepo {
       try {
         // console.log({reqBodyData});
         let selectedGehaat = JSON.parse(reqBodyData.gehaat);
+
         let lastWared = await Wared.findOne({
           where: {
-            doc_num: reqBodyData.lastWaredNum,
+            doc_num: reqBodyData.closedWaredDocNum,
           },
         }).catch((err) => {
           return null;
         });
         let lastWared_id = lastWared ? lastWared.getDataValue("id") : null;
-        let assistantBranch = await Branches.findOne({
-          where: {
-            id: reqBodyData.branch_id,
-          },
-        }).catch((err) => {
-          return null;
-        });
-        let assistantBranchId = assistantBranch?.getDataValue("id");
+        // let assistantBranch = await Branches.findOne({
+        //   where: {
+        //     id: reqBodyData.branch_id,
+        //   },
+        // }).catch((err) => {
+        //   return null;
+        // });
+        // let assistantBranchId = assistantBranch?.getDataValue("id");
         let modifiedSaderData: any = {
           doc_num: reqBodyData.doc_num,
           doc_date: reqBodyData.doc_date,
@@ -303,11 +361,20 @@ export default class SaderRepo {
         let modifiedSader = await Sader.update(modifiedSaderData, {
           where: { id: reqBodyData["saderId"] },
         });
+        if (reqBodyData["selectedMokatbatWithDeadLineForSader"]) {
+          await this.reopenWaredThatWasClosedByTHisSader(
+            reqBodyData["saderId"]
+          );
+          await this.closeOpenedWared(
+            reqBodyData["selectedMokatbatWithDeadLineForSader"],
+            reqBodyData["saderId"]
+          );
+        }
         await Sadertrackingofficers.destroy({
           where: {
             sader_id: reqBodyData["saderId"],
           },
-        }); 
+        });
         let gehaatIdsObjs: { id: any }[] = selectedGehaat.map((branch: any) => {
           return { id: branch.value };
         });
@@ -337,7 +404,7 @@ export default class SaderRepo {
   public static async delete(req: Request) {
     return new Promise((resolve: any, reject: any) => {
       let saderId = req.body.saderId;
-      console.log({ saderId: req.body.saderId });
+      // console.log({ saderId: req.body.saderId });
 
       Sader.destroy({
         where: {

@@ -11,18 +11,18 @@ import cookieParser from "cookie-parser";
 import { router, adminJs } from "./AdminJs";
 import { Server } from "socket.io";
 require("dotenv").config();
-sequelize
-    .sync()
-    .then(() => {
-     console.log("sequelize is in sync with db");
-   })
-    .catch((err) => console.log({ err }));
 // sequelize
-//   .authenticate()
-//   .then(() => {
-//     console.log("sequelize is authenticated with db");
-//   })
-//   .catch((err) => console.log({ err }));
+//     .sync()
+//     .then(() => {
+//      console.log("sequelize is in sync with db");
+//    }) 
+//     .catch((err) => console.log({ err }));
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("sequelize is authenticated with db");
+  })
+  .catch((err) => console.log({ err }));
 const app: Express = express();
 const server = require("http").createServer(app);
 const io = new Server(server, {

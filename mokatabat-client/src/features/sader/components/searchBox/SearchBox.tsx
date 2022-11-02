@@ -19,8 +19,8 @@ interface SearchFormProps {
   officerId: any;
   mokatbaDate: any;
   setMokatbaDate: any;
-  lastWaredId: any;
-  setLastWaredNum: any;
+  closedWaredDocNum: any;
+  setClosedWaredDocNum: any;
 }
 function SearchBox(props: SearchFormProps) {
   const [isSearched, setIsSearched] = useState(false);
@@ -38,7 +38,7 @@ function SearchBox(props: SearchFormProps) {
     props.setBranchId("");
     props.setOfficerId("");
     props.setMokatbaDate("");
-    props.setLastWaredNum("");
+    props.setClosedWaredDocNum("");
     props.fetchRowsWithNoParams();
     setSelectedOfficerName("");
     setSelectedBranchName("");
@@ -272,9 +272,9 @@ function SearchBox(props: SearchFormProps) {
               className="form-control fs-4"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
-              value={props.lastWaredId}
+              value={props.closedWaredDocNum}
               onChange={(e) => {
-                props.setLastWaredNum(e.target.value);
+                props.setClosedWaredDocNum(e.target.value);
               }}
             />
           </div>
