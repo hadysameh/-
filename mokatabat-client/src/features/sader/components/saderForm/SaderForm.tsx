@@ -234,13 +234,6 @@ function SaderForm({
                         setSelectedOfficer(choosedOfficer);
                       }}
                       options={officers
-                        .filter((officer: any) => {
-                          // console.log(
-                          //   officer.branches_id,
-                          //   selectedBranch.value
-                          // );
-                          return officer.branches_id === selectedBranch.id;
-                        })
                         .map((branch: any) => {
                           return {
                             label: branch.name,

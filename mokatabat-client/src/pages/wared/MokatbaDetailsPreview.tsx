@@ -42,7 +42,7 @@ function MokatbaDetailsPreview() {
   }, []);
   const getAndSetMokatbaData = () => {
     axios.get("/api/wared/", { params: { id: mokatbaId } }).then((res) => {
-      console.log({mokatbadata:res})
+      console.log({ mokatbadata: res });
       setMokatbaData(res.data);
     });
   };
@@ -56,9 +56,11 @@ function MokatbaDetailsPreview() {
   }, []);
 
   useEffect(() => {
-    socket.on(socketIoEvent.refetchWared, () => {
-      window.location.reload();
-    });
+    if (user) {
+      socket.on(socketIoEvent.refetchWared, () => {
+        window.location.reload();
+      });
+    }
     // socket.on(socketIoEvent.refetchWared + user.id, () => {
     //   window.location.reload();
     // });
@@ -154,11 +156,15 @@ function MokatbaDetailsPreview() {
             <div className="row align-items-start pt-5">
               <div className="">
                 رقم صادر اغلاق المكاتبة
-                <span className="px-3 text-secondary">
+                <a
+                  className="px-3 text-secondary"
+                  target={"_blank"}
+                  href={`/sader/${mokatbaData?.closedSader_id}`}
+                >
                   {mokatbaData?.closedSader_id
                     ? mokatbaData.closedSader_id
                     : "لايوجد"}
-                </span>
+                </a>
               </div>
             </div>
             <div className="row align-items-start pt-5">

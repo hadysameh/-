@@ -134,12 +134,14 @@ function SaderBox() {
     // cancel the request
   }, []);
   useEffect(() => {
-    socket.on(socketIoEvent.refetchSader, () => {
-      fetchRowsWithParams();
-    });
-    socket.on(socketIoEvent.refetchSader + user.id, () => {
-      fetchRowsWithParams();
-    });
+    if (user) {
+      socket.on(socketIoEvent.refetchSader, () => {
+        fetchRowsWithParams();
+      });
+      socket.on(socketIoEvent.refetchSader + user.id, () => {
+        fetchRowsWithParams();
+      });
+    }
 
     return () => {};
   }, []);

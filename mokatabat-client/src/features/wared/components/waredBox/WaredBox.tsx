@@ -175,14 +175,14 @@ function WaredBox(props: IProps) {
   }, [pageNum, numOfRecords, DaysBeforeExecution]);
 
   useEffect(() => {
-    socket.on(socketIoEvent.refetchWared, () => {
-
-      fetchRowsWithParams();
-    });
-    socket.on(socketIoEvent.refetchWared + user.id, () => {
-      fetchRowsWithParams();
-    });
-    return () => {};
+    if (user) {
+      socket.on(socketIoEvent.refetchWared, () => {
+        fetchRowsWithParams();
+      });
+      socket.on(socketIoEvent.refetchWared + user.id, () => {
+        fetchRowsWithParams();
+      });
+    }
   }, []);
 
   return (

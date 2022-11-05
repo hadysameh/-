@@ -42,9 +42,11 @@ function SaderDetailsPreview() {
   }, []);
 
   useEffect(() => {
-    socket.on(socketIoEvent.refetchSader, () => {
-      window.location.reload();
-    });
+    if (user) {
+      socket.on(socketIoEvent.refetchSader, () => {
+        window.location.reload();
+      });
+    }
     // socket
     // .on(socketIoEvent.refetchSader+user.id, () => {
     //   window.location.reload();
