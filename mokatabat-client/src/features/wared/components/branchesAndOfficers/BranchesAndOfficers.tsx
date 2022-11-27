@@ -14,11 +14,7 @@ interface IProps {
 
 function BranchesAndOfficers(props: IProps) {
   const user = useSelector(selectUser)
-  let navigate = useNavigate();
-  // console.log({
-  //   hasAccessToEditWaredBranchs: premisions.hasAccessToEditWaredBranchs(),
-  //   hasAccessToEditWaredOfficers: premisions.hasAccessToEditWaredOfficers(),
-  // });
+  let navigate = useNavigate(); 
   const [selectedEditedBranches, setSelectedEditedBranches] = useState<any>([]);
   const [selectedEditedOfficers, setSelectedEditedOfficers] = useState<any>([]);
 

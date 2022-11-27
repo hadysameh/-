@@ -66,8 +66,9 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
           setLastWaredNum(data.lastWared_id);
           setType(data.type);
           setSelectedGehaa(data.gehaa);
-          if (data.deadline) {
-            setDeadLineDate(data.deadline);
+          if (data.docDeadline) {
+            
+            setDeadLineDate(data.docDeadline);
             setHasDeadline(true);
           }
           let { branches } = data;

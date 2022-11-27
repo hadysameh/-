@@ -8,8 +8,8 @@ class WaredController {
     res: Response
   ): Promise<any> {
     try {
-      let result = await WaredRepo.getNumberOfUnreadWared(req);
-      res.json(result);
+      let numOfUnreadWared = await WaredRepo.getNumberOfUnreadWared(req);
+      res.json(numOfUnreadWared);
     } catch (error) {
       console.log({ error });
     }
@@ -27,6 +27,7 @@ class WaredController {
       console.log({ error });
     }
   }
+  
   public static async getOne(req: Request, res: Response): Promise<any> {
     // console.log({ reqParams: req.query });
     let id = req.query.id;

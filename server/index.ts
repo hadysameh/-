@@ -40,11 +40,6 @@ global.io = io;
  * adminjs routes and bodyParser mus be first
  *
  */
-app.use((request, response, next) => {
-  console.log("request got to server");
-  next();
-});
-
 //@ts-ignore
 app.use(adminJs.options.rootPath, router);
 app.use(bodyParser());

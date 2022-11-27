@@ -18,7 +18,6 @@ function MokatbaDetailsPreview() {
     return () => {
       controller.abort();
     };
-    // cancel the request
   }, []);
   let navigate = useNavigate();
   useEffect(() => {
@@ -159,10 +158,10 @@ function MokatbaDetailsPreview() {
                 <a
                   className="px-3 text-secondary"
                   target={"_blank"}
-                  href={`/sader/${mokatbaData?.closedSader_id}`}
+                  href={`/sader/${mokatbaData?.id}`}
                 >
                   {mokatbaData?.closedSader_id
-                    ? mokatbaData.closedSader_id
+                    ? mokatbaData.waredClosedSader.doc_num
                     : "لايوجد"}
                 </a>
               </div>

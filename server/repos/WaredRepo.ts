@@ -83,7 +83,11 @@ class WaredRepo {
     //     numberOfWaredAfterLaunchForOfficer - numberOfreadWared,
     //   officerId: req.user.officerId,
     // });
-    return numberOfWaredAfterLaunchForOfficer - numberOfreadWared;
+    const numOfUnreadWared = numberOfWaredAfterLaunchForOfficer - numberOfreadWared;
+
+    console.log({numOfUnreadWared,numberOfWaredAfterLaunchForOfficer ,numberOfreadWared})
+
+    return numOfUnreadWared
   }
 
   public static async getById(id: any): Promise<any> {

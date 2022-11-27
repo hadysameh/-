@@ -83,6 +83,7 @@ function WaredBox(props: IProps) {
         }
       });
   };
+
   const fetchRowsWithParams = () => {
     setIsShowSpinner(true);
     setWaredBoxRecords([]);
@@ -115,6 +116,7 @@ function WaredBox(props: IProps) {
         }
       });
   };
+
   const fetchDaysBeforeExecution = () => {
     axios.get("/api/waredoptions/getDaysBeforeExecution").then((res: any) => {
       console.log({ res });
@@ -277,7 +279,7 @@ function WaredBox(props: IProps) {
             </thead>
             <tbody>
               {waredBoxRecords.map((row: any, index: number) => {
-                return <WaredTabelTR key={index} row={row}></WaredTabelTR>;
+                return <WaredTabelTR key={index} row={row} DaysBeforeExecution={DaysBeforeExecution}></WaredTabelTR>;
               })}
             </tbody>
           </table>

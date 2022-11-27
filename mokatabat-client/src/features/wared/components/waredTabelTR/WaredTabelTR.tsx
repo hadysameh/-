@@ -3,18 +3,38 @@ import { useState } from "react";
 import { selectUser, selectOfficer } from "../../../user/stores/userSlice";
 import Overlay from "../../../../components/Overlay/Overlay";
 import WaredOverlayContent from "../waredOverlayContent";
-// import SingleWaredOverlay from "../waredOverlay/WaredOverlay";
-let aStyle = {
-  textDecoration: "none",
-  color: "#000",
-};
-// import BranchesAndOfficers from "../branchesAndOfficers";
-function WaredTabelTR({ row }: { row: any }) {
-  // console.log(row);
+import addDaysToDate from "../../../../helpers/addDaysToDate";
+import getTodaysDate from "../../../../helpers/getTodaysDate";
 
+function WaredTabelTR({
+  row,
+  DaysBeforeExecution,
+}: {
+  row: any;
+  DaysBeforeExecution: string;
+}) {
+  const dateWithoutDaysBeforeExecution = addDaysToDate(
+    row.docDeadline,
+    -DaysBeforeExecution
+  );
+  const isMokatbaInRedBox =
+    row.known == "0" && dateWithoutDaysBeforeExecution <= getTodaysDate();
+
+  const isMokatbaInGreenBox =
+    row.known == "0" && dateWithoutDaysBeforeExecution > getTodaysDate();
+  const rowTextColor = isMokatbaInRedBox
+    ? "#bb2d3b"
+    : isMokatbaInGreenBox
+    ? "green"
+    : "black";
+
+  let aStyle = {
+    textDecoration: "none",
+    color: rowTextColor,
+    fontWeight: "bold",
+  };
   const [isWaredOverlayOpen, setIsWaredOverlayOpen] = useState(false);
   const officer = useSelector(selectOfficer);
-  // console.log({ user });
   const hasOfficerSeenWared = row.WaredTrackingOfficers.find(
     (WaredTrackedfficer: any) => {
       if (WaredTrackedfficer.id === officer.id) {
@@ -34,7 +54,10 @@ function WaredTabelTR({ row }: { row: any }) {
         </Overlay>
       )}
       <tr
-        style={{ background: hasOfficerSeenWared ? "rgb(182 182 182)" : "" }}
+        style={{
+          background: hasOfficerSeenWared ? "rgb(182 182 182)" : "",
+          color: rowTextColor,
+        }}
         onClick={() => {
           setIsWaredOverlayOpen(true);
         }}
