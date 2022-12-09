@@ -1,4 +1,4 @@
-import Arms from "../ArmsModel"; 
+import Arms from "../ArmsModel";
 import Branches from "../BranchesModel";
 import Gehaa from "../GehaaModel";
 import Officer from "../OfficersModel";
@@ -48,8 +48,11 @@ Wared.belongsToMany(Officer, {
 
 Wared.belongsTo(Sader, {
   foreignKey: "closedSader_id",
-  as:'waredClosedSader'
+  as: "waredClosedSader",
 });
+
+Wared.belongsTo(Wared, { foreignKey: "lastWared_id", as: "lastWared" });
+
 
 // Wared.belongsTo(Sader,{
 //   foreignKey: "closedSader_id",
@@ -72,13 +75,13 @@ Wared.belongsTo(Sader, {
 
 Sader.belongsTo(Wared, {
   foreignKey: "lastWared_id",
-  as:'lastWared'
+  as: "lastWared",
   //constraints: false,
 });
 
 Sader.hasMany(Wared, {
   foreignKey: "closedSader_id",
-  as:'waredClosedSader'
+  as: "waredClosedSader",
 });
 Sader.belongsTo(Officer, {
   foreignKey: "officer_id",
@@ -106,6 +109,8 @@ Sader.belongsToMany(Gehaa, {
 
   constraints: false,
 });
+
+Sader.belongsTo(Sader, { foreignKey: "lastSader_id", as: "lastSader" });
 
 // Sadertrackingofficers.belongsTo(Sader, {
 //   foreignKey: "sader_id",

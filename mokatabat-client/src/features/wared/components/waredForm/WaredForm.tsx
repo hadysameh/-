@@ -1,11 +1,11 @@
 import Select from "react-select";
 import { MultiSelect } from "react-multi-select-component";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import isObjEmpty from "../../../../utils/isObjEmpty";
 import isArrEmpty from "../../../../utils/isArrEmpty";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import RefrenceToLastWared from "../../../../components/RefrenceToLastWared";
 interface IProps {
   submitFormData: Function;
   requiredFields: {
@@ -18,6 +18,7 @@ interface IProps {
 }
 function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
   let navigate = useNavigate();
+
   const [hasDeadline, setHasDeadline] = useState(false);
 
   const [gehaat, setGehaat] = useState([]);
@@ -37,26 +38,25 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
   const [selectedBranchs, setSelectedBranchs] = useState<any>([]);
   const [selectedOfficers, setSelectedOfficers] = useState<any>([]);
 
+  const [isWaredReferncingWared, setIsWaredReferncingWared] = useState<any>(
+    false
+  );
+  const [lastWaredNumber, setLastWaredNumber] = useState<any>();
+  const [lastWaredGeha, setLastWaredGeha] = useState<any>();
+  const [lastWaredYear, setLastWaredYear] = useState<any>();
+
   const [selectedFile, setSelectedFile] = useState<any>();
   const [isFilePicked, setIsFilePicked] = useState(false);
 
-  useEffect(() => {
-    axios.get("/api/waredoptions").then((res) => {
-      setGehaat(res.data.gehaat);
-      setBranchs(res.data.branches);
-      setOfficers(res.data.officers);
-    });
-  }, []);
-  useEffect(() => {
-    // console.log("will fetch");
-    if (waredIdToEdit) {
+  const fetchSingleWared = useCallback(
+    (waredIdToEdit: FormData) => {
       axios
         .get("/api/wared/", {
           params: { id: waredIdToEdit },
         })
         .then((res) => {
           let { data } = res;
-          // console.log(res.data);
+          console.log({ data });
           setDocNum(data.doc_num);
           setDocDepNum(data.doc_dept_num);
           setMokatbaDate(data.doc_date);
@@ -67,7 +67,6 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
           setType(data.type);
           setSelectedGehaa(data.gehaa);
           if (data.docDeadline) {
-            
             setDeadLineDate(data.docDeadline);
             setHasDeadline(true);
           }
@@ -79,14 +78,48 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
           );
           let { Wared_Officers } = data;
 
+          const isWaredReferncingLastWared = Object.hasOwn(
+            data.lastWared,
+            "id"
+          );
+          if (isWaredReferncingLastWared) {
+            setIsWaredReferncingWared(true);
+            setLastWaredNumber(data.lastWared.doc_num);
+
+            setLastWaredYear(data.lastWared.year);
+            let lastWaredGehaa = gehaat.find(
+              (gehaa: { value: any; label: any }) =>
+                gehaa.value === data.lastWared.gehaa_id
+            );
+            setLastWaredGeha(lastWaredGehaa);
+          }
           setSelectedOfficers(
             Wared_Officers.map((officer: any) => {
               return { label: officer.name, value: officer.id };
             })
           );
         });
-    }
+    },
+    [gehaat]
+  );
+  useEffect(() => {
+    axios.get("/api/waredoptions").then((res) => {
+      const mappedGehaat = res.data.gehaat.map((gehaa: any) => {
+        return { label: gehaa.name, value: gehaa.id };
+      });
+      setGehaat(mappedGehaat);
+      setBranchs(res.data.branches);
+      setOfficers(res.data.officers);
+    });
   }, []);
+  useEffect(() => {
+    // console.log("will fetch");
+    if (gehaat.length) {
+      if (waredIdToEdit) {
+        fetchSingleWared(waredIdToEdit);
+      }
+    }
+  }, [gehaat]);
 
   return (
     <div className="container">
@@ -207,26 +240,18 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
           <div className="mb-3">
             <div className="col-10">
               <label className="form-label">جهة الوارد</label>
-              
+
               {!isArrEmpty(gehaat) && (
-                 <Select
-                 value={{
-                   value: selectedGehaa?.id,
-                   label: selectedGehaa?.name,
-                 }}
-                 onChange={(gehaaOption: any) => {
-                   let choosedGehaa: any = gehaat.find((gehaa: any) => {
-                     return gehaa.name == gehaaOption.label;
-                   });
-                   setSelectedGehaa(choosedGehaa);
-                 }}
-                 options={gehaat.map((gehaa: any) => {
-                   return {
-                     label: gehaa.name,
-                     value: gehaa.id,
-                   };
-                 })}
-               />
+                <Select
+                  value={{
+                    value: selectedGehaa?.id,
+                    label: selectedGehaa?.name,
+                  }}
+                  onChange={(gehaaOption: any) => {
+                    setSelectedGehaa(gehaaOption);
+                  }}
+                  options={gehaat}
+                />
               )}
             </div>
           </div>
@@ -275,12 +300,14 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
             </div>
           </div>
           <br />
+
           <div className="row">
-            <div className="form-check col-4 ">
+            <div className="col-4 ">
               <input
                 className="form-check-input"
                 type="checkbox"
                 id="flexCheckDefault"
+                style={{ marginLeft: "10px" }}
                 onChange={() => {
                   setHasDeadline(!hasDeadline);
                 }}
@@ -316,26 +343,38 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
               <br />
             </>
           )}
+
           <div className="row">
-            <div className="col-6">
-              <div className="col-8">
-                <div className="mb-3">
-                  <label className="form-label">
-                    ايماءً الى مكاتبة رقم: (اختياري)
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    onChange={(e) => {
-                      setLastWaredNum(e.target.value);
-                    }}
-                    value={lastWaredNum}
+            <div className="col-10">
+              <input
+                className="form-check-input"
+                style={{ marginLeft: "10px" }}
+                type="checkbox"
+                onChange={() => {
+                  setIsWaredReferncingWared(!isWaredReferncingWared);
+                }}
+                checked={isWaredReferncingWared}
+              />
+              <label className="form-label">ايماءً الى( وارد اختياري)</label>
+              {/* {selectedMokatbatWithDeadLineForSader.map((selectedMokatbaWithDeadLineForSader:any)=>(
+
+              ))} */}
+              {isWaredReferncingWared && (
+                <>
+                  <RefrenceToLastWared
+                    gehaat={gehaat}
+                    setLastWaredGeha={setLastWaredGeha}
+                    setLastWaredNumber={setLastWaredNumber}
+                    setLastWaredYear={setLastWaredYear}
+                    lastGehaa={lastWaredGeha}
+                    lastWaredNumber={lastWaredNumber}
+                    lastWaredYear={lastWaredYear}
                   />
-                </div>
-              </div>
+                </>
+              )}
             </div>
           </div>
+          <br />
           <div className="row">
             <div className="col-10">
               <div>
@@ -404,22 +443,18 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
                 ) {
                   return true;
                 }
-                console.log({
-                  docNum,
-                  docDepNum,
-                  mokatbaDate,
-                  mokatbaDeliveryDate,
-                  subject,
-                  selectedGehaa,
-                  selectedBranchs,
-                  selectedOfficers,
-                });
+
                 return false;
               };
               if (isReqFieldsFilled()) {
                 let formData = new FormData();
                 if (waredIdToEdit) {
                   formData.append("waredId", waredIdToEdit);
+                }
+                if (isWaredReferncingWared) {
+                  formData.append("lastWaredNumber", lastWaredNumber);
+                  formData.append("lastWaredGeha_id", lastWaredGeha.value);
+                  formData.append("lastWaredYear", lastWaredYear);
                 }
                 formData.append("doc_num", docNum);
                 formData.append("doc_dept_num", docDepNum);
@@ -429,8 +464,10 @@ function WaredForm({ submitFormData, requiredFields, waredIdToEdit }: IProps) {
                 formData.append("subject", subject);
                 formData.append("hasDeadLine", `${hasDeadline}`);
                 formData.append("docDeadline", deadLineDate);
-                formData.append("lastWaredNum", lastWaredNum); 
-                formData.append("gehaa_id", selectedGehaa.id); 
+                formData.append("lastWaredNum", lastWaredNum);
+                formData.append("gehaa_id", selectedGehaa.value);
+                //
+
                 formData.append(
                   "selectedBranchs",
                   JSON.stringify(selectedBranchs)

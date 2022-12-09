@@ -140,30 +140,6 @@ function SearchBox(props: SearchFormProps) {
                 };
               })}
             />
-            {/* <input
-              className="form-control fs-3"
-              list="gehaatOptions"
-              id="exampleDataList"
-              placeholder="Type to search..."
-              value={selectedGehaaName}
-              onChange={(e) => {
-                let choosedGehaaName = e.target.value;
-                setSelectedGehaaName(e.target.value);
-                let choosedGehaa: any = gehaat.find((gehaa: any) => {
-                  return gehaa.name == choosedGehaaName;
-                });
-                let choosedGehaaId = choosedGehaa ? choosedGehaa.id : "";
-                // console.log(choosedBranchId);
-                props.setGehaaId(choosedGehaaId);
-              }}
-            ></input>
-            <datalist id="gehaatOptions">
-              {gehaat.map((gehaa: any) => {
-                return (
-                  <option key={gehaa.id + gehaa.name}>{gehaa.name}</option>
-                );
-              })}
-            </datalist> */}
           </div>
 
           {!isArrEmpty(officersOptions) && (
@@ -184,36 +160,6 @@ function SearchBox(props: SearchFormProps) {
                   };
                 })}
               />
-              {/* <input
-                className="form-control fs-3"
-                list="officersOptions"
-                id="exampleDataList"
-                placeholder="Type to search..."
-                value={selectedOfficerName}
-                onChange={(e) => {
-                  let choosedOfficerName = e.target.value;
-                  setSelectedOfficerName(e.target.value);
-                  let choosedOfficer: any = officersOptions.find(
-                    (officer: any) => {
-                      return officer.name == choosedOfficerName;
-                    }
-                  );
-                  let choosedOfficerId = choosedOfficer
-                    ? choosedOfficer.id
-                    : "";
-                  // console.log(choosedOfficerId);
-                  props.setOfficerId(choosedOfficerId);
-                }}
-              ></input>
-              <datalist id="officersOptions">
-                {officersOptions.map((officer: any) => {
-                  return (
-                    <option key={officer.id + officer.name}>
-                      {officer.name}
-                    </option>
-                  );
-                })}
-              </datalist> */}
             </div>
           )}
 
@@ -235,38 +181,12 @@ function SearchBox(props: SearchFormProps) {
                   };
                 })}
               />
-              {/* <input
-                className="form-control fs-3"
-                list="branchsOptions"
-                id="exampleDataList"
-                placeholder="Type to search..."
-                value={selectedBranchName}
-                onChange={(e) => {
-                  let choosedBranchName = e.target.value;
-                  setSelectedBranchName(e.target.value);
-                  let choosedBranch: any = branchsOptions.find(
-                    (branch: any) => {
-                      return branch.name == choosedBranchName;
-                    }
-                  );
-                  let choosedBranchId = choosedBranch ? choosedBranch.id : "";
-                  // console.log(choosedBranchId);
-                  props.setBranchId(choosedBranchId);
-                }}
-              ></input>
-              <datalist id="branchsOptions">
-                {branchsOptions.map((branch: any) => {
-                  return (
-                    <option key={branch.id + branch.name}>{branch.name}</option>
-                  );
-                })}
-              </datalist> */}
             </div>
           )}
 
           {/* TODO */}
           <div className="col-md-3">
-            <label className="form-label">متصلة بوارد رقم</label>
+            <label className="form-label">وارد وجوب الرد رقم:</label>
             <input
               type="text"
               className="form-control fs-4"
@@ -291,18 +211,6 @@ function SearchBox(props: SearchFormProps) {
             <button
               className="btn btn-danger fs-4 btn-lg px-5"
               onClick={() => {
-                // props.setDocNum("");
-                // props.setGehaaId("");
-                // props.setsubject("");
-                // props.setBranchId("");
-                // props.setOfficerId("");
-                // props.setMokatbaDate("");
-                // props.setLastWaredNum("");
-                // props.fetchRowsWithNoParams();
-                // setSelectedOfficerName("");
-                // setSelectedBranchName("");
-                // setSelectedGehaaName("");
-                // setIsSearched(false);
                 clearSearchParams();
               }}
             >
@@ -310,24 +218,7 @@ function SearchBox(props: SearchFormProps) {
             </button>
           </div>
         </form>
-        <div>
-          {/* {isSearched && (
-          <>
-            <h2>كلمات البحث الدالة</h2>
-            <div className="d-flex justify-content-evenly">
-              <div className="fs-3">
-                رقم الوارد:{props.docNum ? props.docNum : "لايوجد"}
-              </div>
-              <div className="fs-3">
-                رقم الادارة:{props.docDeptNum ? props.docDeptNum : "لايوجد"}
-              </div>
-              <div className="fs-3">
-                hg:{selectedGehaaName ? selectedGehaaName : "لايوجد"}
-              </div>
-            </div>
-          </>
-        )} */}
-        </div>
+        <div></div>
       </div>
       {isSearched && (
         <>

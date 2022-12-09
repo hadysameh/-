@@ -44,14 +44,11 @@ function SaderDetailsPreview() {
   useEffect(() => {
     if (user) {
       socket.on(socketIoEvent.refetchSader, () => {
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1300);
       });
     }
-    // socket
-    // .on(socketIoEvent.refetchSader+user.id, () => {
-    //   window.location.reload();
-
-    // });
 
     return () => {};
   }, []);
@@ -109,7 +106,12 @@ function SaderDetailsPreview() {
                     {saderData.gehaas && saderData.gehaas.length > 0 ? (
                       saderData.gehaas.map((officer: any) => {
                         return (
-                          <li className="text-secondary">{officer.name}</li>
+                          <li
+                            className="text-secondary"
+                            key={JSON.stringify(officer.name)}
+                          >
+                            {officer.name}
+                          </li>
                         );
                       })
                     ) : (
@@ -148,9 +150,9 @@ function SaderDetailsPreview() {
             </div>
             <div className="row align-items-start pt-5">
               <div className="">
-                متصلة بوراد:
+                وارد وجوب رد:
                 <span className="px-3 text-secondary">
-                  {saderData.waredClosedSader
+                  {saderData.waredClosedSader?.length
                     ? saderData?.waredClosedSader?.map(
                         (waredClosedSaderElement: any) => (
                           <div>
@@ -165,6 +167,40 @@ function SaderDetailsPreview() {
                         )
                       )
                     : "لا يوجد"}
+                </span>
+              </div>
+            </div>
+            <div className="row align-items-start pt-5">
+              <div className="">
+                ايماءً الى وارد رقم:
+                <span className="px-3 text-secondary">
+                  {saderData.lastWared?.id ? (
+                    <a
+                      href={`/wared/${saderData.lastWared?.id}`}
+                      target="blank"
+                    >
+                      {saderData.lastWared.doc_num}
+                    </a>
+                  ) : (
+                    "لا يوجد"
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="row align-items-start pt-5">
+              <div className="">
+                الحاقاً الى صادر رقم:
+                <span className="px-3 text-secondary">
+                  {saderData.lastWared?.id ? (
+                    <a
+                      href={`/sader/${saderData.lastSader?.id}`}
+                      target="blank"
+                    >
+                      {saderData.lastSader.doc_num}
+                    </a>
+                  ) : (
+                    "لا يوجد"
+                  )}
                 </span>
               </div>
             </div>

@@ -57,7 +57,9 @@ function MokatbaDetailsPreview() {
   useEffect(() => {
     if (user) {
       socket.on(socketIoEvent.refetchWared, () => {
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 1300);
       });
     }
     // socket.on(socketIoEvent.refetchWared + user.id, () => {
@@ -154,16 +156,37 @@ function MokatbaDetailsPreview() {
             </div>
             <div className="row align-items-start pt-5">
               <div className="">
-                رقم صادر اغلاق المكاتبة
-                <a
-                  className="px-3 text-secondary"
-                  target={"_blank"}
-                  href={`/sader/${mokatbaData?.id}`}
-                >
-                  {mokatbaData?.closedSader_id
-                    ? mokatbaData.waredClosedSader.doc_num
-                    : "لايوجد"}
-                </a>
+                رقم صادر اغلاق المكاتبة:
+                <span className="px-3 text-secondary">
+                  {mokatbaData?.closedSader_id ? (
+                    <a
+                      className="px-3 text-secondary"
+                      target={"_blank"}
+                      href={`/sader/${mokatbaData?.id}`}
+                    >
+                      {mokatbaData.waredClosedSader.doc_num}
+                    </a>
+                  ) : (
+                    "لايوجد"
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="row align-items-start pt-5">
+              <div className="">
+                ايماءً الى وارد رقم:
+                <span className="px-3 text-secondary">
+                  {mokatbaData.lastWared?.id ? (
+                    <a
+                      href={`/wared/${mokatbaData.lastWared?.id}`}
+                      target="blank"
+                    >
+                      {mokatbaData.lastWared.doc_num}
+                    </a>
+                  ) : (
+                    "لا يوجد"
+                  )}
+                </span>
               </div>
             </div>
             <div className="row align-items-start pt-5">

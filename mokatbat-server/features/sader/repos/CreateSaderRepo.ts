@@ -3,7 +3,7 @@ import getTodaysDate from "../../../helpers/getTodaysDate";
 import Sader_Gehaa from "../../../models/Sader_GehaaModel";
 import closeOpenedWared from "./helpers/closeOpenWared";
 import { Request, Response } from "express";
-import Wared from '../../../models/WaredModel'
+import Wared from "../../../models/WaredModel";
 import Officer from "../../../models/OfficersModel";
 import Branches from "../../../models/BranchesModel";
 import Gehaa from "../../../models/GehaaModel";
@@ -16,29 +16,40 @@ export default class CreateSaderRepo {
   ): Promise<any> {
     // console.log({ reqBodyData, fileLocationPath });
     return new Promise(async (resolve: any, reject: any) => {
-      const t = await sequelize.transaction();
+      const transaction = await sequelize.transaction();
       try {
         // console.log({ selectedGehaat: reqBodyData.gehaat });
         let selectedGehaat = JSON.parse(reqBodyData.gehaat);
 
         let lastWared = await Wared.findOne({
           where: {
-            doc_num: reqBodyData.closedWaredDocNum
-              ? reqBodyData.closedWaredDocNum
-              : "f",
+            doc_num: reqBodyData.lastWaredNumber,
+            gehaa_id: reqBodyData.lastWaredGeha_id,
+            year: reqBodyData.lastWaredYear,
           },
         }).catch((err: any) => {
           return null;
         });
         let lastWared_id = lastWared?.getDataValue("id");
-        let assistantBranch = await Branches.findOne({
+        console.log({ lastWared_id });
+
+        let lastSader = await Sader.findOne({
           where: {
-            id: reqBodyData.branch_id,
+            doc_num: reqBodyData.lastWaredNumber,
+            year: reqBodyData.lastSaderYear,
           },
-        }).catch((err) => {
+        }).catch((err: any) => {
           return null;
         });
-        let assistantBranchId = assistantBranch?.getDataValue("id");
+        let lastSader_id = lastSader?.getDataValue("id");
+        // let assistantBranch = await Branches.findOne({
+        //   where: {
+        //     id: reqBodyData.branch_id,
+        //   },
+        // }).catch((err) => {
+        //   return null;
+        // });
+        // let assistantBranchId = assistantBranch?.getDataValue("id");
         let storedSader = await Sader.create({
           doc_num: reqBodyData.doc_num,
           doc_date: reqBodyData.doc_date,
@@ -47,6 +58,7 @@ export default class CreateSaderRepo {
           known: reqBodyData.branch_id,
           officer_id: reqBodyData.officer_id,
           lastWared_id: lastWared_id ? lastWared_id : null,
+          lastSader_id: lastSader_id ? lastSader_id : null,
           register_date: getTodaysDate(),
           type: reqBodyData.type,
           register_user: "1",
@@ -70,11 +82,11 @@ export default class CreateSaderRepo {
 
         await Sader_Gehaa.bulkCreate(Sader_GehaaRows);
 
-        t.commit();
+        transaction.commit();
 
         resolve();
       } catch (error) {
-        t.rollback();
+        transaction.rollback();
         reject(error);
       }
     });

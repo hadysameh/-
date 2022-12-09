@@ -54,7 +54,6 @@ class WaredBoxRepo {
         model: Branches,
         where: { id: searchParams.branchId },
       });
-      // whereParams["branches_id"] = `${searchParams.branchId}`;
     }
     if (searchParams.officerId) {
       includeParams.push({
@@ -62,7 +61,6 @@ class WaredBoxRepo {
         as: "Wared_Officers",
         where: { id: searchParams.officerId },
       });
-      // whereParams["id"] = `${searchParams.officerId}`;
     }
     if (searchParams.mokatbaDate) {
       whereParams["doc_date"] = `${searchParams.mokatbaDate}`;
@@ -130,7 +128,6 @@ class WaredBoxRepo {
       order: orderByArr.length == 0 ? [["id", "DESC"]] : orderByArr,
       offset: Number(searchParams.numOfRecords) * Number(searchParams.pageNum),
     });
-    // console.timeEnd(durationName);
     return wareds;
   }
 }

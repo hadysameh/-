@@ -221,7 +221,7 @@ function SaderBox() {
               {/* <th scope="col">الإتجاه المختص</th> */}
               {/* <th scope="col">الضابط المختص</th> */}
               <th scope="col" style={{ width: "15%" }}>
-                متصلة بوارد
+                وجوب رد وارد رقم
               </th>
               {/* <th scope="col">متصلة بوارد</th> */}
             </tr>

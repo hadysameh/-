@@ -22,6 +22,11 @@ class MokatbaDetailsPreviewRepo {
           model:Sader,
           as:'waredClosedSader'
           
+        },
+        {
+          model:Wared,
+          as:'lastWared'
+          
         }
       ],
     });

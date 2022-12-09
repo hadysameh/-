@@ -1,11 +1,13 @@
 import { MultiSelect } from "react-multi-select-component";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import isObjEmpty from "../../../../utils/isObjEmpty";
 import isArrEmpty from "../../../../utils/isArrEmpty";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-
+import RefrenceToLastWared from "../../../../components/RefrenceToLastWared";
+import RefrenceToLastSader from "../../../../components/RefrenceToLastSader";
+import { lastWaredTypesNames } from "../../../../types";
 interface IProps {
   submitFormDataMethod: Function;
   requiredFields: {
@@ -22,7 +24,6 @@ function SaderForm({
   saderIdToEdit,
 }: IProps) {
   let navigate = useNavigate();
-
   const [gehaat, setGehaat] = useState([]);
   const [branchs, setBranchs] = useState([]);
   const [officers, setOfficers] = useState([]);
@@ -31,7 +32,6 @@ function SaderForm({
   const [mokatbaDate, setMokatbaDate] = useState<string>("");
 
   const [subject, setSubject] = useState<string>("");
-  const [lastWaredNum, setLastWaredNum] = useState<string>("");
   const [type, setType] = useState<string>("فاكس");
 
   const [selectedGehaat, setSelectedGehaat] = useState<any>([]);
@@ -40,6 +40,8 @@ function SaderForm({
 
   const [selectedFile, setSelectedFile] = useState<any>();
   const [isFilePicked, setIsFilePicked] = useState(false);
+
+  const [lastWaredType, setLastWaredType] = useState<string | null>(null);
 
   const [mokatbatWithDeadLine, setMokatbatWithDeadLine] = useState<any>([]);
   const [
@@ -52,33 +54,34 @@ function SaderForm({
     setIsSaderForMokatabaWithDeadLine,
   ] = useState<any>(false);
 
-  useEffect(() => {
-    axios.get("/api/saderoptions").then((res) => {
-      setGehaat(res.data.gehaat);
-      setBranchs(res.data.branches);
-      setOfficers(res.data.officers);
-    });
+  const [isSaderReferncingWared, setIsSaderReferncingWared] = useState<any>(
+    false
+  );
+  const [lastWaredGeha, setLastWaredGeha] = useState<any>({});
+  const [lastWaredNumber, setLastWaredNumber] = useState<any>();
+  const [lastWaredYear, setLastWaredYear] = useState<any>();
 
-    axios.get("/api/wared/waredwithdeadline").then((res) => {
-      // setMokatbatWithDeadLine([...mokatbatWithDeadLine,...res.data]);
+  const [
+    isSaderReferncingAnotherSader,
+    setIsSaderReferncingAnotherSader,
+  ] = useState<any>(false);
 
-      setMokatbatWithDeadLine((mokatbatWithDeadLine:any)=>[...res.data,...mokatbatWithDeadLine]);
-    });
-  }, []);
+  const [lastSaderNumber, setLastSaderNumber] = useState<any>();
+  const [lastSaderYear, setLastSaderYear] = useState<any>();
 
-  useEffect(() => {
-    if (saderIdToEdit) {
+  const fetchSingleSader = useCallback(
+    (saderId: FormData) => {
       axios
         .get("/api/onesader", {
-          params: { id: saderIdToEdit },
+          params: { id: saderId },
         })
         .then((res) => {
-
           let { data } = res;
+          console.log({ data });
           setDocNum(data.doc_num);
           setMokatbaDate(data.doc_date);
           setSubject(data.subject);
-          setLastWaredNum(data.lastWared_id);
+          // setLastWaredNum(data.lastWared_id);
           setType(data.type);
           setSelectedGehaat(
             data?.gehaas?.map((gehaa: any) => {
@@ -93,16 +96,76 @@ function SaderForm({
               value: closedWaredBySader.id,
             })
           );
+          const isSaderHasWaredWithDeadLine = !!data.waredClosedSader?.length;
+          const isSaderReferncingLastWared = Object.hasOwn(
+            data.lastWared,
+            "id"
+          );
+          if (isSaderHasWaredWithDeadLine) {
+            setLastWaredType(lastWaredTypesNames.deadLineWared);
+          } else if (isSaderReferncingLastWared) {
+            setLastWaredType(lastWaredTypesNames.normalWared);
+            setLastWaredNumber(data.lastWared.doc_num);
+            setLastWaredYear(data.lastWared.year);
+            let lastWaredGehaa = gehaat.find(
+              (gehaa: { value: any; label: any }) =>
+                gehaa.value === data.lastWared.gehaa_id
+            );
+            setLastWaredGeha(lastWaredGehaa);
+          }
+          setIsSaderReferncingWared(
+            isSaderHasWaredWithDeadLine || isSaderReferncingLastWared
+          );
+
+          const isSaderReferncingAnotherSader = Object.hasOwn(
+            data.lastSader,
+            "id"
+          );
+          if (isSaderReferncingAnotherSader) {
+            setIsSaderReferncingAnotherSader(true);
+            setLastSaderNumber(data.lastSader.doc_num);
+            setLastSaderYear(data.lastSader.year);
+          }
           setSelectedMokatbatWithDeadLineForSader(mappedClosedWaredBySader);
-          setIsSaderForMokatabaWithDeadLine(!!data.waredClosedSader?.length);
-          setMokatbatWithDeadLine((mokatbatWithDeadLine:any)=>[...data.waredClosedSader,...mokatbatWithDeadLine])
+
+          setIsSaderForMokatabaWithDeadLine(isSaderHasWaredWithDeadLine);
+          setMokatbatWithDeadLine((mokatbatWithDeadLine: any) => [
+            ...data.waredClosedSader,
+            ...mokatbatWithDeadLine,
+          ]);
         });
-    }
+    },
+    [gehaat]
+  );
+
+  useEffect(() => {
+    axios.get("/api/saderoptions").then((res) => {
+      const mappedGehaat = res.data.gehaat.map((gehaa: any) => {
+        return { label: gehaa.name, value: gehaa.id };
+      });
+      setGehaat(mappedGehaat);
+      setBranchs(res.data.branches);
+      setOfficers(res.data.officers);
+    });
+
+    axios.get("/api/wared/waredwithdeadline").then((res) => {
+      // setMokatbatWithDeadLine([...mokatbatWithDeadLine,...res.data]);
+
+      setMokatbatWithDeadLine((mokatbatWithDeadLine: any) => [
+        ...res.data,
+        ...mokatbatWithDeadLine,
+      ]);
+    });
   }, []);
 
   useEffect(() => {
-    console.log({ selectedMokatbatWithDeadLineForSader });
-  }, [selectedMokatbatWithDeadLineForSader]);
+    if (gehaat.length) {
+      if (saderIdToEdit) {
+        fetchSingleSader(saderIdToEdit);
+      }
+    }
+  }, [gehaat]);
+
   return (
     <div className="container">
       <div className="border-start border-end p-4">
@@ -173,9 +236,7 @@ function SaderForm({
 
               {!isArrEmpty(gehaat) && (
                 <MultiSelect
-                  options={gehaat.map((gehaa: any) => {
-                    return { label: gehaa.name, value: gehaa.id };
-                  })}
+                  options={gehaat}
                   value={selectedGehaat}
                   onChange={setSelectedGehaat}
                   labelledBy="Select"
@@ -233,13 +294,12 @@ function SaderForm({
                         );
                         setSelectedOfficer(choosedOfficer);
                       }}
-                      options={officers
-                        .map((branch: any) => {
-                          return {
-                            label: branch.name,
-                            value: branch.id,
-                          };
-                        })}
+                      options={officers.map((branch: any) => {
+                        return {
+                          label: branch.name,
+                          value: branch.id,
+                        };
+                      })}
                     />
                   </>
                 )}
@@ -273,56 +333,142 @@ function SaderForm({
           </div>
 
           <br />
+          <div>
+            <div className="col-10">
+              <input
+                className="form-check-input"
+                onChange={() => {
+                  setIsSaderReferncingWared(!isSaderReferncingWared);
+                }}
+                style={{ marginLeft: "10px" }}
+                type="checkbox"
+                checked={isSaderReferncingWared}
+              />
+              <label className="form-label">الإشارة الى وارد سابق</label>
+            </div>
+            {isSaderReferncingWared && (
+              <>
+                <div className="row">
+                  <div className="col-10">
+                    <input
+                      className="form-check-input"
+                      onChange={(e) => {
+                        setLastWaredType(e.target.value);
+                      }}
+                      style={{ marginLeft: "10px" }}
+                      value={lastWaredTypesNames.deadLineWared}
+                      type="radio"
+                      checked={
+                        lastWaredType == lastWaredTypesNames.deadLineWared
+                      }
+                    />
+                    <label className="form-label"> وارد وجوب رد</label>
 
+                    {lastWaredType === lastWaredTypesNames.deadLineWared && (
+                      <>
+                        <ul className="px-4">
+                          {selectedMokatbatWithDeadLineForSader.map(
+                            (selectedMokatbaWithDeadLineForSader: any) => (
+                              <li
+                                key={selectedMokatbaWithDeadLineForSader.value}
+                              >
+                                {selectedMokatbaWithDeadLineForSader.label}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                        <MultiSelect
+                          options={mokatbatWithDeadLine.map((mokatba: any) => {
+                            return {
+                              label:
+                                mokatba.doc_num +
+                                "----" +
+                                mokatba.subject +
+                                "----" +
+                                mokatba?.gehaa?.name,
+                              value: mokatba.id,
+                            };
+                          })}
+                          value={selectedMokatbatWithDeadLineForSader}
+                          onChange={setSelectedMokatbatWithDeadLineForSader}
+                          labelledBy="officers-select-label"
+                        />
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <br />
+                <div className="row">
+                  <div className="col-10">
+                    <input
+                      className="form-check-input"
+                      style={{ marginLeft: "10px" }}
+                      onChange={(e) => {
+                        setLastWaredType(e.target.value);
+                      }}
+                      value={lastWaredTypesNames.normalWared}
+                      type="radio"
+                      checked={
+                        lastWaredType === lastWaredTypesNames.normalWared
+                      }
+                    />
+
+                    <label className="form-label">
+                      ايماءً الى( وارد اختياري)
+                    </label>
+
+                    {lastWaredType === lastWaredTypesNames.normalWared && (
+                      <>
+                        <RefrenceToLastWared
+                          gehaat={gehaat}
+                          setLastWaredGeha={setLastWaredGeha}
+                          setLastWaredNumber={setLastWaredNumber}
+                          setLastWaredYear={setLastWaredYear}
+                          lastGehaa={lastWaredGeha}
+                          lastWaredNumber={lastWaredNumber}
+                          lastWaredYear={lastWaredYear}
+                        />
+                      </>
+                    )}
+                  </div>
+                </div>
+                <hr />
+              </>
+            )}
+          </div>
+          <br />
           <div className="row">
             <div className="col-10">
               <input
                 className="form-check-input"
+                style={{ marginLeft: "10px" }}
                 type="checkbox"
-                id="flexCheckDefault"
                 onChange={() => {
-                  setIsSaderForMokatabaWithDeadLine(
-                    !isSaderForMokatabaWithDeadLine
+                  setIsSaderReferncingAnotherSader(
+                    !isSaderReferncingAnotherSader
                   );
                 }}
-                checked={isSaderForMokatabaWithDeadLine}
+                checked={isSaderReferncingAnotherSader}
               />
-              <label className="form-label">صادر مكاتبة وجوب رد</label>
+              <label className="form-label">الحاقاً الى( صادر اختياري)</label>
               {/* {selectedMokatbatWithDeadLineForSader.map((selectedMokatbaWithDeadLineForSader:any)=>(
 
               ))} */}
-              {isSaderForMokatabaWithDeadLine && (
+              {isSaderReferncingAnotherSader && (
                 <>
-                  <ul className="mr-2">
-                    {selectedMokatbatWithDeadLineForSader.map(
-                      (selectedMokatbaWithDeadLineForSader: any) => (
-                        <li key={selectedMokatbaWithDeadLineForSader.value}>
-                          {selectedMokatbaWithDeadLineForSader.label}
-                        </li>
-                      )
-                    )}
-                  </ul>
-                  <MultiSelect
-                    options={mokatbatWithDeadLine.map((mokatba: any) => {
-                      console.log({mokatbatWithDeadLine})
-                      return {
-                        label:
-                          mokatba.doc_num +
-                          "----" +
-                          mokatba.subject +
-                          "----" +
-                          mokatba?.gehaa?.name,
-                        value: mokatba.id,
-                      };
-                    })}
-                    value={selectedMokatbatWithDeadLineForSader}
-                    onChange={setSelectedMokatbatWithDeadLineForSader}
-                    labelledBy="officers-select-label"
+                  <RefrenceToLastSader
+                    gehaat={gehaat}
+                    setLastSaderNumber={setLastSaderNumber}
+                    setLastSaderYear={setLastSaderYear}
+                    lastSaderNumber={lastSaderNumber}
+                    lastSaderYear={lastSaderYear}
                   />
                 </>
               )}
             </div>
           </div>
+
           <br />
           <div className="row">
             <div className="col-10">
@@ -396,15 +542,35 @@ function SaderForm({
                 if (saderIdToEdit) {
                   formData.append("saderId", saderIdToEdit);
                 }
+                if (isSaderReferncingWared) {
+                  if (lastWaredType === lastWaredTypesNames.deadLineWared) {
+                    formData.append(
+                      "selectedMokatbatWithDeadLineForSader",
+                      JSON.stringify(selectedMokatbatWithDeadLineForSader)
+                    );
+                  } else if (
+                    lastWaredType === lastWaredTypesNames.normalWared
+                  ) {
+                    formData.append("lastWaredNumber", lastWaredNumber);
+
+                    formData.append("lastWaredGeha_id", lastWaredGeha.value);
+                    formData.append("lastWaredYear", lastWaredYear);
+                  }
+                }
+                if (isSaderReferncingAnotherSader) {
+                  formData.append("lastSaderNumber", lastSaderNumber);
+                  formData.append("lastSaderYear", lastSaderYear);
+                }
                 formData.append("doc_num", docNum);
                 formData.append("type", type);
                 formData.append("doc_date", mokatbaDate);
                 formData.append("subject", subject);
-                formData.append("lastWaredNum", lastWaredNum);
-                formData.append(
-                  "selectedMokatbatWithDeadLineForSader",
-                  JSON.stringify(selectedMokatbatWithDeadLineForSader)
-                );
+
+                //
+                formData.append("lastSaderNumber", lastWaredNumber);
+                formData.append("lastSaderYear", lastWaredYear);
+                //
+
                 formData.append("gehaat", JSON.stringify(selectedGehaat));
                 formData.append("branch_id", selectedBranch.id);
                 formData.append("officer_id", selectedOfficer.id);

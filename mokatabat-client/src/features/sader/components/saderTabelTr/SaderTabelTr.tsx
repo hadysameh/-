@@ -3,9 +3,11 @@ import { useState } from "react";
 import SaderOverlayContent from "../saderOverlayContent";
 import Overlay from "../../../../components/Overlay/Overlay";
 import { selectUser, selectOfficer } from "../../../user/stores/userSlice";
+import isObjEmpty from "../../../../utils/isObjEmpty";
 let aStyle = {
   textDecoration: "none",
   color: "#000",
+  fontWeight: "bold",
 };
 function SaderTabelTR({ row }: { row: any }) {
   const [isWaredOverlayOpen, setIsWaredOverlayOpen] = useState(false);
@@ -133,7 +135,22 @@ function SaderTabelTR({ row }: { row: any }) {
             }}
             rel="noreferrer"
           >
-            {row.wared ? row.wared.doc_num : "لايوجد"}
+            {!isObjEmpty(row.waredClosedSader)
+              ? row.waredClosedSader.map((singleWaredClosedSader: any) => {
+                  return (
+                    <>
+                      <a
+                        href={`/waredbox/${singleWaredClosedSader.id}`}
+                        target={"_blank"}
+                      >
+                        {" "}
+                        {singleWaredClosedSader.doc_num}
+                      </a>
+                      <br />
+                    </>
+                  );
+                })
+              : "لايوجد"}
           </a>
         </td>
 

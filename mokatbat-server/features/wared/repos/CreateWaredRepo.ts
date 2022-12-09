@@ -36,7 +36,9 @@ class CreateWaredRepo {
         });
         let lastWared = await Wared.findOne({
           where: {
-            doc_num: reqBodyData.lastWaredNum,
+            doc_num: reqBodyData.lastWaredNumber,
+            gehaa_id: reqBodyData.lastWaredGeha_id,
+            year:reqBodyData.lastWaredYear,
           },
         }).catch((err: any) => {
           return null;

@@ -83,11 +83,19 @@ export default class SaderBoxRepo {
       whereParams["doc_date"] = `${searchParams.mokatbaDate}`;
     }
     if (searchParams.closedWaredDocNum) {
-      includeParams.push({
+      includeParams.push(
+      //   {
+      //   model: Wared,
+      //   as: "lastWared",
+      //   where: { doc_num: searchParams.closedWaredDocNum },
+      // },
+      {
         model: Wared,
-        as: "lastWared",
+        as: "waredClosedSader",
         where: { doc_num: searchParams.closedWaredDocNum },
-      });
+
+      }
+      );
       // whereParams["branch_id"] = `${searchParams.branchId}`;
     }
 

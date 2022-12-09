@@ -22,8 +22,14 @@ export default class SaderDetailsPreviewRepo {
           as: "waredClosedSader",
           // where: { closedSader_id: id },
         },
+        {
+          model: Wared,
+          as: "lastWared",
+          // where: { closedSader_id: id },
+        },
         Branches,
         Gehaa,
+        {model:Sader,as:'lastSader'}
       ],
     });
     return mokatba;

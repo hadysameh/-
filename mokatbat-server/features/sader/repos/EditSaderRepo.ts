@@ -20,12 +20,24 @@ export default class EditSaderRepo {
 
         let lastWared = await Wared.findOne({
           where: {
-            doc_num: reqBodyData.closedWaredDocNum,
+            doc_num: reqBodyData.lastWaredNumber,
+            gehaa_id: reqBodyData.lastWaredGeha_id,
+            year: reqBodyData.lastWaredYear,
           },
         }).catch((err: any) => {
           return null;
         });
         let lastWared_id = lastWared ? lastWared.getDataValue("id") : null;
+        let lastSader = await Sader.findOne({
+          where: {
+            doc_num: reqBodyData.lastSaderNumber,
+            year: reqBodyData.lastSaderYear,
+          },
+        }).catch((err: any) => {
+          return null;
+        });
+        let lastSader_id = lastSader?.getDataValue("id");
+        console.log({ lastSader_id });
         let modifiedSaderData: any = {
           doc_num: reqBodyData.doc_num,
           doc_date: reqBodyData.doc_date,
@@ -33,7 +45,8 @@ export default class EditSaderRepo {
           subject: reqBodyData.subject,
           known: reqBodyData.branch_id,
           officer_id: reqBodyData.officer_id,
-          lastWared_id,
+          lastWared_id: lastWared_id ? lastWared_id : null,
+          lastSader_id: lastSader_id ? lastSader_id : null,
           register_date: getTodaysDate(),
           type: reqBodyData.type,
           register_user: "1",
