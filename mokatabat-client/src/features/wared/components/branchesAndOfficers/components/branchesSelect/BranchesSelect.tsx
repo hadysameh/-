@@ -25,7 +25,7 @@ function BranchesSelect({
             <div className="">
               الأفرع المختصة:
               <div style={{ paddingRight: "20px" }}>
-                <ul>
+                <ul style={{listStyle:'none'}}>
                   {!isArrEmpty(selectedBranches) &&
                     selectedBranches.map((branch: any) => {
                       return <li className="text-secondary">{branch.name}</li>;

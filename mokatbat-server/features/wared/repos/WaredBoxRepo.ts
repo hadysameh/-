@@ -76,7 +76,7 @@ class WaredBoxRepo {
         };
         whereParams["closedSader_id"] = null;
         whereParams["known"] = 0;
-        orderByArr.push(["docDeadline", "DESC"]);
+        orderByArr.push(["docDeadline", "ASC"]);
       }
     } else if (searchParams.withinExcutionTimeType == "2") {
       if (searchParams.DaysBeforeExecution) {
@@ -89,7 +89,7 @@ class WaredBoxRepo {
         };
         whereParams["closedSader_id"] = null;
         whereParams["known"] = 0;
-        orderByArr.push(["docDeadline", "DESC"]);
+        orderByArr.push(["docDeadline", "ASC"]);
       }
     }
 

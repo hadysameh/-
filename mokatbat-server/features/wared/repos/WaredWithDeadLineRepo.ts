@@ -11,7 +11,7 @@ class WaredWithDeadLineRepo {
     whereParams["known"] = 0;
     let wareds = await Wared.findAll({
       where: whereParams,
-      order: [["id", "DESC"]],
+      order: [["deadline", "ASC"]],
       include: [Gehaa],
     });
     return wareds;

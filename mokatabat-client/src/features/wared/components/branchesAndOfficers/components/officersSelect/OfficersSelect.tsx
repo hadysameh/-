@@ -25,7 +25,7 @@ function OfficersSelect({
               <div className="">
                 الضباط المختصين:
                 <div style={{ paddingRight: "20px" }}>
-                  <ul>
+                  <ul  style={{listStyle:'none'}}>
                     {!isArrEmpty(selectedOfficers) &&
                       selectedOfficers.map((officer: any) => {
                         return (

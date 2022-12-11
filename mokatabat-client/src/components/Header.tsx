@@ -47,7 +47,7 @@ function Header() {
           resolve(data);
         })
         .catch((err) => {
-          console.log({err})
+          console.log({ err });
           reject("0");
         });
     });
