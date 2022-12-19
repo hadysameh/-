@@ -187,47 +187,55 @@ function Header() {
                     premissions.hasAddSaderPremission()
                   }
                 >
-                  <li className="nav-item dropdown  ">
-                    <a
-                      className="nav-link dropdown-toggle text-white"
-                      href="#"
-                      id="navbarDropdownMenuLink"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      اضافة مكاتبة
-                    </a>
-                    <ul
-                      className="dropdown-menu fs-3"
-                      aria-labelledby="navbarDropdownMenuLink"
-                    >
-                      <HasAccessToShowComponent
-                        condition={premissions.hasAddWaredPremission()}
+                  <>
+                    <li className="nav-item dropdown  ">
+                      <a
+                        className="nav-link dropdown-toggle text-white"
+                        href="#"
+                        id="navbarDropdownMenuLink"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
                       >
-                        <li>
-                          <Link
-                            to="/createwared"
-                            className="nav-link active text-dark text-center"
-                          >
-                            اضافة وارد
-                          </Link>
-                        </li>
-                      </HasAccessToShowComponent>
-                      <HasAccessToShowComponent
-                        condition={premissions.hasAddSaderPremission()}
+                        اضافة مكاتبة
+                      </a>
+                      <ul
+                        className="dropdown-menu fs-3"
+                        aria-labelledby="navbarDropdownMenuLink"
                       >
-                        <li>
-                          <Link
-                            to="/createsader"
-                            className="nav-link active text-dark text-center"
-                          >
-                            اضافة صادر
-                          </Link>
-                        </li>
-                      </HasAccessToShowComponent>
-                    </ul>
-                  </li>
+                        <HasAccessToShowComponent
+                          condition={premissions.hasAddWaredPremission()}
+                        >
+                          <li>
+                            <Link
+                              to="/createwared"
+                              className="nav-link active text-dark text-center"
+                            >
+                              اضافة وارد
+                            </Link>
+                          </li>
+                        </HasAccessToShowComponent>
+                        <HasAccessToShowComponent
+                          condition={premissions.hasAddSaderPremission()}
+                        >
+                          <li>
+                            <Link
+                              to="/createsader"
+                              className="nav-link active text-dark text-center"
+                            >
+                              اضافة صادر
+                            </Link>
+                          </li>
+                        </HasAccessToShowComponent>
+                      </ul>
+                    </li>
+                    <li className="nav-item">
+                      <a href="/admin" className="nav-link active text-white" target={"_blank"}>
+                        admin panel
+                         
+                      </a>
+                    </li>
+                  </>
                 </HasAccessToShowComponent>
               </>
             )}
