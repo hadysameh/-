@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./store/index";
 import { Provider } from "react-redux";
-import { removeData } from "./features/user";
+import { removeAuthData } from "./features/user";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
 import {hasAddWaredPremission} from './utils/premissions'
@@ -23,7 +23,7 @@ bc.onmessage = (event) => {
   }
   if (data.type == "loggedout") {
     // console.log({ data });
-    store.dispatch(removeData());
+    store.dispatch(removeAuthData());
     window.location.href = "/login";
 
     // localStorage.removeItem('token')

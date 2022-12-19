@@ -117,14 +117,61 @@ function Header() {
                     الصفحة الرئيسية
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link to="/waredbox" className="nav-link active text-white">
-                    صندوق الوارد
+
+                <li className="nav-item dropdown ">
+                  <a
+                    className="nav-link dropdown-toggle text-white"
+                    href="#"
+                    id="navbarDropdownMenuLink"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    المكاتبات الواردة
                     <span style={{ background: "red" }}>
                       {numOfUnreadWared}
                     </span>
-                  </Link>
+                  </a>
+                  <ul
+                    className="dropdown-menu fs-3"
+                    aria-labelledby="navbarDropdownMenuLink"
+                  >
+                    <li className="nav-item text-right">
+                      <Link
+                        to="/waredbox"
+                        className="nav-link active text-black"
+                      >
+                        صندوق الوارد
+                        <span
+                          style={{
+                            background: "red",
+                            margin: "20px",
+                            color: "white",
+                          }}
+                        >
+                          {numOfUnreadWared}
+                        </span>
+                      </Link>
+                    </li>
+                    <li className="nav-item text-right">
+                      <Link
+                        to="/redcirclewaredbox"
+                        className="nav-link active text-danger"
+                      >
+                        مكاتبات قريبة من او تجاوزت الحد الاقصى للتنفيذ
+                      </Link>
+                    </li>
+                    <li className="nav-item text-right">
+                      <Link
+                        to="/greencirclewaredbox"
+                        className="nav-link active text-success"
+                      >
+                        مكاتبات بعيدة عن الحد الأقصى للتنفيذ
+                      </Link>
+                    </li>
+                  </ul>
                 </li>
+
                 <li className="nav-item">
                   <Link to="/saderbox" className="nav-link active text-white">
                     صندوق الصادر

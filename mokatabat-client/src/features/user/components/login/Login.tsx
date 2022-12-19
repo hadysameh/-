@@ -2,7 +2,7 @@ import "../../assets/style.css";
 import { postloginData } from "../../services";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { setData } from "../../stores/userSlice";
+import { setAuthData } from "../../stores/userSlice";
 import { useDispatch } from "react-redux";
 export function Login() {
   const dispatch = useDispatch();
@@ -43,7 +43,7 @@ export function Login() {
                   rank,
                 };
                 console.log({ dataToStore });
-                dispatch(setData(dataToStore));
+                dispatch(setAuthData(dataToStore));
                 //@ts-ignore
                 window.bc.postMessage({ type: "loggedin" });
                 navigate("/");

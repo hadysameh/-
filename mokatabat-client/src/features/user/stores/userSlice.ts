@@ -26,7 +26,7 @@ export const userSlice = createSlice({
   name: "userSlice",
   initialState,
   reducers: {
-    setData: (state: userState, action) => {
+    setAuthData: (state: userState, action) => {
       let data = action.payload;
       state.user = data.user;
       state.premissions = data.premissions;
@@ -35,7 +35,7 @@ export const userSlice = createSlice({
       state.token = data.token;
       state.rank = data.rank;
     },
-    removeData: (state: userState) => {
+    removeAuthData: (state: userState) => {
       state.user = null;
       state.premissions = null;
       state.userType = null;
@@ -46,7 +46,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setData, removeData } = userSlice.actions;
+export const { setAuthData, removeAuthData } = userSlice.actions;
 // The functions below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.counter.value)`
@@ -69,7 +69,7 @@ export const getUser = () => (dispatch: any, getState: any) => {
   return getState().userSlice.user;
 };
 
-export const getPremissions = () => (dispatch: any, getState: any):any[] => {
+export const getPremissions = () => (dispatch: any, getState: any): any[] => {
   return getState().userSlice.premissions;
 };
 
