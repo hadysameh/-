@@ -1,0 +1,1 @@
+export { SaderTabelTR } from "./SaderTabelTr";
